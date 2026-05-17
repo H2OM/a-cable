@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Хост: 127.0.0.1:3306
--- Время создания: Май 15 2026 г., 01:58
+-- Время создания: Май 18 2026 г., 01:03
 -- Версия сервера: 8.0.30
 -- Версия PHP: 8.1.9
 
@@ -51,19 +51,20 @@ INSERT INTO `brands` (`id`, `name`, `code`) VALUES
 CREATE TABLE `categories` (
   `id` int UNSIGNED NOT NULL,
   `title` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `code` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL
+  `code` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `image` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Дамп данных таблицы `categories`
 --
 
-INSERT INTO `categories` (`id`, `title`, `code`) VALUES
-(1, 'кабельная продукция', 'kabelnaya-produktsiya'),
-(2, 'Освещение и светотехника', 'lighting'),
-(3, 'Электроустановочные изделия', 'wiring-accessories'),
-(4, 'Инструменты', 'tools'),
-(5, 'Сетевое оборудование', 'network');
+INSERT INTO `categories` (`id`, `title`, `code`, `image`) VALUES
+(1, 'кабельная продукция', 'cable-products', ' cable.jpg'),
+(2, 'Освещение и светотехника', 'lighting', 'light.png'),
+(3, 'Электроустановочные изделия', 'wiring-accessories', 'electrical-installation.jpg'),
+(4, 'Инструменты', 'tools', '7829c.1200x1000.jpg'),
+(5, 'Сетевое оборудование', 'network-equipment', 'dir-1260_r1_left.1200x1000.jpg');
 
 -- --------------------------------------------------------
 
@@ -85,7 +86,11 @@ INSERT INTO `categories_filters` (`category_id`, `filter_id`) VALUES
 (1, 8),
 (1, 9),
 (1, 10),
-(1, 11);
+(1, 11),
+(1, 12),
+(1, 13),
+(1, 14),
+(1, 15);
 
 -- --------------------------------------------------------
 
@@ -96,6 +101,7 @@ INSERT INTO `categories_filters` (`category_id`, `filter_id`) VALUES
 CREATE TABLE `categories_types` (
   `id` int UNSIGNED NOT NULL,
   `name` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `code` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `category_id` int UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -103,15 +109,15 @@ CREATE TABLE `categories_types` (
 -- Дамп данных таблицы `categories_types`
 --
 
-INSERT INTO `categories_types` (`id`, `name`, `category_id`) VALUES
-(8, 'Акустический кабель', 1),
-(2, 'Витая пара', 1),
-(7, 'Кабель для видеонаблюдения', 1),
-(4, 'Коаксиальный кабель', 1),
-(5, 'Оптоволоконный кабель', 1),
-(6, 'Ретро провод', 1),
-(1, 'Силовой кабель', 1),
-(3, 'Телефонный кабель', 1);
+INSERT INTO `categories_types` (`id`, `name`, `code`, `category_id`) VALUES
+(1, 'Силовой кабель', 'power-cable', 1),
+(2, 'Витая пара', 'twisted-pair', 1),
+(3, 'Телефонный кабель', 'telephone-cable', 1),
+(4, 'Коаксиальный кабель', 'coaxial-cable', 1),
+(5, 'Оптоволоконный кабель', 'fiber-optic-cable', 1),
+(6, 'Ретро провод', 'retro-wire', 1),
+(7, 'Кабель для видеонаблюдения', 'cctv-cable', 1),
+(8, 'Акустический кабель', 'speaker-cable', 1);
 
 -- --------------------------------------------------------
 
@@ -123,6 +129,15 @@ CREATE TABLE `favorites` (
   `user_id` int UNSIGNED NOT NULL,
   `product_id` int UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Дамп данных таблицы `favorites`
+--
+
+INSERT INTO `favorites` (`user_id`, `product_id`) VALUES
+(16, 20),
+(16, 21),
+(16, 23);
 
 -- --------------------------------------------------------
 
@@ -167,7 +182,11 @@ INSERT INTO `filters` (`id`, `filter`, `code`, `type`, `position`) VALUES
 (8, 'Длинна', 'length', 'multi', 127),
 (9, 'Кол-во пар', 'pairs_count', 'multi', 127),
 (10, 'Исполнение', 'perfomance', 'multi', 127),
-(11, 'Кол-во проводников', 'cores_count', 'multi', 127);
+(11, 'Кол-во проводников', 'cores_count', 'multi', 127),
+(12, 'Сечение кабеля', 'cable_section', 'multi', 127),
+(13, 'Материал', 'material', 'multi', 127),
+(14, 'Номинальное напряжение', 'rated_voltage', 'multi', 127),
+(15, 'Скорость передачи данных', 'data_rate', 'switch', 127);
 
 -- --------------------------------------------------------
 
@@ -187,20 +206,31 @@ CREATE TABLE `filters_values` (
 --
 
 INSERT INTO `filters_values` (`id`, `value`, `code`, `filter_id`) VALUES
+(77, '2.5 мм^2', '2d5mm', 12),
+(81, '3', '3', 11),
 (73, '305 м', '305m', 8),
 (74, '4', '4', 9),
 (76, '4', '4', 11),
+(78, '50 м', '50m', 8),
+(80, '660 В', '660v', 14),
 (57, 'Бежевый', 'beige', 7),
 (55, 'Белый', 'white', 7),
-(5, 'Больше 10%', 'more-10', 2),
-(6, 'Больше 30%', 'more-30', 2),
-(7, 'Больше 50%', 'more-50', 2),
 (58, 'Бордовый', 'vinous', 7),
+(82, 'ВВГ-Пнг(А)-LS', 'vvg-png-a-ls', 10),
 (59, 'Голубой', 'blue', 7),
 (4, 'Да', 'yes', 2),
+(83, 'До 0,01 Гбит/с', '001gbits', 15),
+(84, 'До 0,1 Гбит/с', '01gbits', 15),
+(85, 'До 1 Гбит/с', '1gbits', 15),
+(88, 'До 10 Гбит/с', '10gbits', 15),
+(86, 'До 2.5 Гбит/с', '2d5gbits', 15),
+(89, 'До 40 Гбит/с', '40gbits', 15),
+(87, 'До 5 Гбит/с', '5gbits', 15),
 (63, 'Зеленый', 'green', 7),
+(79, 'Медь', 'copper', 13),
 (60, 'Мультиколор', 'multicolor', 7),
 (75, 'нг(А)-HF', 'ng-a-hf', 10),
+(5, 'Нет', 'no', 2),
 (61, 'Оранжевый', 'orange', 7),
 (1, 'По возрастанию цены', 'low-to-high', 1),
 (3, 'По популярности', 'by-popular', 1),
@@ -229,7 +259,21 @@ INSERT INTO `filters_values_products` (`filter_value_id`, `product_id`) VALUES
 (73, 20),
 (74, 20),
 (75, 20),
-(76, 20);
+(76, 20),
+(86, 20),
+(61, 21),
+(73, 21),
+(74, 21),
+(75, 21),
+(76, 21),
+(86, 21),
+(56, 23),
+(77, 23),
+(78, 23),
+(79, 23),
+(80, 23),
+(81, 23),
+(82, 23);
 
 -- --------------------------------------------------------
 
@@ -266,9 +310,16 @@ CREATE TABLE `orders` (
   `user_id` int UNSIGNED NOT NULL,
   `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `change_date` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  `delivery_date` timestamp NOT NULL,
+  `delivery_date` date NOT NULL,
   `comment` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Дамп данных таблицы `orders`
+--
+
+INSERT INTO `orders` (`id`, `number`, `status`, `user_id`, `date`, `change_date`, `delivery_date`, `comment`) VALUES
+(3, '7930FBR3406VL', '1', 16, '2026-05-17 09:09:02', '2026-05-17 09:09:02', '2026-05-21', '');
 
 -- --------------------------------------------------------
 
@@ -278,9 +329,16 @@ CREATE TABLE `orders` (
 
 CREATE TABLE `orders_products` (
   `order_id` int UNSIGNED NOT NULL,
-  `product_id` int UNSIGNED NOT NULL,
-  `size` varchar(4) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL
+  `product_id` int UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Дамп данных таблицы `orders_products`
+--
+
+INSERT INTO `orders_products` (`order_id`, `product_id`) VALUES
+(3, 20),
+(3, 23);
 
 -- --------------------------------------------------------
 
@@ -294,8 +352,9 @@ CREATE TABLE `products` (
   `brand_id` int UNSIGNED NOT NULL,
   `category_type_id` int UNSIGNED DEFAULT NULL,
   `article` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `price` decimal(10,2) NOT NULL DEFAULT '0.00',
-  `price_old` decimal(10,2) NOT NULL DEFAULT '0.00',
+  `price` float NOT NULL DEFAULT '0',
+  `price_old` float NOT NULL DEFAULT '0',
+  `unit` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `image` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'Untitled.jpg',
   `slider_images` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT 'example.jpg,example2.jpg,example3.jpg...',
   `description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
@@ -306,8 +365,10 @@ CREATE TABLE `products` (
 -- Дамп данных таблицы `products`
 --
 
-INSERT INTO `products` (`id`, `title`, `brand_id`, `category_type_id`, `article`, `price`, `price_old`, `image`, `slider_images`, `description`, `hit`) VALUES
-(20, 'Кабель витая пара UTP (U/UTP), категория 5e, 4 пары (24 AWG), одножильный, серый, LSZH, нг(А)-HF, (305 м)', 1, 2, 'UTP-4P-Cat.5e-SOLID-LSZH-GY', '17123.18', '0.00', '', '', 'Четырехпарный кабель категории 5e на основе витой пары предназначен для использования в системах передачи данных со скоростью до 2.5 Гбит/c. Кабель выполнен в неэкранированном исполнении U/UTP и предназначен для прокладки внутри зданий. Диаметр проводников составляет 0,50 мм (24 AWG). Внешняя оболочка выполнена из не распространяющего горение LSZH-компаунда, малодымного и не выделяющего ядовитых соединений в процессе горения, исполнение нг(А)-HF. На внешней оболочке кабеля нанесены метровые метки длины кабеля.\r\nКабель обладает отличными характеристиками при разумной цене, что делает его оптимальным вариантом для построения сетей в проектах, в том числе где требуется гарантийная системная поддержка. Кабель поставляется в картонной коробке «easy-pull box».', '1');
+INSERT INTO `products` (`id`, `title`, `brand_id`, `category_type_id`, `article`, `price`, `price_old`, `unit`, `image`, `slider_images`, `description`, `hit`) VALUES
+(20, 'Кабель витая пара UTP (U/UTP), категория 5e, 4 пары (24 AWG), одножильный, серый, LSZH, нг(А)-HF, (305 м)', 1, 2, 'UTP-4P-Cat.5e-SOLID-LSZH-GY', 17123.2, 0, 'шт.', '9776c-other.1200x1000.jpg', '9776c-other.1200x1000.jpg,9776c.1200x1000.jpg,9776c.3.1200x1000.jpg', 'Четырехпарный кабель категории 5e на основе витой пары предназначен для использования в системах передачи данных со скоростью до 2.5 Гбит/c. Кабель выполнен в неэкранированном исполнении U/UTP и предназначен для прокладки внутри зданий. Диаметр проводников составляет 0,50 мм (24 AWG). Внешняя оболочка выполнена из не распространяющего горение LSZH-компаунда, малодымного и не выделяющего ядовитых соединений в процессе горения, исполнение нг(А)-HF. На внешней оболочке кабеля нанесены метровые метки длины кабеля.\r\nКабель обладает отличными характеристиками при разумной цене, что делает его оптимальным вариантом для построения сетей в проектах, в том числе где требуется гарантийная системная поддержка. Кабель поставляется в картонной коробке «easy-pull box».', '1'),
+(21, 'Кабель витая пара UTP (U/UTP), категория 5e, 4 пары (24 AWG), одножильный, оранжевый, LSZH, нг(А)-HF, (305 м)', 1, 2, 'UTP-4P-Cat.5e-SOLID-LSZH', 17123.2, 0, 'шт.', 'utp-4p-cat5e-solid-lszh_1.1200x1000.jpg', '9776c-other.1200x1000.jpg,7170c.1200x1000.jpg,7170c.3.1200x1000.jpg', 'Четырехпарный кабель категории 5e на основе витой пары предназначен для использования в системах передачи данных со скоростью до 2.5 Гбит/c. Кабель выполнен в неэкранированном исполнении U/UTP и предназначен для прокладки внутри зданий. Диаметр проводников составляет 0,50 мм (24 AWG). Внешняя оболочка выполнена из не распространяющего горение LSZH-компаунда, малодымного и не выделяющего ядовитых соединений в процессе горения, исполнение нг(А)-HF. На внешней оболочке кабеля нанесены метровые метки длины кабеля.\r\nКабель обладает отличными характеристиками при разумной цене, что делает его оптимальным вариантом для построения сетей в проектах, в том числе где требуется гарантийная системная поддержка. Кабель поставляется в картонной коробке «easy-pull box».', '1'),
+(23, 'Кабель силовой медный ВВГ-Пнг(А)-LS 3x2,5 мм, длина 50 метров, ГОСТ 31996-2012, ТУ 16.К71-310-2001 REXANT 01-8272-50', 3, 1, '01-8272-50', 8871.82, 9458.34, 'шт.', 'sds-rexant-01-8272-50.1200x1000.jpg', 'sds-rexant-01-8272-50.1200x1000.jpg', 'Кабель ВВГ-Пнг(А)-LS силовой с пластмассовой изоляцией, в оболочке из поливинилхлоридного пластиката пониженной горючести. Кабели соответствуют требованиям ГОСТ 31996-2012.\r\n\r\nПрименение:\r\nПредназначен для передачи и распределения электрической энергии в стационарных установках на номинальное переменное напряжение в основном 0,66 и 1 кВ номинальной частотой 50 Гц. Кабель применяется для групповой прокладки в кабельных сооружениях наружных (открытых) электроустановок (кабельных эстакадах, галереях). Кабели изготавливаются для эксплуатации в кабельных сооружениях и помещениях, в том числе для использования в системе атомных станций классов 3 и 4 по классификации ОПБ-88 (ПНАЭ Г-01-011-97). Кабель не распространяет горение как при одиночной, так и при групповой прокладке.', '1');
 
 -- --------------------------------------------------------
 
@@ -320,6 +381,33 @@ CREATE TABLE `products_related` (
   `related_id` int UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Дамп данных таблицы `products_related`
+--
+
+INSERT INTO `products_related` (`product_id`, `related_id`) VALUES
+(20, 21);
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `products_stocks`
+--
+
+CREATE TABLE `products_stocks` (
+  `product_id` int UNSIGNED NOT NULL,
+  `count` smallint UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Дамп данных таблицы `products_stocks`
+--
+
+INSERT INTO `products_stocks` (`product_id`, `count`) VALUES
+(23, 76),
+(20, 135),
+(21, 156);
+
 -- --------------------------------------------------------
 
 --
@@ -330,6 +418,13 @@ CREATE TABLE `products_variations` (
   `product_id` int UNSIGNED NOT NULL,
   `variation_id` int UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Дамп данных таблицы `products_variations`
+--
+
+INSERT INTO `products_variations` (`product_id`, `variation_id`) VALUES
+(20, 21);
 
 -- --------------------------------------------------------
 
@@ -359,7 +454,7 @@ INSERT INTO `users` (`id`, `first_name`, `second_name`, `age`, `gender`, `email`
 (13, 'Дмитрий', 'Заболотнов', 43, 'male', 'dima.za425@mail.ru', '+7 (918) 222-22-22', '$2y$10$4xPK6YnY.oRFQZU6Kbe/6.ljQXGH17unMsp1vjACibDCwhRsoTQwK'),
 (14, 'Дмитрий', 'Коваленко', 22, 'female', 'danvbcsf@mail.ru', '+7 (124) 151-51-54', '$2y$10$czay3zomMM5UuR2aNjcQye2Uol3ai3IzPv6k4bMxbazPIbm5b9jtm'),
 (15, 'Дмитрий', 'Коваленко', 22, 'male', 'dima.za2512@mail.ru', '+7 (151) 515-15-11', '$2y$10$zx/B7DdeJlYiRLl4JNRUNuNggsYtInO0y91qSnt3d3Jky6QGjrlw6'),
-(16, 'Тест', 'Тест', 44, 'male', 'jopaj@mail.su', '77678768686', '$2y$10$9uQhtPQG.1TcN8CGeDn1/ez3603bAEqtLX4mj58zEhSvgiHtgD2VW'),
+(16, 'Тест', 'Тест', 44, 'male', 'jopaj@mail.su', '79999999999', '$2y$10$9uQhtPQG.1TcN8CGeDn1/ez3603bAEqtLX4mj58zEhSvgiHtgD2VW'),
 (17, 'Тест', 'Тест', 99, 'male', 'test@mail.su', '73323321312', '$2y$10$ZwO9y.CHqjD0c1HVdr2Wv.gBMzs/1Wh6empYeXOwC0rwKFP0qCSvq');
 
 --
@@ -393,7 +488,8 @@ ALTER TABLE `categories_types`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `name_2` (`name`,`category_id`),
   ADD KEY `name` (`name`),
-  ADD KEY `type_category_id` (`category_id`);
+  ADD KEY `type_category_id` (`category_id`),
+  ADD KEY `code` (`code`);
 
 --
 -- Индексы таблицы `favorites`
@@ -462,7 +558,8 @@ ALTER TABLE `products`
   ADD UNIQUE KEY `Article` (`article`),
   ADD KEY `Title` (`title`),
   ADD KEY `product_brand_id` (`brand_id`),
-  ADD KEY `product_category_type_id` (`category_type_id`);
+  ADD KEY `product_category_type_id` (`category_type_id`),
+  ADD KEY `unit` (`unit`);
 
 --
 -- Индексы таблицы `products_related`
@@ -471,6 +568,13 @@ ALTER TABLE `products_related`
   ADD PRIMARY KEY (`product_id`,`related_id`) USING BTREE,
   ADD KEY `Related_id` (`related_id`) USING BTREE,
   ADD KEY `Goods_id` (`product_id`) USING BTREE;
+
+--
+-- Индексы таблицы `products_stocks`
+--
+ALTER TABLE `products_stocks`
+  ADD UNIQUE KEY `product_id` (`product_id`),
+  ADD KEY `count` (`count`);
 
 --
 -- Индексы таблицы `products_variations`
@@ -520,13 +624,13 @@ ALTER TABLE `feedbacks`
 -- AUTO_INCREMENT для таблицы `filters`
 --
 ALTER TABLE `filters`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT для таблицы `filters_values`
 --
 ALTER TABLE `filters_values`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=77;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=91;
 
 --
 -- AUTO_INCREMENT для таблицы `news`
@@ -538,13 +642,13 @@ ALTER TABLE `news`
 -- AUTO_INCREMENT для таблицы `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT для таблицы `products`
 --
 ALTER TABLE `products`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- AUTO_INCREMENT для таблицы `users`
@@ -622,6 +726,12 @@ ALTER TABLE `products`
 ALTER TABLE `products_related`
   ADD CONSTRAINT `products_related_ibfk_1` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `products_related_ibfk_2` FOREIGN KEY (`related_id`) REFERENCES `products` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Ограничения внешнего ключа таблицы `products_stocks`
+--
+ALTER TABLE `products_stocks`
+  ADD CONSTRAINT `to_count_products_id` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
 --
 -- Ограничения внешнего ключа таблицы `products_variations`
