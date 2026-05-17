@@ -60,15 +60,14 @@ class BasketController {
      * @return Response
      */
     public function decrementAction(): Response {
-        $id   = $this->session->input('id');
-        $size = $this->session->input('size');
+        $id = $this->session->input('id');
 
-        if(!$id || !$size) {
+        if(!$id) {
             return Response::jsonError(message: ResponseMessage::ERROR_NOT_ENOUGH_DATA, status: 403);
         }
 
         try {
-            $basket = $this->basketService->decrement(id: $id, size: $size);
+            $basket = $this->basketService->decrement(id: $id);
 
             return Response::jsonSuccess(data: $basket, message: ResponseMessage::SUCCESS_REMOVE_BASKET);
         } catch (ResponseException $exception) {
@@ -82,11 +81,10 @@ class BasketController {
      * @return Response
      */
     public function removeAction(): Response {
-        $id   = $this->session->input('id');
-        $size = $this->session->input('size');
+        $id = $this->session->input('id');
 
         try {
-            $basket = $this->basketService->remove(id: $id, size: $size);
+            $basket = $this->basketService->remove(id: $id);
 
             return Response::jsonSuccess(data: $basket, message: ResponseMessage::SUCCESS_REMOVE_BASKET);
         } catch (ResponseException $exception) {
@@ -100,16 +98,15 @@ class BasketController {
      * @return Response
      */
     public function setCountAction(): Response {
-        $id      = $this->session->input('id');
-        $size    = $this->session->input('size');
-        $count   = (int)$this->session->input('count');
+        $id    = $this->session->input('id');
+        $count = (int)$this->session->input('count');
 
-        if(!$id || !$size || $count <= 0) {
+        if(!$id || $count <= 0) {
             return Response::jsonError(message: ResponseMessage::ERROR_NOT_ENOUGH_DATA, status: 403);
         }
 
         try {
-            $basket = $this->basketService->setCount(id: $id, size: $size, count: $count);
+            $basket = $this->basketService->setCount(id: $id, count: $count);
 
             return Response::jsonSuccess(data: $basket);
         } catch (ResponseException $exception) {
@@ -123,6 +120,6 @@ class BasketController {
      * @return Response
      */
     public function clearAction(): Response {
-        return Response::jsonSuccess(data: $this->basketService->clear());
+        return Response::jsonSuccess(data: $this->basketService->clear(), message: ResponseMessage::SUCCESS_CLEAR_BASKET);
     }
 }

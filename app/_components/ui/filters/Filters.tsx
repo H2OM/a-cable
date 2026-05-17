@@ -61,8 +61,8 @@ export default function Filters({filters, category = false}: { filters: Filter[]
 
                 return (
                     <div className={"filters__tab"
-                        + (searchParams.has(filter.code) ? " filters__tab_selected" : "")
-                        + (modalOptions.name == filter.code ? " filters__tab_active" : "")}
+                        + (searchParams.has(filter.code) ? " _selected" : "")
+                        + (modalOptions.name == filter.code ? " _active" : "")}
                          key={filter.code + filter.name}
                          data-type={filter.type}
                          data-code={filter.code}

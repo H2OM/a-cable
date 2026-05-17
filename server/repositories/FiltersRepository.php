@@ -11,32 +11,63 @@ class FiltersRepository {
     /**
      * Получение всех фильтров
      *
-     * @param array $filters
+     * @param string $categoryCode
      * @return array
      */
-    public function getFilters(array $filters): array {
-        $sqlPartCondition = "";
-
-        if(isset($filters['category'])) {
-            $sqlPartCondition .= match (strtolower($filters['category'])) {
-                "man" => "AND (categories.code = 'man' OR categories.code = 'all')",
-                "woman" => "AND (categories.code = 'woman' OR categories.code = 'all')",
-                "kids" => "AND categories.code = 'kids'",
-                "all" => "AND (categories.code = 'man' OR categories.code = 'woman' OR categories.code = 'all')",
-                default => ''
-            };
-        }
-
-        return $this->db->fetchAll("SELECT filters.filter, filters.code, filters.type, filters_values.id,
-                                IF(filters.type = 'multi' AND filters_goods.filter_value_id = filters_values.id, filters_values.value, 
-                                IF(filters.type = 'multi', null, IF(filters.code = 'price', null, COALESCE(filters_values.value, categories.title)))) AS name, 
-                                IF(filters.type = 'multi' AND filters_goods.filter_value_id = filters_values.id, COALESCE(filters_values.code, filters_values.id), 
-                                IF(filters.type = 'multi', null, IF(filters.code = 'price', CONCAT(MIN(goods.price), ',', MAX(goods.price)), 
-                                COALESCE(filters_values.code, filters_values.id, categories.code)))) AS value_code 
-                                FROM filters JOIN categories LEFT JOIN filters_values ON filters.id = filters_values.filter_id JOIN goods 
-                                LEFT JOIN filters_goods ON filters_values.id = filters_goods.filter_value_id AND goods.id = filters_goods.goods_id 
-                                AND categories.id = goods.category_id ".$sqlPartCondition." 
-                                WHERE IF(filters.code = 'price', goods.category_id = categories.id ".$sqlPartCondition.", filters.code is NOT null) 
-                                GROUP BY Name, code ORDER BY Type, id ASC, Name DESC;");
+    public function getFilters(string $categoryCode): array {
+        return $this->db->fetchAll("
+            WITH target_types AS (
+                SELECT ct.id
+                FROM categories_types ct
+                JOIN categories c ON ct.category_id = c.id
+                WHERE c.code = ?
+            )
+            SELECT
+                filters.id,
+                filters.filter AS filter_name,
+                filters.code AS filter_code,
+                filters.type,
+                filters.position,
+                CASE
+                    WHEN filters.id = 5 THEN CONCAT(MIN(products.price), ',', MAX(products.price))
+                    WHEN filters.id = 4 THEN brands.name
+                    WHEN filters.id = 3 THEN categories_types.name
+                    ELSE filters_values.value
+                END AS value_name,
+                CASE
+                    WHEN filters.id = 5 THEN CONCAT(MIN(products.price), ',', MAX(products.price))
+                    WHEN filters.id = 4 THEN brands.code
+                    WHEN filters.id = 3 THEN categories_types.code
+                    ELSE filters_values.code
+                END AS value_code,
+                CASE
+                    WHEN filters.id = 5 THEN 'price_range'
+                    WHEN filters.id = 4 THEN CONCAT('b_', brands.id)
+                    WHEN filters.id = 3 THEN CONCAT('c_', categories_types.id)
+                    ELSE filters_values.id
+                END AS value_id
+            FROM filters
+            LEFT JOIN filters_values ON filters.id = filters_values.filter_id
+            LEFT JOIN categories_filters ON filters.id = categories_filters.filter_id
+            LEFT JOIN categories ON categories_filters.category_id = categories.id
+            LEFT JOIN products ON products.category_type_id IN (SELECT id FROM target_types)
+            LEFT JOIN brands ON filters.id = 4 AND products.brand_id = brands.id
+            LEFT JOIN categories_types ON filters.id = 3 AND products.category_type_id = categories_types.id
+            LEFT JOIN filters_values_products ON products.id = filters_values_products.product_id AND filters_values.id = filters_values_products.filter_value_id
+            WHERE
+                (categories.code = ? OR filters.id IN (1, 2, 3, 4, 5))
+                AND (
+                    (filters.id = 5 AND products.id IS NOT NULL) OR
+                    (filters.id = 4 AND brands.id IS NOT NULL) OR
+                    (filters.id = 3 AND categories_types.id IS NOT NULL) OR
+                    (filters.id IN (1, 2) AND filters_values.id IS NOT NULL) OR
+                    (filters.id NOT IN (1, 2, 3, 4, 5) AND filters_values.id IS NOT NULL AND filters_values_products.filter_value_id IS NOT NULL)
+                )
+            GROUP BY
+                filters.id,
+                IF(filters.id = 5, 'price', value_id)
+            ORDER BY
+                 filters.position ASC, value_name ASC;
+        ", [$categoryCode, $categoryCode]);
     }
 }

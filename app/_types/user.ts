@@ -24,7 +24,7 @@ export interface UserEditData extends Omit<User, 'id'> {
 }
 
 export interface UserOrder {
-    id: number;
+    order_id: number;
     number: string;
     status: number;
     user_id: number;
@@ -32,5 +32,5 @@ export interface UserOrder {
     change_date: string;
     delivery_date: string;
     comment: string;
-    products: Product[];
+    products: Omit<Product, 'variations'>[];
 }

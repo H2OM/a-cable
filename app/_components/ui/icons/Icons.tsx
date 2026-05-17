@@ -48,6 +48,11 @@ const ICONS_MAP = {
                   d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3z"/>
         </svg>
     ),
+    copy: ({className, style}: { className?: string; style?: CSSProperties }) => (
+        <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16" className={className} style={style}>
+            <path d="M4 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1zM2 5a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-1h1v1a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h1v1z"/>
+        </svg>
+    ),
     octagon: ({className, style}: { className?: string; style?: CSSProperties }) => (
         <svg width="16" height="16" fill="orange" viewBox="0 0 16 16" className={className} style={style}>
             <path

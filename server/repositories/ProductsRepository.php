@@ -7,8 +7,8 @@ use app\core\Hydrator;
 
 /** Репозиторий для управления товарами */
 class ProductsRepository {
-    private const PRODUCTS_WITH_VARIATIONS_SQL = "SELECT products.*, categories_types.name AS category, brands.name as brand,
-                                            products_stocks.count as stock,
+    private const PRODUCTS_WITH_VARIATIONS_SQL = "SELECT products.*, categories_types.name AS category, categories_types.code as category_code,
+                                            brands.name as brand, products_stocks.count as stock,
                                             IF(COUNT(var_p.id) > 0,
                                                JSON_ARRAYAGG(JSON_OBJECT('id', var_p.id, 'image', var_p.image)),
                                                JSON_ARRAY()
@@ -47,7 +47,7 @@ class ProductsRepository {
      */
     public function getByFilters(array $filters): array {
         $sqlPartSelect = "";
-        $sqlPartCondition = "";
+        $whereCondition = "";
         $prepareSelectedValue = [];
         $prepareConditionedValue = [];
 
@@ -58,20 +58,16 @@ class ProductsRepository {
 
             switch($key) {
                 case "category":
-                    $sqlPartCondition .= match (strtolower($value)) {
-                        "man" => "(categories.code = 'man' OR categories.code = 'all') AND ",
-                        "woman" => "(categories.code = 'woman' OR categories.code = 'all') AND ",
-                        "kids" => "categories.Code = 'kids' AND ",
-                        "all" => "categories.Code = 'all' AND ",
-                        default => ''
-                    };
+                    $whereCondition .= "categories.code = ? AND ";
+
+                    $prepareConditionedValue[] = $value;
 
                     break;
                 case "price":
                     $price = explode(",", $value);
 
-                    if(count($price) == 2 && is_numeric($price[0]) && is_numeric($price[1])) {
-                        $sqlPartCondition .= "goods.price <= ? AND goods.price >= ? AND ";
+                    if(count($price) === 2 && is_numeric($price[0]) && is_numeric($price[1])) {
+                        $whereCondition .= "products.price <= ? AND products.price >= ? AND ";
 
                         array_push($prepareConditionedValue, $price[1], $price[0]);
                     }
@@ -79,20 +75,12 @@ class ProductsRepository {
                     break;
                 case "sale":
                     switch($value) {
-                        case "Yes":
-                            $sqlPartCondition .= "goods.price <= (goods.price_old * 1) AND ";
+                        case "yes":
+                            $whereCondition .= "products.price <= (products.price_old * 1) AND ";
 
                             break;
-                        case "More10":
-                            $sqlPartCondition .= "goods.price <= (goods.price_old * 0.9) AND ";
-
-                            break;
-                        case "More30":
-                            $sqlPartCondition .= "goods.price <= (goods.price_old * 0.7) AND ";
-
-                            break;
-                        case "More50":
-                            $sqlPartCondition .= "goods.price <= (goods.price_old * 0.5) AND ";
+                        case "no":
+                            $whereCondition .= "products.price_old  = 0 AND ";
 
                             break;
                         default:
@@ -100,6 +88,7 @@ class ProductsRepository {
                     }
 
                     break;
+//                    TODO Фильтрация по тип, бренду и всех фильтров
                 case "brand":
                 case "size":
                 case "color":
@@ -122,7 +111,7 @@ class ProductsRepository {
 
                         $prepareSelectedValue[] = $key;
 
-                        $sqlPartCondition .= "goods.id = {$index}s.ID AND ";
+                        $whereCondition .= "goods.id = {$index}s.ID AND ";
                     }
 
                     break;
@@ -133,27 +122,43 @@ class ProductsRepository {
             $index++;
         }
 
-        if(strlen($sqlPartCondition) > 0) {
-            $sqlPartCondition = " WHERE ". substr_replace($sqlPartCondition, "", -5);
+        if(strlen($whereCondition) > 0) {
+            $whereCondition = " WHERE ". substr_replace($whereCondition, "", -5);
         }
 
-        $sqlPartCondition .= " GROUP BY goods.id";
+        $whereCondition .= " GROUP BY products.id";
 
         if(isset($filters['sort'])) {
-            $sqlPartCondition .= match ($filters['sort']) {
-                'low_to_high' => ' ORDER BY goods.price ASC',
-                'high_to_low' => ' ORDER BY goods.price DESC',
+            $whereCondition .= match ($filters['sort']) {
+                'low-to-high' => ' ORDER BY products.price ASC',
+                'high-to-low' => ' ORDER BY products.price DESC',
                 default => ''
             };
         }
 
-        return $this->db->fetchAll("SELECT goods.*, categories.code AS category, GROUP_CONCAT(filters_values.value SEPARATOR '.') AS size 
-                                            FROM ".$sqlPartSelect."filters_goods JOIN goods 
-                                            JOIN filters_values ON filters_goods.goods_id = goods.id 
-                                            AND filters_goods.filter_value_id = filters_values.id 
-                                            JOIN filters ON filters_values.filter_id = filters.id AND filters.code = 'size' JOIN 
-                                            categories ON goods.category_id = categories.id".$sqlPartCondition,
-        [...$prepareSelectedValue, ...$prepareConditionedValue]);
+        return $this->hydrator->decodeJson($this->db->fetchAll("
+            SELECT 
+                products.*, 
+                categories_types.name AS category, 
+                categories_types.code as category_code,
+                brands.name as brand, 
+                products_stocks.count as stock,
+                (
+                    SELECT COALESCE(JSON_ARRAYAGG(JSON_OBJECT('id', vp.id, 'image', vp.image)), JSON_ARRAY())
+                    FROM products_variations p_v
+                    JOIN products vp ON (p_v.variation_id = vp.id OR p_v.product_id = vp.id) AND vp.id != products.id
+                    WHERE p_v.product_id = products.id OR p_v.variation_id = products.id
+                ) AS variations
+            FROM ".$sqlPartSelect."filters_values_products 
+            JOIN products ON filters_values_products.product_id = products.id
+            JOIN filters_values ON filters_values_products.filter_value_id = filters_values.id 
+            JOIN filters ON filters_values.filter_id = filters.id
+            JOIN categories_types ON products.category_type_id = categories_types.id
+            JOIN categories ON categories_types.category_id = categories.id 
+            LEFT JOIN products_stocks ON products_stocks.product_id = products.id
+            LEFT JOIN brands ON products.brand_id = brands.id
+                $whereCondition
+        ", [...$prepareSelectedValue, ...$prepareConditionedValue]), ['variations']);
     }
 
     /**
@@ -274,7 +279,8 @@ class ProductsRepository {
     private function prepareProductsById(array $ids): string {
         $placeholders = implode(',', array_fill(0, count($ids), '?'));
 
-        return "SELECT products.*, categories_types.name AS category, brands.name as brand, products_stocks.count as stock
+        return "SELECT products.*, categories_types.name AS category, categories_types.code as category_code, 
+                    brands.name as brand, products_stocks.count as stock
                 FROM products 
                 JOIN categories_types ON products.category_type_id = categories_types.id
                 LEFT JOIN products_stocks ON products_stocks.product_id = products.id

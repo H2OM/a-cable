@@ -4,11 +4,12 @@ export interface Filter {
     code: string;
     name: string;
     type: FilterType;
+    position: number;
     values: FilterValues[];
 }
 
 export interface FilterValues {
-    id: number | null;
+    id: string;
     code: string;
     name: string;
 }

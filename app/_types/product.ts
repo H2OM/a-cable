@@ -6,6 +6,7 @@ export interface Product {
     brand: string; // TODO
     category_type_id: number;
     category: string;
+    category_code: string;
     description: string;
     hit: "1" | "0";
     image: string;

@@ -53,6 +53,26 @@ const raleway = localFont({
         },
         {
             path: "../public/fonts/1Ptug8zYS_SKggPNyCkIT5lu.woff2",
+            weight: "500",
+            style: "italic",
+        },
+        {
+            path: "../public/fonts/1Pt_g8zYS_SKggPNyCgSQamb1W0lwk4S4VrMDrcfIA9c.woff2",
+            weight: "500",
+            style: "italic",
+        },
+        {
+            path: "../public/fonts/1Pt_g8zYS_SKggPNyCgSQamb1W0lwk4S4bbLDrcfIA9c.woff2",
+            weight: "600",
+            style: "italic",
+        },
+        {
+            path: "../public/fonts/1Pt_g8zYS_SKggPNyCgSQamb1W0lwk4S4bbLDrMfIA.woff2",
+            weight: "600",
+            style: "italic",
+        },
+        {
+            path: "../public/fonts/1Ptug8zYS_SKggPNyCkIT5lu.woff2",
             weight: "400",
             style: "normal",
         },
@@ -62,12 +82,12 @@ const raleway = localFont({
             style: "normal",
         },
         {
-            path: "../public/fonts/1Ptug8zYS_SKggPNyCkIT5lu.woff2",
+            path: "../public/fonts/1Ptxg8zYS_SKggPN4iEgvnHyvveLxVvoorCIPrE.woff2",
             weight: "500",
             style: "normal",
         },
         {
-            path: "../public/fonts/1Pt_g8zYS_SKggPNyCgSQamb1W0lwk4S4VrMDrcfIA9c.woff2",
+            path: "../public/fonts/1Ptxg8zYS_SKggPN4iEgvnHyvveLxVvoorCMPrEHJA.woff2",
             weight: "500",
             style: "normal",
         },

@@ -14,11 +14,22 @@ class OrdersRepository {
      * @return array
      */
     public function getByUserId(int $userId): array {
-        return $this->db->fetchAll("SELECT orders.*, goods.*, orders_goods.size, categories.title as category 
-                                                FROM orders JOIN orders_goods ON orders.id = orders_goods.order_id 
-                                                JOIN goods ON orders_goods.goods_id = goods.id JOIN categories 
-                                                ON categories.id = goods.category_id 
-                                                WHERE user_id = ? ORDER BY `orders`.`date` DESC",
+        return $this->db->fetchAll("SELECT 
+                                                orders.*, 
+                                                orders.id as order_id,
+                                                products.*, 
+                                                categories_types.name AS category, 
+                                                categories_types.code as category_code, 
+                                                brands.name as brand, 
+                                                products_stocks.count as stock
+                                        FROM orders 
+                                            JOIN orders_products ON orders.id = orders_products.order_id 
+                                            LEFT JOIN products ON orders_products.product_id = products.id
+                                            JOIN categories_types ON products.category_type_id = categories_types.id
+                                            LEFT JOIN brands ON products.brand_id = brands.id
+                                            LEFT JOIN products_stocks ON products_stocks.product_id = products.id
+                                        WHERE orders.user_id = ? 
+                                        ORDER BY `orders`.`date` DESC",
             [$userId]);
     }
 }

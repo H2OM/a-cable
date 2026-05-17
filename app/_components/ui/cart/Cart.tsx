@@ -7,12 +7,11 @@ import {Icons} from "@components/ui/icons/Icons";
 import {useFavorites} from "@hooks/useFavorites";
 import {useBasket} from "@hooks/useBasket";
 import Link from "next/link";
+import ClipboardCopy from "@ui/clipboardCopy/ClipboardCopy";
 
 export default function Cart({product, isSlider = false}: { product: Product; isSlider?: boolean; }) {
     const {isFavorite, isPending, toggle} = useFavorites(product.id);
     const {add} = useBasket();
-
-    const title: string = (product.title.length > 19 ? product.title.slice(0, 19) + "... " : product.title);
 
     return (
         <div className={"cart-wrap" + (isSlider ? " cart-wrap_slide" : "")}>
@@ -22,16 +21,16 @@ export default function Cart({product, isSlider = false}: { product: Product; is
 
                      if (!target.classList.contains("cart")) target = target.closest(".cart")!;
 
-                     target.classList.remove("cart_unactive");
-                     target.classList.add("cart_active");
+                     target.classList.remove("_unactive");
+                     target.classList.add("_active");
                  }}
                  onMouseLeave={({currentTarget}) => {
                      let target = currentTarget;
 
                      if (!target.classList.contains("cart")) target = target.closest(".cart")!;
 
-                     target.classList.remove("cart_active");
-                     target.classList.add("cart_unactive");
+                     target.classList.remove("_active");
+                     target.classList.add("_unactive");
                  }}>
                 <div className={"cart__heart" + (isPending ? ' _disabled' : '')} onClick={() => toggle()}>
                     <Icons type={isFavorite() ? 'filedHeart' : 'unfiledHeart'}/>
@@ -64,15 +63,43 @@ export default function Cart({product, isSlider = false}: { product: Product; is
                             : null
                         }
                     </div>
-                    <Link href={`/product/${product.id}`} className="cart__desc__title">
-                        {product.category} {title}
+                    <Link href={`/catalog/${product.category_code}`} className="cart__desc__sub-title">
+                        {product.category}
                     </Link>
-                    <h3 className="cart__desc__sub-title">{product.brand}</h3>
-                    {/*TODO вариации*/}
+                    <Link href={`/product/${product.id}`} className="cart__desc__title">
+                        {product.title}
+                    </Link>
+                    <h3 className="cart__desc__sub-title"
+                        style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '20px'}}>
+                        {product.brand}
+                        <ClipboardCopy content={product.article}/>
+                    </h3>
+                    {/*TODO слайдер вариаций*/}
+                    <div className={"cart__variations"}>
+                        {product.variations.map(variation => (
+                            <Link href={`/variation/${variation.id}`} key={variation.id}>
+                                <Image
+                                    src={`/img/${variation.image.trim()}`}
+                                    alt={"ОШИБКА ЗАГРУЗКИ ФОТОГРАФИИ"}
+                                    width={0}
+                                    height={0}
+                                    sizes="100vw"
+                                    quality={100}
+                                    priority={true}
+                                />
+                            </Link>
+                        ))}
+                    </div>
+                    <div className={"cart__stock" + (product.stock > 0 ? ' _in-stock' : '_out-stock')}>
+                        {product.stock > 0 ?
+                            `В наличии: ${product.stock} ${product.unit}`
+                            : 'Нет в наличии'
+                        }
+                    </div>
                     {/*TODO в наличии stock unit*/}
                 </div>
                 {product.stock > 0 ?
-                    <button className="cart__btn btn btn_small" onClick={() => add(product.id)}>
+                    <button className="btn" onClick={() => add(product.id)}>
                         В корзину
                     </button>
                     : <div>Товар закончился</div>

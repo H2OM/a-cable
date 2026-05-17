@@ -1,9 +1,5 @@
-import Catalog from "@components/catalog/server/Catalog";
-import {SearchParams} from "@_types/common";
+import CatalogCategories from "@components/catalog/server/CatalogCategories";
 
-export default function Page({params, searchParams}: {
-    params: Promise<{}>;
-    searchParams: Promise<SearchParams>;
-}) {
-    return <Catalog promiseParams={params} promiseSearchParams={searchParams}/>;
+export default function Page() {
+    return <CatalogCategories/>;
 }

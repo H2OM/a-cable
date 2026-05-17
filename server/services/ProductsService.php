@@ -68,12 +68,12 @@ class ProductsService {
     /**
      * Получение всех фильтров
      *
-     * @param array $params
+     * @param string $categoryCode
      * @return array
      * @throws ResponseException
      */
-    public function getFilters(array $params): array {
-        $filters = $this->filtersRepository->getFilters($params);
+    public function getFilters(string $categoryCode): array {
+        $filters = $this->filtersRepository->getFilters($categoryCode);
 
         if(count($filters) === 0) {
             throw new ResponseException(ResponseMessage::ERROR_DATA, 403);
@@ -85,50 +85,47 @@ class ProductsService {
     /**
      * Получение всех фильтров сгруппированных по коду
      *
-     * @param array $params
+     * @param string $categoryCode
      * @return array
      * @throws ResponseException
      */
-    public function getFiltersGroupByCode(array $params): array {
-        $filters = $this->getFilters($params);
+    public function getFiltersGroupByCode(string $categoryCode): array {
+        $filters = $this->getFilters($categoryCode);
 
         $groupedFilters = [];
 
         foreach($filters as $filter) {
-            if(!$filter['name'] && !$filter['value_code']) {
-                continue;
-            }
-
-            $code = $filter['code'];
+            $code = $filter['filter_code'];
 
             if(!isset($groupedFilters[$code])) {
                 $groupedFilters[$code] = [
                     'code' => $code,
-                    'name' => $filter['filter'],
+                    'name' => $filter['filter_name'],
                     'type' => $filter['type'],
+                    'position' => $filter['position'],
                     'values' => []
                 ];
             }
 
             $groupedFilters[$code]['values'][] = [
-                'id' => $filter['id'],
-                'name' => $filter['name'],
+                'id' => $filter['value_id'],
+                'name' => $filter['value_name'],
                 'code' => $filter['value_code'],
             ];
         }
 
         return array_values($groupedFilters);
     }
-    
+
     /**
      * Получение всех фильтров сгруппированных по типу
      *
-     * @param array $params
+     * @param string $categoryCode
      * @return array
      * @throws ResponseException
      */
-    public function getFiltersGroupByType(array $params): array {
-        $filters = $this->getFilters($params);
+    public function getFiltersGroupByType(string $categoryCode): array {
+        $filters = $this->getFilters($categoryCode);
 
         $groupedFilters = [];
 

@@ -8,57 +8,48 @@ import Fallback from "@ui/fallback/Fallback";
 import {Filter} from "@_types/filters";
 import normalizeParams from "@utils/normalizeParams";
 import {SearchParams} from "@_types/common";
+import {categoriesService} from "@utils/categoriesService";
 
 export default async function Catalog({promiseParams, promiseSearchParams}: {
-    promiseParams: Promise<{ type?: string; }>
+    promiseParams: Promise<{ category: string; }>
     promiseSearchParams: Promise<SearchParams>;
 }) {
     const rawSearchParams: SearchParams = await promiseSearchParams;
     const params = await promiseParams;
+    const category = categoriesService.getByCode(params.category);
+
+    if(!category) {
+        notFound();
+    }
 
     const searchParams = normalizeParams(rawSearchParams);
 
-    if (params.type) {
-        searchParams.category = params.type.toLowerCase();
-    }
+    searchParams.category = params.category;
 
-    const data = await catalogAPI.get(searchParams);
+    const response = await catalogAPI.get(searchParams);
 
-    let title = searchParams.category;
-
-    switch (title) {
-        case undefined:
-        case "":
-            title = "";
-            break;
-        case "woman":
-            title = "Женская обувь";
-            break;
-        case "man":
-            title = "Мужская обувь";
-            break;
-        case "kids":
-            title = "Детская обувь";
-            break;
-        case "all":
-            title = "Унисекс";
-            break;
-        default:
-            notFound();
+    if(!response.success) {
+        notFound();
     }
 
     const {catalog, filters}: {
         catalog?: Product[];
         filters?: Filter[];
-    } = data.data ?? {};
+    } = response.data ?? {};
+    const type = searchParams.type
+        ? filters?.find(f => f.code === 'type')?.values.find(v => v.code === searchParams.type)
+        : null;
+    const title = type
+        ? `${category.title} - ${type.name.toLowerCase()}`
+        : category.title;
 
     return (
-        <section className="Catalog section">
+        <section className="catalog section">
             <div className="grid">
                 {catalog &&
                     <>
-                        <div className="Catalog__title">
-                            <h1 className="title title_black">{title ? title : "Каталог"}</h1>
+                        <div className="catalog__title">
+                            <h1 className="title title_black">{title}</h1>
                             <span className="title__count"> - {catalog.length}</span>
                         </div>
                         {(Object.keys(searchParams).length !== 0 || catalog.length > 0) && filters &&
@@ -66,15 +57,15 @@ export default async function Catalog({promiseParams, promiseSearchParams}: {
                         }
                         {catalog.length > 0 ?
                             <>
-                                <div className="Catalog__content">
+                                <div className="catalog__content">
                                     {catalog.map(product => {
                                         return (
                                             <Cart product={product} key={product.id}/>
                                         )
                                     })}
                                 </div>
-                                {/* <div className="Catalog__navigation">
-                                    <div className="btn btn_big Catalog__navigation__btn">Показать еще</div>
+                                {/* <div className="catalog__navigation">
+                                    <div className="btn btn_big catalog__navigation__btn">Показать еще</div>
                                     <div className="pagination">
                                         <button className="pagination__btns">
                                         </button>
@@ -103,7 +94,7 @@ export default async function Catalog({promiseParams, promiseSearchParams}: {
                         }
                     </>
                 }
-                {(!data.success || !catalog) && <Fallback message={data.message}/>}
+                {(!response.success || !catalog) && <Fallback message={response.message}/>}
             </div>
         </section>
     );

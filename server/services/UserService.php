@@ -142,12 +142,12 @@ class UserService {
         $result = [];
 
         foreach($orders as $order) {
-            $orderId = $order['id'];
+            $orderId = $order['order_id'];
 
             $product = [];
 
             foreach ($order as $field => $value) {
-                if(in_array($field, ['id', 'number', 'status', 'user_id', 'date', 'change_date', 'delivery_date', 'comment'])) {
+                if(in_array($field, ['order_id', 'number', 'status', 'user_id', 'date', 'change_date', 'delivery_date', 'comment'])) {
                      $result[$orderId][$field] = $value;
                 } else {
                     $product[$field] = $value;

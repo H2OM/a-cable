@@ -18,18 +18,19 @@
     &__links {
         display: flex;
         justify-content: space-between;
+        > div {
+            display: flex;
+            column-gap: 25px;
+            row-gap: 5px;
+            margin-right: 25px;
+            flex-wrap: wrap;
+        }
         &__link {
             font-size: 16px;
             text-decoration: none;
             color: white;
-            margin-left: 50px;
-            &:first-child {
-                margin-left: 0px;
-            }
-            &:last-child {
-                margin-right: 10px;
-            }
-        } 
+            white-space: nowrap;
+        }
     }
     &__btns {
         display: flex;

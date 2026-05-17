@@ -241,6 +241,7 @@
                             background-color: unset;
                             padding: 15px;
                             border-bottom: 1px solid $gray;
+                            gap: 20px;
                             &__desc {
                                 &__price {
                                     font-size: 18px;
@@ -257,27 +258,11 @@
                                         font-style: italic;
                                     }
                                 }
-                                &__title {
-                                    margin: 10px 0px;
-                                    font-weight: 400;
-                                    font-size: 16px;
-                                }
-                                &__subtitle {
-                                    font-size: 15px;
-                                    margin: 10px 0px;
-                                    color: $light-black;
-                                }
-                                &__link  {
-                                    color: black;
-                                    text-decoration: none;
-                                    cursor: pointer;
-                                }
                             }
-                               
                             &__image {
                                 height: 140px;
                                 width: 140px;
-                                object-fit: cover;
+                                object-fit: contain;
                                 border-radius: 10px;
                             }
                             &:last-child {

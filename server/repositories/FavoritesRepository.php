@@ -8,7 +8,8 @@ use app\core\Hydrator;
 
 /** Репозиторий по управлению избранными товарами */
 class FavoritesRepository {
-    private const FAVORITES_PRODUCTS_WITH_VARIATIONS_SQL = "SELECT products.*, categories_types.name AS category, brands.name as brand, products_stocks.count as stock,
+    private const FAVORITES_PRODUCTS_WITH_VARIATIONS_SQL = "SELECT products.*, categories_types.name AS category, 
+                    categories_types.code as category_code, brands.name as brand, products_stocks.count as stock,
                     IF(COUNT(var_p.id) > 0,
                        JSON_ARRAYAGG(JSON_OBJECT('id', var_p.id, 'image', var_p.image)),
                        JSON_ARRAY()

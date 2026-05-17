@@ -11,7 +11,7 @@ export function useBasket() {
 
     return {
         ...context,
-        getItem: (id: number, size: string) =>
-            context.basket.find(p => p.id === id && p.size === size)
+        getItem: (id: number) =>
+            context.basket.find(p => p.id === id)
     };
 }

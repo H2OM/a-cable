@@ -51,7 +51,7 @@ export default function Basket() {
                         </div>
                         <div className="Basket__split__content">
                             {basket.map(product => (
-                                <BasketCart product={product} key={product.id + product.size}/>
+                                <BasketCart product={product} key={product.id}/>
                             ))}
                         </div>
                     </div>

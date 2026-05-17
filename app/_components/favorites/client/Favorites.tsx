@@ -7,11 +7,11 @@ export default function Favorites() {
     const {favorites} = useFavorites();
 
     return (
-        <section className="Catalog section">
+        <section className="catalog section">
             <div className="grid">
-                <h1 className="title title_black">Избранное</h1>
+                <h1 className="title title_black _mb">Избранное</h1>
                 {favorites.length > 0 &&
-                    <div className="Catalog__content">
+                    <div className="catalog__content">
                         {favorites.map(product => {
                             return (
                                 <Cart product={product} key={product.id}/>

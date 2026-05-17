@@ -25,7 +25,8 @@ enum ResponseMessage: string {
     case SUCCESS_REMOVE = 'Успешное удаление';
     case SUCCESS_REMOVE_BASKET = 'Товар удален из корзины';
     case SUCCESS_REMOVE_FAVORITES = 'Товар удален из избранного';
-    case SUCCESS_CLEAR_FAVORITES = 'Избранное отчищено!';
+    case SUCCESS_CLEAR_FAVORITES = 'Избранное отчищено';
+    case SUCCESS_CLEAR_BASKET = 'Корзина отчищена';
     case SUCCESS_EDIT = 'Данные отредактированы';
     case USER_ALREADY = 'Пользователь уже авторизован';
 }

@@ -59,21 +59,6 @@
                             font-style: italic;
                         }
                     }
-                    &__title {
-                        margin: 10px 0px;
-                        font-weight: 400;
-                        font-size: 16px;
-                        &__type {
-                            font-size: 14px;
-                            font-weight: 400;
-                            color: rgba(75,75,75,.8);
-                        }
-                    }
-                    &__subtitle {
-                        font-size: 15px;
-                        margin: 10px 0px;
-                        color: $light-black;
-                    }
                 }
                 &__options {
                     display: grid;

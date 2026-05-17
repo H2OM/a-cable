@@ -21,9 +21,13 @@ class CatalogController {
     public function getAction(): Response {
         $filters = $this->request->get();
 
+        if(empty($filters['category'])) {
+            return Response::jsonError(message: ResponseMessage::ERROR_DATA);
+        }
+
         try {
             $catalog = $this->productsService->getCatalogByFilters($filters);
-            $filters = $this->productsService->getFiltersGroupByCode($filters);
+            $filters = $this->productsService->getFiltersGroupByCode($filters['category']);
 
             return Response::jsonSuccess(data: [
                 'catalog' => $catalog,

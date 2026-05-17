@@ -5,4 +5,10 @@
     height:100vh;
     top: 0;
     z-index: 51;
+    transition: visibility .1s, opacity .1s;
+    &._hidden {
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+    }
 }
