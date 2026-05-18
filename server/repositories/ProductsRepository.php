@@ -7,20 +7,65 @@ use app\core\Hydrator;
 
 /** Репозиторий для управления товарами */
 class ProductsRepository {
-    private const PRODUCTS_WITH_VARIATIONS_SQL = "SELECT products.*, categories_types.name AS category, categories_types.code as category_code,
-                                            brands.name as brand, products_stocks.count as stock,
-                                            IF(COUNT(var_p.id) > 0,
-                                               JSON_ARRAYAGG(JSON_OBJECT('id', var_p.id, 'image', var_p.image)),
-                                               JSON_ARRAY()
-                                            ) AS variations
-                                        FROM products 
-                                        JOIN categories_types ON products.category_type_id = categories_types.id
-                                        LEFT JOIN products_stocks ON products_stocks.product_id = products.id
-                                        LEFT JOIN brands ON products.brand_id = brands.id
-                                        LEFT JOIN products_variations ON (products.id = products_variations.product_id OR products.id = products_variations.variation_id)
-                                        LEFT JOIN products AS var_p ON (products_variations.variation_id = var_p.id OR products_variations.product_id = var_p.id) AND var_p.id != products.id
-                                        WHERE (%s)
-                                        GROUP BY products.id;";
+    private const PRODUCTS_WITH_VARIATIONS_SQL = "
+        SELECT 
+            products.*, 
+            categories_types.name AS category, 
+            categories_types.code as category_code,
+            brands.name as brand, 
+            products_stocks.count as stock,
+            IF(COUNT(var_p.id) > 0,
+               JSON_ARRAYAGG(JSON_OBJECT('id', var_p.id, 'image', var_p.image)),
+               JSON_ARRAY()
+            ) AS variations
+        FROM products 
+        JOIN categories_types ON products.category_type_id = categories_types.id
+        LEFT JOIN products_stocks ON products_stocks.product_id = products.id
+        LEFT JOIN brands ON products.brand_id = brands.id
+        LEFT JOIN products_variations ON products.id = products_variations.product_id
+        LEFT JOIN products AS var_p ON products_variations.variation_id = var_p.id
+        %s
+        WHERE (%s)
+        GROUP BY products.id";
+
+    private const PRODUCT_WITH_DETAILS = "
+        SELECT 
+            products.*, 
+            categories_types.name AS category, 
+            categories_types.code AS category_code,
+            brands.name AS brand, 
+            products_stocks.count AS stock,
+            (
+                SELECT COALESCE(JSON_ARRAYAGG(JSON_OBJECT('id', vp.id, 'image', vp.image)), JSON_ARRAY())
+                FROM products_variations p_v
+                JOIN products vp ON p_v.variation_id = vp.id
+                WHERE p_v.product_id = products.id
+            ) AS variations,
+            (
+                SELECT COALESCE(
+                    JSON_ARRAYAGG(
+                        JSON_OBJECT(
+                            'filter_name', f.filter, 
+                            'filter_code', f.code, 
+                            'value_name', f_v.value, 
+                            'value_code', f_v.code, 
+                            'product_id', f_v_p.product_id 
+                        )
+                    ), 
+                    JSON_ARRAY()
+                )
+                FROM filters_values_products f_v_p
+                JOIN filters_values f_v ON f_v_p.filter_value_id = f_v.id
+                JOIN filters f ON f_v.filter_id = f.id
+                LEFT JOIN products_variations p_v ON f_v_p.product_id = p_v.variation_id AND p_v.product_id = products.id
+                WHERE f_v_p.product_id = products.id OR p_v.variation_id IS NOT NULL
+            ) AS local_filters
+        FROM products 
+        JOIN categories_types ON products.category_type_id = categories_types.id
+        LEFT JOIN products_stocks ON products_stocks.product_id = products.id
+        LEFT JOIN brands ON products.brand_id = brands.id
+        WHERE (%s);
+    ";
 
     public function __construct(private readonly Db $db, private readonly Hydrator $hydrator) {}
 
@@ -33,6 +78,7 @@ class ProductsRepository {
         return $this->hydrator->decodeJson(
             $this->db->fetchAll(sprintf(
                 self::PRODUCTS_WITH_VARIATIONS_SQL,
+                '',
                 "products.hit = '1' OR products.price_old > 0"
             )),
             ['variations']
@@ -141,8 +187,8 @@ class ProductsRepository {
                 (
                     SELECT COALESCE(JSON_ARRAYAGG(JSON_OBJECT('id', vp.id, 'image', vp.image)), JSON_ARRAY())
                     FROM products_variations p_v
-                    JOIN products vp ON (p_v.variation_id = vp.id OR p_v.product_id = vp.id) AND vp.id != products.id
-                    WHERE p_v.product_id = products.id OR p_v.variation_id = products.id
+                    JOIN products vp ON p_v.variation_id = vp.id AND vp.id != products.id
+                    WHERE p_v.product_id = products.id
                 ) AS variations
             FROM products
             JOIN filters_values_products ON products.id = filters_values_products.product_id
@@ -164,20 +210,14 @@ class ProductsRepository {
      * @return array|null
      */
     public function getProductDetailsById(int $id): array|null {
-       return $this->db->fetchOne("SELECT goods.*, base.value AS color, categories.code AS category, 
-                                        GROUP_CONCAT(filters_values.value SEPARATOR '.') AS size, mods.colors 
-                                        FROM (SELECT GROUP_CONCAT(CONCAT(goods.id, ';', goods.article, ';', categories.code, ';', goods.image) SEPARATOR ',') AS colors 
-                                        FROM goods_variations JOIN goods ON (goods_variations.base_id = goods.id OR goods_variations.variation_id = goods.id) 
-                                        JOIN categories ON goods.category_id = categories.id 
-                                        WHERE (goods_variations.base_id = ? OR goods_variations.variation_id = ?) ORDER BY goods_variations.base_article DESC) AS mods, 
-                                        (SELECT filters_values.value FROM goods JOIN filters_goods ON filters_goods.goods_id = goods.id 
-                                        JOIN filters_values ON filters_goods.filter_value_id = filters_values.id JOIN filters ON filters_values.filter_id = filters.id 
-                                        AND filters.code = 'color' WHERE goods.id = ?) AS base, 
-                                        goods JOIN categories ON goods.category_id = categories.id JOIN filters_goods ON filters_goods.goods_id = goods.id 
-                                        JOIN filters_values ON filters_goods.filter_value_id = filters_values.id 
-                                        JOIN filters ON filters_values.filter_id = filters.id AND filters.code = 'size' 
-                                        WHERE goods.id = ?",
-            array_fill(0, 4, $id));
+        $response = $this->db->fetchOne(sprintf(
+            self::PRODUCT_WITH_DETAILS,
+            "products.id = ?"
+        ), [$id]);
+
+        if(!is_array($response)) return null;
+
+        return $this->hydrator->decodeJson($response, ['variations', 'local_filters']);
     }
 
     /**
@@ -187,15 +227,14 @@ class ProductsRepository {
      * @return array
      */
     public function getRelatedById(int $id): array {
-        return $this->db->fetchAll("SELECT goods.*, categories.code AS category, 
-                                        GROUP_CONCAT(filters_values.value SEPARATOR '.') AS size FROM goods_related 
-                                        JOIN goods ON goods_related.goods_id = goods.id OR goods_related.related_id = goods.id 
-                                        JOIN filters_goods JOIN filters_values JOIN filters ON filters_values.filter_id = filters.id 
-                                        AND filters.code = 'size' AND filters_goods.goods_id = goods.id AND filters_goods.filter_value_id = filters_values.id 
-                                        JOIN categories ON goods.category_id = categories.id 
-                                        WHERE (goods_related.goods_id = ? OR goods_related.related_id = ?) 
-                                        AND goods.id != ? GROUP BY goods.id",
-            array_fill(0, 3, $id));
+        return $this->hydrator->decodeJson(
+            $this->db->fetchAll(sprintf(
+                self::PRODUCTS_WITH_VARIATIONS_SQL,
+                'JOIN products_related ON products.id = products_related.related_id',
+                "products_related.product_id = ?"
+            ), [$id]),
+            ['variations']
+        );
     }
 
     /**
@@ -243,8 +282,26 @@ class ProductsRepository {
         return $this->hydrator->decodeJson(
             $this->db->fetchAll(sprintf(
                 self::PRODUCTS_WITH_VARIATIONS_SQL,
+                '',
                 "products.id IN ($placeholders)"
             ), $ids),
+            ['variations']
+        );
+    }
+
+    /**
+     * Получение товаров по id с вариациями
+     *
+     * @param int $userId
+     * @return array
+     */
+    public function getProductsWithVariationsByUserId(int $userId): array {
+        return $this->hydrator->decodeJson(
+            $this->db->fetchAll(sprintf(
+                self::PRODUCTS_WITH_VARIATIONS_SQL,
+                'LEFT JOIN favorites ON products.id = favorites.product_id',
+                "favorites.user_id = ?"
+            ), [$userId]),
             ['variations']
         );
     }
@@ -258,6 +315,7 @@ class ProductsRepository {
     public function getProductWithVariationsById(int $id): array|null {
         $response = $this->db->fetchOne(sprintf(
             self::PRODUCTS_WITH_VARIATIONS_SQL,
+            '',
             "products.id = ?"
         ), [$id]);
 
@@ -275,13 +333,18 @@ class ProductsRepository {
     private function prepareProductsById(array $ids): string {
         $placeholders = implode(',', array_fill(0, count($ids), '?'));
 
-        return "SELECT products.*, categories_types.name AS category, categories_types.code as category_code, 
-                    brands.name as brand, products_stocks.count as stock
-                FROM products 
-                JOIN categories_types ON products.category_type_id = categories_types.id
-                LEFT JOIN products_stocks ON products_stocks.product_id = products.id
-                LEFT JOIN brands ON products.brand_id = brands.id
-                WHERE products.id IN ($placeholders)
-                GROUP BY products.id;";
+        return "
+            SELECT 
+                products.*, 
+                categories_types.name AS category, 
+                categories_types.code as category_code, 
+                brands.name as brand, 
+                products_stocks.count as stock
+            FROM products 
+            JOIN categories_types ON products.category_type_id = categories_types.id
+            LEFT JOIN products_stocks ON products_stocks.product_id = products.id
+            LEFT JOIN brands ON products.brand_id = brands.id
+            WHERE products.id IN ($placeholders)
+            GROUP BY products.id";
     }
 }

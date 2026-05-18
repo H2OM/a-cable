@@ -43,6 +43,9 @@
                 &:first-child {
                     padding-top: 0;
                 }
+                .describe__subtitle .clipboard-copy {
+                    justify-content: flex-end;
+                }
                 &__desc {
                     &__price {
                         font-size: 18px;

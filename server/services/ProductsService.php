@@ -190,26 +190,25 @@ class ProductsService {
             throw new ResponseException(ResponseMessage::ERROR_PRODUCT_NOT_FOUND, 404);
         }
 
-        if(!empty($product['colors'])) {
-            $colors = array_unique(explode(',', $product['colors']));
+        $localFilters = [];
 
-            sort($colors);
-
-            foreach ($colors as &$color) {
-                $params = explode(';', $color);
-
-                $color = [
-                    'id' => (int)$params[0],
-                    'article' => $params[1],
-                    'category' => $params[2],
-                    'image' => $params[3],
+        foreach ($product['local_filters'] as $filter) {
+            if(!isset($localFilters[$filter['filter_code']]['values'])) {
+                $localFilters[$filter['filter_code']] = [
+                    'name' => $filter['filter_name'],
+                    'code' => $filter['filter_code'],
+                    'values' => []
                 ];
             }
 
-            $product['colors'] = $colors;
-        } else {
-            $product['colors'] = [];
+            $localFilters[$filter['filter_code']]['values'][] = [
+                'name' => $filter['value_name'],
+                'code' => $filter['value_code'],
+                'product_id' => $filter['product_id'],
+            ];
         }
+
+        $product['local_filters'] = array_values($localFilters);
 
         return $product;
     }

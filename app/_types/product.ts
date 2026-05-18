@@ -23,10 +23,18 @@ export interface ProductBasket extends Omit<Product, 'variations'>  {
 }
 
 export interface ProductDetails extends Product {
-    local_filters: ProductLocalFilters[]; // TODO
+    local_filters: ProductLocalFilters[];
 }
 
 export interface ProductLocalFilters {
-    // TODO
+    name: string;
+    code: string;
+    values: LocalFilter[];
+}
+
+export interface LocalFilter {
+    name: string;
+    code: string;
+    product_id: number;
 }
 

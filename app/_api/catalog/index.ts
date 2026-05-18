@@ -10,5 +10,5 @@ export const get = async (filters: Record<string, string>) => {
 }
 
 export const getProductById = async (id: number|string) => {
-    return await _FETCH.request({url: `${API_URL}/getProduct?id=${id}`});
+    return await _FETCH.request({url: `${API_URL}/get-product?id=${id}`});
 }

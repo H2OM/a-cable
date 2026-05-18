@@ -37,7 +37,7 @@ class FavoritesService {
     public function get(): array {
         if(!$this->authService->id()) return $this->favorites;
 
-        $this->favorites = $this->favoritesRepository->get($this->authService->id());
+        $this->favorites = $this->productsRepository->getProductsWithVariationsByUserId($this->authService->id());
 
         return $this->save();
     }

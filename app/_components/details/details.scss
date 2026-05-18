@@ -3,17 +3,68 @@
 .Details {
     padding-top: 45px;
     padding-bottom: 80px;
+    &__filters {
+        font-weight: 400;
+        color: $light-black;
+        &__grid {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            gap: 5px;
+            font-weight: inherit;
+        }
+        &__filter {
+            border: 1px solid $grape_purple_5;
+            color: $grape_purple_4;
+            border-radius: 5px;
+            margin-top: 5px;
+            padding: 5px 10px;
+            font-weight: inherit;
+            &:not(._active):hover {
+                border: 1px solid $dark-purple;
+                color: $dark-purple;
+            }
+            &._active {
+                background-color: $dark-purple;
+                border: 1px solid $dark-purple;
+                color: white;
+            }
+        }
+    }
     &__split {
         display: flex;
         padding-bottom: 15px;
         border-bottom: 1px solid $gray;
+        gap: 50px;
         &__content {
             width: 36%;
+            > div:nth-child(2) {
+                display: flex;
+                flex-direction: column;
+                gap: 15px;
+            }
+            .describe__title {
+                display: flex;
+                justify-content: space-between;
+                white-space: nowrap;
+                .clipboard-copy {
+                    justify-content: flex-end;
+                }
+                * {
+                    font-weight: inherit;
+                    font-size: inherit;
+                }
+            }
             &__title {
                 transition: 0.2s all;
                 font-size: 18px;
                 font-weight: 300;
                 border-left: 0 solid $dark-purple;
+                -webkit-line-clamp: 2;
+                word-break: break-all;
+                -webkit-box-orient: vertical;
+                display: -webkit-box;
+                overflow: hidden;
             }
             &__subtitle {
                 font-size: 14px;
@@ -36,8 +87,7 @@
                 }
             }   
             &__price {
-                margin-top: 20px;
-
+                margin: 20px 0;
                 font-size: 22px;
                 font-weight: 600;
                 &_new {
@@ -165,7 +215,6 @@
             }
         }
         &__slider {
-            padding-left: 50px;
             display: flex;
             width: 70%;
             &:hover {
