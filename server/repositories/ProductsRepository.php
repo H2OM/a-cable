@@ -46,41 +46,44 @@ class ProductsRepository {
      * @return array
      */
     public function getByFilters(array $filters): array {
-        $sqlPartSelect = "";
-        $whereCondition = "";
-        $prepareSelectedValue = [];
-        $prepareConditionedValue = [];
-
-        $index = 1;
+        $whereCondition = [];
+        $filtersCondition = [];
+        $endCondition = 'GROUP BY products.id';
+        $wherePrepareValues = [];
+        $filtersPrepareValues = [];
 
         foreach ($filters as $key => $value) {
-            if($key === 'sort') continue;
-
             switch($key) {
-                case "category":
-                    $whereCondition .= "categories.code = ? AND ";
+                case "sort":
+                    $endCondition .= match ($value) {
+                        'low-to-high' => ' ORDER BY products.price ASC',
+                        'high-to-low' => ' ORDER BY products.price DESC',
+                        default => ''
+                    };
 
-                    $prepareConditionedValue[] = $value;
+                    break;
+                case "category":
+                    $whereCondition[] = "categories.code = ?";
+                    $wherePrepareValues[] = $value;
 
                     break;
                 case "price":
                     $price = explode(",", $value);
 
                     if(count($price) === 2 && is_numeric($price[0]) && is_numeric($price[1])) {
-                        $whereCondition .= "products.price <= ? AND products.price >= ? AND ";
-
-                        array_push($prepareConditionedValue, $price[1], $price[0]);
+                        array_push($whereCondition, "products.price <= ?", "products.price >= ?");
+                        array_push($wherePrepareValues, $price[1], $price[0]);
                     }
 
                     break;
                 case "sale":
                     switch($value) {
                         case "yes":
-                            $whereCondition .= "products.price <= (products.price_old * 1) AND ";
+                            $whereCondition[] = "products.price <= (products.price_old * 1)";
 
                             break;
                         case "no":
-                            $whereCondition .= "products.price_old  = 0 AND ";
+                            $whereCondition[] = "products.price_old  = 0";
 
                             break;
                         default:
@@ -88,52 +91,44 @@ class ProductsRepository {
                     }
 
                     break;
-//                    TODO Фильтрация по тип, бренду и всех фильтров
                 case "brand":
-                case "size":
-                case "color":
                 case "type":
-                    $filter = explode(",", $value);
+                    $filterCode = match ($key) {
+                        'brand' => "brands",
+                        'type' => "categories_types",
+                    };
 
-                    if(count($filter) >= 1) {
-                        $sqlPartSelect .= "(SELECT goods.id AS ID FROM goods JOIN filters_goods ON filters_goods.goods_id = goods.id 
-                                                    JOIN filters_values ON filters_values.id = filters_goods.filter_value_id JOIN filters 
-                                                    ON filters.id = filters_values.filter_id WHERE (";
+                    $filterValues = explode(",", $value);
+                    $wherePrepareValues = [...$wherePrepareValues, ...$filterValues];
+                    $wheres = implode(",", array_fill(0, count($filterValues), '?'));
 
-                        foreach($filter as $field) {
-                            $sqlPartSelect .= "COALESCE(filters_values.code, filters_values.id) = ? OR ";
-
-                            $prepareSelectedValue[] = $field;
-                        }
-
-                        $sqlPartSelect = substr_replace($sqlPartSelect, ")", -4);
-                        $sqlPartSelect .= " AND filters.code = ? GROUP BY goods.id) AS {$index}s, ";
-
-                        $prepareSelectedValue[] = $key;
-
-                        $whereCondition .= "goods.id = {$index}s.ID AND ";
-                    }
+                    $whereCondition[] = "$filterCode.code IN ($wheres)";
 
                     break;
                 default:
+                    $filterValues = explode(",", $value);
+                    $wheres = implode(",", array_fill(0, count($filterValues), '?'));
+
+                    $filtersCondition[] = "(filters.code = ? AND filters_values.code IN ($wheres))";
+
+                    array_push($filtersPrepareValues, $key, ...$filterValues);
+
                     break;
             }
-
-            $index++;
         }
 
-        if(strlen($whereCondition) > 0) {
-            $whereCondition = " WHERE ". substr_replace($whereCondition, "", -5);
+        if(count($filtersCondition) > 0) {
+            $whereCondition[] = "(" . implode(' OR ', $filtersCondition) . ")";
+            $wherePrepareValues = [...$wherePrepareValues, ...$filtersPrepareValues];
+
+            $endCondition .= " HAVING COUNT(DISTINCT filters.code) = " . count($filtersCondition);
         }
 
-        $whereCondition .= " GROUP BY products.id";
+        if(count($whereCondition) > 0) {
+            $whereCondition = " WHERE ". implode(' AND ', $whereCondition);
 
-        if(isset($filters['sort'])) {
-            $whereCondition .= match ($filters['sort']) {
-                'low-to-high' => ' ORDER BY products.price ASC',
-                'high-to-low' => ' ORDER BY products.price DESC',
-                default => ''
-            };
+        } else {
+            $whereCondition = "";
         }
 
         return $this->hydrator->decodeJson($this->db->fetchAll("
@@ -149,16 +144,17 @@ class ProductsRepository {
                     JOIN products vp ON (p_v.variation_id = vp.id OR p_v.product_id = vp.id) AND vp.id != products.id
                     WHERE p_v.product_id = products.id OR p_v.variation_id = products.id
                 ) AS variations
-            FROM ".$sqlPartSelect."filters_values_products 
-            JOIN products ON filters_values_products.product_id = products.id
+            FROM products
+            JOIN filters_values_products ON products.id = filters_values_products.product_id
             JOIN filters_values ON filters_values_products.filter_value_id = filters_values.id 
             JOIN filters ON filters_values.filter_id = filters.id
             JOIN categories_types ON products.category_type_id = categories_types.id
             JOIN categories ON categories_types.category_id = categories.id 
             LEFT JOIN products_stocks ON products_stocks.product_id = products.id
             LEFT JOIN brands ON products.brand_id = brands.id
-                $whereCondition
-        ", [...$prepareSelectedValue, ...$prepareConditionedValue]), ['variations']);
+            $whereCondition 
+            $endCondition
+        ", $wherePrepareValues), ['variations']);
     }
 
     /**

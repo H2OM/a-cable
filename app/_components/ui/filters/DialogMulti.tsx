@@ -11,10 +11,11 @@ export default function DialogMulti({modalOptions, closeAction}: {
     const {content, name, cords} = modalOptions;
     const {set, unset, confirm, get} = setQueryParams();
     const [selected, setSelected] = useState<string[]>([]);
+    const inQuery: boolean = Boolean(get(name));
 
     useEffect(() => {
         setSelected(get(name)?.split(",") || []);
-    }, []);
+    }, [content, name]);
 
     const triggerSelect = (value: string) => {
         setSelected(prev => prev.includes(value)
@@ -25,14 +26,22 @@ export default function DialogMulti({modalOptions, closeAction}: {
 
     const handleClear = () => {
         unset(name);
-        confirm();
         setSelected([]);
+        confirm();
     }
 
     const handleConfirm = () => {
-        if (selected.length === 0) return;
+        if (selected.length === 0 && !inQuery) return;
 
-        set(name, selected.join(','));
+        const value = selected.join(',');
+
+        if(value.length > 0) {
+            set(name, value);
+
+        } else {
+            unset(name);
+        }
+
         confirm();
         closeAction();
     }
@@ -64,7 +73,7 @@ export default function DialogMulti({modalOptions, closeAction}: {
                     <span className="filters__tab__dialog__footer__submenu__count">Выбрано: {selected.length}</span>
                 </div>
                 <button className="filters__tab__dialog__footer__submit btn_small btn"
-                        disabled={selected.length === 0}
+                        disabled={selected.length === 0 && !inQuery}
                         onClick={handleConfirm}>
                     Подтвердить
                 </button>
