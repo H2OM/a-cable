@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Хост: 127.0.0.1:3306
--- Время создания: Май 18 2026 г., 19:09
+-- Время создания: Май 20 2026 г., 01:25
 -- Версия сервера: 8.0.30
 -- Версия PHP: 8.1.9
 
@@ -20,6 +20,32 @@ SET time_zone = "+00:00";
 --
 -- База данных: `x_cable`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `admins`
+--
+
+CREATE TABLE `admins` (
+  `id` int UNSIGNED NOT NULL,
+  `name` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `email` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `login` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `password` varchar(256) COLLATE utf8mb4_general_ci NOT NULL,
+  `last_login` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `admins_permissions`
+--
+
+CREATE TABLE `admins_permissions` (
+  `admin_id` int UNSIGNED NOT NULL,
+  `permission_id` int UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -136,7 +162,6 @@ CREATE TABLE `favorites` (
 
 INSERT INTO `favorites` (`user_id`, `product_id`) VALUES
 (16, 20),
-(19, 20),
 (16, 21),
 (16, 23);
 
@@ -321,13 +346,6 @@ CREATE TABLE `orders` (
   `comment` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Дамп данных таблицы `orders`
---
-
-INSERT INTO `orders` (`id`, `number`, `status`, `user_id`, `date`, `change_date`, `delivery_date`, `comment`) VALUES
-(3, '7930FBR3406VL', '1', 19, '2026-05-17 09:09:02', '2026-05-17 09:09:02', '2026-05-21', '');
-
 -- --------------------------------------------------------
 
 --
@@ -339,13 +357,24 @@ CREATE TABLE `orders_products` (
   `product_id` int UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+-- --------------------------------------------------------
+
 --
--- Дамп данных таблицы `orders_products`
+-- Структура таблицы `permissions`
 --
 
-INSERT INTO `orders_products` (`order_id`, `product_id`) VALUES
-(3, 20),
-(3, 23);
+CREATE TABLE `permissions` (
+  `id` int UNSIGNED NOT NULL,
+  `name` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `code` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Дамп данных таблицы `permissions`
+--
+
+INSERT INTO `permissions` (`id`, `name`, `code`) VALUES
+(1, '*', 'god');
 
 -- --------------------------------------------------------
 
@@ -374,8 +403,8 @@ CREATE TABLE `products` (
 
 INSERT INTO `products` (`id`, `title`, `brand_id`, `category_type_id`, `article`, `price`, `price_old`, `unit`, `image`, `slider_images`, `description`, `hit`) VALUES
 (20, 'Кабель витая пара UTP (U/UTP), категория 5e, 4 пары (24 AWG), одножильный, серый, LSZH, нг(А)-HF, (305 м)', 1, 2, 'UTP-4P-Cat.5e-SOLID-LSZH-GY', 17123.2, 0, 'шт.', '9776c-other.1200x1000.jpg', '9776c-other.1200x1000.jpg,9776c.1200x1000.jpg,9776c.3.1200x1000.jpg', 'Четырехпарный кабель категории 5e на основе витой пары предназначен для использования в системах передачи данных со скоростью до 2.5 Гбит/c. Кабель выполнен в неэкранированном исполнении U/UTP и предназначен для прокладки внутри зданий. Диаметр проводников составляет 0,50 мм (24 AWG). Внешняя оболочка выполнена из не распространяющего горение LSZH-компаунда, малодымного и не выделяющего ядовитых соединений в процессе горения, исполнение нг(А)-HF. На внешней оболочке кабеля нанесены метровые метки длины кабеля.\r\nКабель обладает отличными характеристиками при разумной цене, что делает его оптимальным вариантом для построения сетей в проектах, в том числе где требуется гарантийная системная поддержка. Кабель поставляется в картонной коробке «easy-pull box».', '1'),
-(21, 'Кабель витая пара UTP (U/UTP), категория 5e, 4 пары (24 AWG), одножильный, оранжевый, LSZH, нг(А)-HF, (305 м)', 1, 2, 'UTP-4P-Cat.5e-SOLID-LSZH', 17123.2, 0, 'шт.', 'utp-4p-cat5e-solid-lszh_1.1200x1000.jpg', '9776c-other.1200x1000.jpg,7170c.1200x1000.jpg,7170c.3.1200x1000.jpg', 'Четырехпарный кабель категории 5e на основе витой пары предназначен для использования в системах передачи данных со скоростью до 2.5 Гбит/c. Кабель выполнен в неэкранированном исполнении U/UTP и предназначен для прокладки внутри зданий. Диаметр проводников составляет 0,50 мм (24 AWG). Внешняя оболочка выполнена из не распространяющего горение LSZH-компаунда, малодымного и не выделяющего ядовитых соединений в процессе горения, исполнение нг(А)-HF. На внешней оболочке кабеля нанесены метровые метки длины кабеля.\r\nКабель обладает отличными характеристиками при разумной цене, что делает его оптимальным вариантом для построения сетей в проектах, в том числе где требуется гарантийная системная поддержка. Кабель поставляется в картонной коробке «easy-pull box».', '1'),
-(22, 'Кабель витая пара UTP (U/UTP), категория 5e, 4 пары (24 AWG), одножильный, оранжевый, LSZH, нг(А)-HF, (305 м)', 1, 2, 'UTP-4P-Cat.5e-SOLID-LSZH_pink', 17123.2, 0, 'шт.', 'utp-4p-cat5e-solid-lszh_1.1200x1000.jpg', '9776c-other.1200x1000.jpg,7170c.1200x1000.jpg,7170c.3.1200x1000.jpg', 'Четырехпарный кабель категории 5e на основе витой пары предназначен для использования в системах передачи данных со скоростью до 2.5 Гбит/c. Кабель выполнен в неэкранированном исполнении U/UTP и предназначен для прокладки внутри зданий. Диаметр проводников составляет 0,50 мм (24 AWG). Внешняя оболочка выполнена из не распространяющего горение LSZH-компаунда, малодымного и не выделяющего ядовитых соединений в процессе горения, исполнение нг(А)-HF. На внешней оболочке кабеля нанесены метровые метки длины кабеля.\r\nКабель обладает отличными характеристиками при разумной цене, что делает его оптимальным вариантом для построения сетей в проектах, в том числе где требуется гарантийная системная поддержка. Кабель поставляется в картонной коробке «easy-pull box».', '1'),
+(21, 'Кабель витая пара UTP (U/UTP), категория 5e, 4 пары (24 AWG), одножильный, оранжевый, LSZH, нг(А)-HF, (305 м)', 1, 2, 'UTP-4P-Cat.5e-SOLID-LSZH', 17123.2, 0, 'шт.', 'utp-4p-cat5e-solid-lszh_1.1200x1000.jpg', 'utp-4p-cat5e-solid-lszh_1.1200x1000.jpg,7170c.1200x1000.jpg,7170c.3.1200x1000.jpg', 'Четырехпарный кабель категории 5e на основе витой пары предназначен для использования в системах передачи данных со скоростью до 2.5 Гбит/c. Кабель выполнен в неэкранированном исполнении U/UTP и предназначен для прокладки внутри зданий. Диаметр проводников составляет 0,50 мм (24 AWG). Внешняя оболочка выполнена из не распространяющего горение LSZH-компаунда, малодымного и не выделяющего ядовитых соединений в процессе горения, исполнение нг(А)-HF. На внешней оболочке кабеля нанесены метровые метки длины кабеля.\r\nКабель обладает отличными характеристиками при разумной цене, что делает его оптимальным вариантом для построения сетей в проектах, в том числе где требуется гарантийная системная поддержка. Кабель поставляется в картонной коробке «easy-pull box».', '1'),
+(22, 'Кабель витая пара UTP (U/UTP), категория 5e, 4 пары (24 AWG), одножильный, оранжевый, LSZH, нг(А)-HF, (305 м)', 1, 2, 'UTP-4P-Cat.5e-SOLID-LSZH_pink', 17123.2, 0, 'шт.', 'utp-4p-cat5e-solid-lszh_1.1200x1000.jpg', 'utp-4p-cat5e-solid-lszh_1.1200x1000.jpg,7170c.1200x1000.jpg,7170c.3.1200x1000.jpg', 'Четырехпарный кабель категории 5e на основе витой пары предназначен для использования в системах передачи данных со скоростью до 2.5 Гбит/c. Кабель выполнен в неэкранированном исполнении U/UTP и предназначен для прокладки внутри зданий. Диаметр проводников составляет 0,50 мм (24 AWG). Внешняя оболочка выполнена из не распространяющего горение LSZH-компаунда, малодымного и не выделяющего ядовитых соединений в процессе горения, исполнение нг(А)-HF. На внешней оболочке кабеля нанесены метровые метки длины кабеля.\r\nКабель обладает отличными характеристиками при разумной цене, что делает его оптимальным вариантом для построения сетей в проектах, в том числе где требуется гарантийная системная поддержка. Кабель поставляется в картонной коробке «easy-pull box».', '1'),
 (23, 'Кабель силовой медный ВВГ-Пнг(А)-LS 3x2,5 мм, длина 50 метров, ГОСТ 31996-2012, ТУ 16.К71-310-2001 REXANT 01-8272-50', 3, 1, '01-8272-50', 8871.82, 9458.34, 'шт.', 'sds-rexant-01-8272-50.1200x1000.jpg', 'sds-rexant-01-8272-50.1200x1000.jpg', 'Кабель ВВГ-Пнг(А)-LS силовой с пластмассовой изоляцией, в оболочке из поливинилхлоридного пластиката пониженной горючести. Кабели соответствуют требованиям ГОСТ 31996-2012.\r\n\r\nПрименение:\r\nПредназначен для передачи и распределения электрической энергии в стационарных установках на номинальное переменное напряжение в основном 0,66 и 1 кВ номинальной частотой 50 Гц. Кабель применяется для групповой прокладки в кабельных сооружениях наружных (открытых) электроустановок (кабельных эстакадах, галереях). Кабели изготавливаются для эксплуатации в кабельных сооружениях и помещениях, в том числе для использования в системе атомных станций классов 3 и 4 по классификации ОПБ-88 (ПНАЭ Г-01-011-97). Кабель не распространяет горение как при одиночной, так и при групповой прокладке.', '1');
 
 -- --------------------------------------------------------
@@ -436,8 +465,11 @@ CREATE TABLE `products_variations` (
 
 INSERT INTO `products_variations` (`product_id`, `variation_id`) VALUES
 (21, 20),
+(22, 20),
 (20, 21),
-(20, 22);
+(22, 21),
+(20, 22),
+(21, 22);
 
 -- --------------------------------------------------------
 
@@ -461,19 +493,26 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `first_name`, `second_name`, `age`, `gender`, `email`, `phone`, `password`) VALUES
-(5, 'Дмитрий', 'Заболотнов', 19, 'male', 'dima.zabolotnov.02@mail.ru', '+7 (918) 219-55-84', '$2y$10$j3VsuFxHcIeTuCy/9yPfS.2BVzi/4AXy1KB4/nr14q/JUt6NlWiti'),
-(11, 'Дмитрий', 'Заболотнов', 12, 'male', 'dima.za2232@mail.ru', '+7 (918) 294-25-22', '$2y$10$t56uGoskE/jLBmrpzMlm3.ZkZ1yukDyHwk8Rar3YaTT7jrMx6GmS2'),
-(12, 'Дмитрий', 'Заболотнов', 43, 'male', 'dima.za423@mail.ru', '+7 (918) 111-11-12', '$2y$10$TwK3UYpWGj2UvUwjS0OMMuWchiJIFh.AOH.Zxr52S9deifhtbTj16'),
-(13, 'Дмитрий', 'Заболотнов', 43, 'male', 'dima.za425@mail.ru', '+7 (918) 222-22-22', '$2y$10$4xPK6YnY.oRFQZU6Kbe/6.ljQXGH17unMsp1vjACibDCwhRsoTQwK'),
-(14, 'Дмитрий', 'Коваленко', 22, 'female', 'danvbcsf@mail.ru', '+7 (124) 151-51-54', '$2y$10$czay3zomMM5UuR2aNjcQye2Uol3ai3IzPv6k4bMxbazPIbm5b9jtm'),
-(15, 'Дмитрий', 'Коваленко', 22, 'male', 'dima.za2512@mail.ru', '+7 (151) 515-15-11', '$2y$10$zx/B7DdeJlYiRLl4JNRUNuNggsYtInO0y91qSnt3d3Jky6QGjrlw6'),
-(16, 'Тест', 'Тест', 44, 'male', 'jopaj@mail.su', '79999999999', '$2y$10$9uQhtPQG.1TcN8CGeDn1/ez3603bAEqtLX4mj58zEhSvgiHtgD2VW'),
-(17, 'Тест', 'Тест', 99, 'male', 'test@mail.su', '73323321312', '$2y$10$ZwO9y.CHqjD0c1HVdr2Wv.gBMzs/1Wh6empYeXOwC0rwKFP0qCSvq'),
-(19, 'Тест', 'Тест', 23, 'male', 'joptsewaj@mail.su', '71111111111', '$2y$10$9mulR27hE7.JBWGe51vch.Een4n.FZO02.2MxJSY2JjCy3Rz8yCY.');
+(16, 'Тест', 'Тест', 44, 'male', 'jopaj@mail.su', '79999999999', '$2y$10$9uQhtPQG.1TcN8CGeDn1/ez3603bAEqtLX4mj58zEhSvgiHtgD2VW');
 
 --
 -- Индексы сохранённых таблиц
 --
+
+--
+-- Индексы таблицы `admins`
+--
+ALTER TABLE `admins`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `login` (`login`),
+  ADD UNIQUE KEY `email` (`email`);
+
+--
+-- Индексы таблицы `admins_permissions`
+--
+ALTER TABLE `admins_permissions`
+  ADD KEY `admin_id` (`admin_id`),
+  ADD KEY `permission_id` (`permission_id`);
 
 --
 -- Индексы таблицы `brands`
@@ -565,6 +604,14 @@ ALTER TABLE `orders_products`
   ADD KEY `OrderGToOrders` (`order_id`);
 
 --
+-- Индексы таблицы `permissions`
+--
+ALTER TABLE `permissions`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `name` (`name`),
+  ADD KEY `code` (`code`);
+
+--
 -- Индексы таблицы `products`
 --
 ALTER TABLE `products`
@@ -611,6 +658,12 @@ ALTER TABLE `users`
 --
 
 --
+-- AUTO_INCREMENT для таблицы `admins`
+--
+ALTER TABLE `admins`
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT для таблицы `brands`
 --
 ALTER TABLE `brands`
@@ -638,13 +691,13 @@ ALTER TABLE `feedbacks`
 -- AUTO_INCREMENT для таблицы `filters`
 --
 ALTER TABLE `filters`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT для таблицы `filters_values`
 --
 ALTER TABLE `filters_values`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=91;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=93;
 
 --
 -- AUTO_INCREMENT для таблицы `news`
@@ -659,6 +712,12 @@ ALTER TABLE `orders`
   MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
+-- AUTO_INCREMENT для таблицы `permissions`
+--
+ALTER TABLE `permissions`
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
 -- AUTO_INCREMENT для таблицы `products`
 --
 ALTER TABLE `products`
@@ -668,11 +727,18 @@ ALTER TABLE `products`
 -- AUTO_INCREMENT для таблицы `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- Ограничения внешнего ключа сохраненных таблиц
 --
+
+--
+-- Ограничения внешнего ключа таблицы `admins_permissions`
+--
+ALTER TABLE `admins_permissions`
+  ADD CONSTRAINT `to_admin_id` FOREIGN KEY (`admin_id`) REFERENCES `admins` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  ADD CONSTRAINT `to_permission_id` FOREIGN KEY (`permission_id`) REFERENCES `permissions` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
 --
 -- Ограничения внешнего ключа таблицы `categories_filters`

@@ -1,7 +1,6 @@
 import toast from 'react-hot-toast';
 
 const isClient = typeof window !== 'undefined';
-const DEBUG = process.env.NEXT_PUBLIC_DEBUG === '1';
 
 const cleanRequest = async ({url, options = {method: "GET"}}: {
     url: string,
@@ -68,10 +67,8 @@ const request = async ({
     }
 
     return await fetch(url, options)
-        .then(response => DEBUG ? response.text() : response.json())
+        .then(response => response.json())
         .then(data => {
-            DEBUG && console.log(data);
-
             if (!data || !data.success) {
                 throw new Error(data.message ?? `Ошибка в получении данных с сервера.`);
             }
