@@ -3,7 +3,11 @@
 .Details {
     padding-top: 45px;
     padding-bottom: 80px;
-    &__filters {
+    .describe__title {
+        display: flex;
+        white-space: nowrap;
+    }
+    &__block {
         font-weight: 400;
         color: $light-black;
         &__grid {
@@ -12,12 +16,12 @@
             flex-wrap: wrap;
             gap: 5px;
             font-weight: inherit;
+            margin-top: 5px;
         }
         &__filter {
             border: 1px solid $grape_purple_5;
             color: $grape_purple_4;
             border-radius: 5px;
-            margin-top: 5px;
             padding: 5px 10px;
             font-weight: inherit;
             &:not(._active):hover {
@@ -38,6 +42,10 @@
         gap: 50px;
         &__content {
             width: 36%;
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+            justify-content: flex-start;
             > div:nth-child(2) {
                 display: flex;
                 flex-direction: column;
@@ -183,7 +191,6 @@
                 }
             }
             &__container {
-                margin-top: 50px;
                 display: flex;
                 flex-direction: row;
                 justify-content: space-between;

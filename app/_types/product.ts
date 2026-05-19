@@ -15,7 +15,7 @@ export interface Product {
     price_old: number;
     unit: string;
     stock: number;
-    variations: {id: number; image: string}[];
+    variations: ProductVariation[];
 }
 
 export interface ProductBasket extends Omit<Product, 'variations'>  {
@@ -29,12 +29,16 @@ export interface ProductDetails extends Product {
 export interface ProductLocalFilters {
     name: string;
     code: string;
-    values: LocalFilter[];
+    values: ProductLocalFilter[];
 }
 
-export interface LocalFilter {
+export interface ProductLocalFilter {
     name: string;
     code: string;
     product_id: number;
 }
 
+export interface ProductVariation {
+    id: number;
+    image: string;
+}

@@ -75,7 +75,7 @@ export default function Cart({product, isSlider = false}: { product: Product; is
                         <ClipboardCopy content={product.article}/>
                     </h3>
                     {/*TODO слайдер вариаций*/}
-                    <div className={"cart__variations"}>
+                    <div className="variations">
                         {product.variations.map(variation => (
                             <Link href={`/variation/${variation.id}`} key={variation.id}>
                                 <Image
@@ -90,19 +90,21 @@ export default function Cart({product, isSlider = false}: { product: Product; is
                             </Link>
                         ))}
                     </div>
-                    <div className={"cart__stock" + (product.stock > 0 ? ' _in-stock' : '_out-stock')}>
+                    <div className={"stock" + (product.stock > 0 ? ' _in-stock' : ' _out-stock')}>
                         {product.stock > 0 ?
                             `В наличии: ${product.stock} ${product.unit}`
                             : 'Нет в наличии'
                         }
                     </div>
-                    {/*TODO в наличии stock unit*/}
                 </div>
                 {product.stock > 0 ?
                     <button className="btn" onClick={() => add(product.id)}>
                         В корзину
                     </button>
-                    : <div>Товар закончился</div>
+                    :
+                    <button className="btn _transparent" disabled={true}>
+                        Товар закончился
+                    </button>
                 }
             </div>
         </div>

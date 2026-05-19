@@ -42,7 +42,7 @@
     }
     &__img {
         justify-self: center;
-        object-fit: cover;
+        object-fit: contain;
         width: 100%;
         height: 244px;
         padding: 0 10px;
@@ -103,105 +103,6 @@
         &__size {
             font-size: 15px;
             color: $light-black;
-        }
-    }
-    &__sizes {
-        height: 36px;
-        width: 190px;
-        overflow: hidden;
-        margin-top: 15px;
-        justify-self: center;
-        opacity: 1;
-        border: 1px solid $dark-purple;
-        border-radius: 4px;
-        transition: .2s all;
-        &__wrapper {
-            margin-top: 4px;
-            display: flex;
-            justify-content: flex-start;
-            width: 190px;
-            position: relative;
-            transition: 0.2s;
-            &__btn {
-                min-width: calc(190px / 5);
-                cursor: pointer;
-                background-color: unset;
-                border: none;
-                min-width: 38px;
-                font-weight: 500;
-                transition: 0.2s all;
-                &:hover {
-                    background-color: $light-purple;
-                }
-            }
-        }    
-        &__nav {
-            margin-top: 8px;
-            display: flex;
-            justify-content: center;
-            &__tab {
-                cursor: pointer;
-                margin-right: 8px;
-                width: 15px;
-                height: 10px;
-                background-color: unset;
-                border-top: 2px solid $dark-purple;
-                transition: 0.02s all;
-                &._active {
-                    border-top: 4px solid $dark-purple;
-                }
-                &:hover {
-                    border-top: 4px solid $dark-purple;
-                }
-            }
-        }   
-    }
-    &__variations {
-        display: flex;
-        justify-content: flex-start;
-        align-items: center;
-        gap: 10px;
-        height: 50px;
-        a {
-            height: 50px;
-            width: 50px;
-            transition: 0.2s all;
-            img {
-                height: 100%;
-                width: 100%;
-                object-fit: contain;
-            }
-            &:hover {
-                opacity: 0.8;
-            }
-        }
-    }
-    &__stock {
-        font-size: 12px;
-        font-weight: 500;
-        display: flex;
-        justify-content: flex-start;
-        align-items: center;
-        gap: 5px;
-        margin: 7px 0;
-        &:before {
-            content: "";
-            display: block;
-            width: 6px;
-            height: 6px;
-            border-radius: 100%;
-        }
-        &._in-stock {
-            color: $green;
-            &:before {
-                background-color: $green;
-            }
-        }
-        &._out-stock {
-            color: $red;
-            &:before {
-                background-color: $red;
-            }
         }
     }
     .btn {

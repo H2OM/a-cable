@@ -5,7 +5,7 @@ import Image from "next/image";
 export default function ClientImage({
     src,
     alt,
-    className,
+    className = '',
     width,
     height,
     quality,
@@ -14,7 +14,7 @@ export default function ClientImage({
 }: {
     src: string;
     alt: string;
-    className: string;
+    className?: string;
     width: number;
     height: number;
     quality: number;
