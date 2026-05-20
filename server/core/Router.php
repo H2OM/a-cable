@@ -15,22 +15,29 @@
          *                          'имя-контроллера' => [
          *                              'класс' => 'middleware-обработчик',
          *                              'базовое право доступа' => 'Если не нашлось прав для запрашиваемого экшена',
-         *                              'экшен' => 'Права доступа'
+         *                              'экшен' => 'Право доступа | '' | false (без авторизации по JWT)'
          *                      ]
+         * @var false[][]|string[][] $PROTECTED_ROUTES
          */
         private const PROTECTED_ROUTES = [
-            'admin-user' => [
+            'admin-auth' => [
                 'class' => AdminMiddleware::class,
                 'base_permission' => '',
-                'create' => 'user.create',
-                'create-order' => 'user.create-order',
+                'check' => '',
+                'login' => false
+            ],
+            'admin-user' => [
+                'class' => AdminMiddleware::class,
+                'base_permission' => 'user',
+                'delete' => 'user.delete',
             ],
             'admin-products' => [
                 'class' => AdminMiddleware::class,
                 'base_permission' => 'products',
                 'create' => 'product.create',
                 'edit' => 'product.edit',
-            ],
+                'delete' => 'product.delete',
+            ]
         ];
 
         /**
@@ -80,7 +87,7 @@
                     $middleware = App::container()->get($config['class']);
                     $requiredPermission = $config[strtolower($action)] ?? $config['base_permission'];
 
-                    if($middleware->handle($requiredPermission)) {
+                    if($requiredPermission === false || $middleware->handle($requiredPermission)) {
                         $namespace .= $middleware->getNamespace() . '\\';
                         break;
                     }

@@ -19,16 +19,20 @@ class UserRepository {
         $response = $this->db->fetchOne("
             SELECT 
 	            admins.*,
+                admins_roles.name AS role,
+                admins_roles.code AS role_code,
                 IF(COUNT(p.id) > 0,
                     JSON_ARRAYAGG(JSON_OBJECT(
                         'id', p.id, 
-                        'name', p.name
+                        'name', p.name,
+                        'code', p.code
                     )),
                     JSON_ARRAY()
                 ) AS permissions  
               FROM admins
-              LEFT JOIN admins_permissions ON admins.id = admins_permissions.admin_id
-              LEFT JOIN permissions AS p ON admins_permissions.permission_id = p.id
+			  LEFT JOIN admins_roles ON admins.role_id = admins_roles.id
+              LEFT JOIN admins_roles_permissions on admins_roles.id = admins_roles_permissions.role_id
+              LEFT JOIN permissions AS p ON admins_roles_permissions.permission_id = p.id
               WHERE admins.login = ?;
         ", [$login]);
 

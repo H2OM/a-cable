@@ -35,7 +35,7 @@ class UserController {
      */
     public function signInAction(): Response {
         if($this->authService->check()) {
-            return Response::jsonSuccess(data: $this->authService->user(), message: ResponseMessage::USER_ALREADY);
+            return Response::jsonSuccess(data: $this->authService->user(), message: ResponseMessage::USER_ALREADY_AUTH);
         }
 
         $phone = $this->request->input('phone');
@@ -65,7 +65,7 @@ class UserController {
      */
     public function signUpAction(): Response {
         if($this->authService->check()) {
-            return Response::jsonSuccess(data: $this->authService->user(), message: ResponseMessage::USER_ALREADY);
+            return Response::jsonSuccess(data: $this->authService->user(), message: ResponseMessage::USER_ALREADY_AUTH);
         }
 
         $user = $this->userService->signUp($this->request->input());

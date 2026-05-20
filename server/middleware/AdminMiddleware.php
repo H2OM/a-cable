@@ -3,12 +3,21 @@
 namespace app\middleware;
 
 use app\core\enums\ResponseMessage;
+use app\core\Env;
 use app\core\exceptions\ResponseException;
+use app\services\admin\UserService;
 use Exception;
+use Firebase\JWT\JWT;
+use Firebase\JWT\Key;
 
 class AdminMiddleware implements MiddlewareInterface {
     /** Имя пространства защищенных классов */
     private const NAMESPACE = "admin";
+
+    public function __construct(
+        private readonly UserService $userService,
+        private readonly Env         $env
+    ) {}
 
     /**
      * Получение имени пространства защищенных классов
@@ -37,18 +46,16 @@ class AdminMiddleware implements MiddlewareInterface {
         $token = str_replace('Bearer ', '', $authHeader);
 
         try {
-            $secretKey = $_ENV['JWT_SECRET_KEY'] ?? 'your-very-secret-key';
+            $secretKey = $this->env->get('JWT_SECRET_KEY');
             $decoded = JWT::decode($token, new Key($secretKey, 'HS256'));
-            $adminData = (array) $decoded->data;
-            $adminPermissions = $adminData['permissions'] ?? [];
+            $adminData = (array)$decoded->data;
+            $adminPermissions = array_column($adminData['permissions'] ?? [], 'code');
 
-            if($requiredPermission && !in_array($requiredPermission, $adminPermissions)) {
+            if($requiredPermission && !in_array($requiredPermission, $adminPermissions) && !in_array('*', $adminPermissions)) {
                 throw new ResponseException(ResponseMessage::ERROR_PERMISSIONS, 403);
             }
 
-            // Сохраняем данные админа в глобальный массив или статический класс,
-            // чтобы к ним был доступ из контроллеров
-            $_REQUEST['admin_data'] = (array) $decoded->data;
+            $this->userService->setCurrent(userData: $adminData);
 
             return true;
         } catch (ResponseException $e) {

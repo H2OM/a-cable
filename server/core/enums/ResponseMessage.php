@@ -32,5 +32,6 @@ enum ResponseMessage: string {
     case SUCCESS_CLEAR_FAVORITES = 'Избранное отчищено';
     case SUCCESS_CLEAR_BASKET = 'Корзина очищена';
     case SUCCESS_EDIT = 'Данные отредактированы';
-    case USER_ALREADY = 'Пользователь уже авторизован';
+    case USER_AUTH = 'Пользователь авторизован';
+    case USER_ALREADY_AUTH = 'Пользователь уже авторизован';
 }
