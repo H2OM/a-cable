@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Хост: 127.0.0.1:3306
--- Время создания: Май 20 2026 г., 01:25
+-- Время создания: Май 20 2026 г., 16:01
 -- Версия сервера: 8.0.30
 -- Версия PHP: 8.1.9
 
@@ -32,9 +32,16 @@ CREATE TABLE `admins` (
   `name` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `email` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `login` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `password` varchar(256) COLLATE utf8mb4_general_ci NOT NULL,
+  `password` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `last_login` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Дамп данных таблицы `admins`
+--
+
+INSERT INTO `admins` (`id`, `name`, `email`, `login`, `password`, `last_login`) VALUES
+(1, 'Администратор', 'admin@admin.admin', 'admin', '$2y$10$FcX.VPPrj0pvmbYL4XK3SeYsCJqcCTVPQ2Mpe00jQ7nOeio7.Jd9u', '2026-05-20 14:25:34');
 
 -- --------------------------------------------------------
 
@@ -46,6 +53,13 @@ CREATE TABLE `admins_permissions` (
   `admin_id` int UNSIGNED NOT NULL,
   `permission_id` int UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Дамп данных таблицы `admins_permissions`
+--
+
+INSERT INTO `admins_permissions` (`admin_id`, `permission_id`) VALUES
+(1, 1);
 
 -- --------------------------------------------------------
 
@@ -365,16 +379,15 @@ CREATE TABLE `orders_products` (
 
 CREATE TABLE `permissions` (
   `id` int UNSIGNED NOT NULL,
-  `name` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `code` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL
+  `name` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Дамп данных таблицы `permissions`
 --
 
-INSERT INTO `permissions` (`id`, `name`, `code`) VALUES
-(1, '*', 'god');
+INSERT INTO `permissions` (`id`, `name`) VALUES
+(1, 'god');
 
 -- --------------------------------------------------------
 
@@ -608,8 +621,7 @@ ALTER TABLE `orders_products`
 --
 ALTER TABLE `permissions`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `name` (`name`),
-  ADD KEY `code` (`code`);
+  ADD KEY `code` (`name`);
 
 --
 -- Индексы таблицы `products`
@@ -661,7 +673,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT для таблицы `admins`
 --
 ALTER TABLE `admins`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT для таблицы `brands`
