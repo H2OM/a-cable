@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Хост: 127.0.0.1:3306
--- Время создания: Май 20 2026 г., 16:01
+-- Время создания: Май 21 2026 г., 02:19
 -- Версия сервера: 8.0.30
 -- Версия PHP: 8.1.9
 
@@ -29,6 +29,7 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `admins` (
   `id` int UNSIGNED NOT NULL,
+  `role_id` int UNSIGNED NOT NULL,
   `name` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `email` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `login` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
@@ -40,26 +41,53 @@ CREATE TABLE `admins` (
 -- Дамп данных таблицы `admins`
 --
 
-INSERT INTO `admins` (`id`, `name`, `email`, `login`, `password`, `last_login`) VALUES
-(1, 'Администратор', 'admin@admin.admin', 'admin', '$2y$10$FcX.VPPrj0pvmbYL4XK3SeYsCJqcCTVPQ2Mpe00jQ7nOeio7.Jd9u', '2026-05-20 14:25:34');
+INSERT INTO `admins` (`id`, `role_id`, `name`, `email`, `login`, `password`, `last_login`) VALUES
+(1, 1, 'Администратор', 'admin@admin.admin', 'admin', '$2y$10$Zt5JHqRP3RqIuIiyK/XgD.munQ1/vssnmQQ5pieS2hl/4jojAqV2i', '2026-05-20 14:25:34');
 
 -- --------------------------------------------------------
 
 --
--- Структура таблицы `admins_permissions`
+-- Структура таблицы `admins_roles`
 --
 
-CREATE TABLE `admins_permissions` (
-  `admin_id` int UNSIGNED NOT NULL,
+CREATE TABLE `admins_roles` (
+  `id` int UNSIGNED NOT NULL,
+  `name` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `code` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Дамп данных таблицы `admins_roles`
+--
+
+INSERT INTO `admins_roles` (`id`, `name`, `code`) VALUES
+(1, 'Супер админ', 'superadmin'),
+(2, 'Менеджер', 'manager');
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `admins_roles_permissions`
+--
+
+CREATE TABLE `admins_roles_permissions` (
+  `role_id` int UNSIGNED NOT NULL,
   `permission_id` int UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Дамп данных таблицы `admins_permissions`
+-- Дамп данных таблицы `admins_roles_permissions`
 --
 
-INSERT INTO `admins_permissions` (`admin_id`, `permission_id`) VALUES
-(1, 1);
+INSERT INTO `admins_roles_permissions` (`role_id`, `permission_id`) VALUES
+(1, 1),
+(2, 2),
+(2, 3),
+(2, 4),
+(2, 5),
+(2, 6),
+(2, 8),
+(2, 9);
 
 -- --------------------------------------------------------
 
@@ -379,15 +407,24 @@ CREATE TABLE `orders_products` (
 
 CREATE TABLE `permissions` (
   `id` int UNSIGNED NOT NULL,
-  `name` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL
+  `name` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `code` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Дамп данных таблицы `permissions`
 --
 
-INSERT INTO `permissions` (`id`, `name`) VALUES
-(1, 'god');
+INSERT INTO `permissions` (`id`, `name`, `code`) VALUES
+(1, 'Полный доступ', '*'),
+(2, 'Доступ к товарам', 'products'),
+(3, 'Удаление товаров', 'products.delete'),
+(4, 'Редактирование товаров', 'products.edit'),
+(5, 'Добавление товаров', 'products.add'),
+(6, 'Доступ к пользователям', 'users'),
+(7, 'Удаление пользователей', 'users.delete'),
+(8, 'Редактирование пользователей', 'users.edit'),
+(9, 'Добавление пользователей', 'users.add');
 
 -- --------------------------------------------------------
 
@@ -518,14 +555,23 @@ INSERT INTO `users` (`id`, `first_name`, `second_name`, `age`, `gender`, `email`
 ALTER TABLE `admins`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `login` (`login`),
-  ADD UNIQUE KEY `email` (`email`);
+  ADD UNIQUE KEY `email` (`email`),
+  ADD KEY `role_id` (`role_id`);
 
 --
--- Индексы таблицы `admins_permissions`
+-- Индексы таблицы `admins_roles`
 --
-ALTER TABLE `admins_permissions`
-  ADD KEY `admin_id` (`admin_id`),
-  ADD KEY `permission_id` (`permission_id`);
+ALTER TABLE `admins_roles`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `code` (`code`),
+  ADD KEY `name` (`name`);
+
+--
+-- Индексы таблицы `admins_roles_permissions`
+--
+ALTER TABLE `admins_roles_permissions`
+  ADD UNIQUE KEY `role_id` (`role_id`,`permission_id`),
+  ADD KEY `to_permissions_id2` (`permission_id`);
 
 --
 -- Индексы таблицы `brands`
@@ -621,7 +667,8 @@ ALTER TABLE `orders_products`
 --
 ALTER TABLE `permissions`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `code` (`name`);
+  ADD UNIQUE KEY `code_2` (`code`),
+  ADD KEY `name` (`name`);
 
 --
 -- Индексы таблицы `products`
@@ -676,6 +723,12 @@ ALTER TABLE `admins`
   MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
+-- AUTO_INCREMENT для таблицы `admins_roles`
+--
+ALTER TABLE `admins_roles`
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
 -- AUTO_INCREMENT для таблицы `brands`
 --
 ALTER TABLE `brands`
@@ -727,7 +780,7 @@ ALTER TABLE `orders`
 -- AUTO_INCREMENT для таблицы `permissions`
 --
 ALTER TABLE `permissions`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT для таблицы `products`
@@ -746,11 +799,17 @@ ALTER TABLE `users`
 --
 
 --
--- Ограничения внешнего ключа таблицы `admins_permissions`
+-- Ограничения внешнего ключа таблицы `admins`
 --
-ALTER TABLE `admins_permissions`
-  ADD CONSTRAINT `to_admin_id` FOREIGN KEY (`admin_id`) REFERENCES `admins` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
-  ADD CONSTRAINT `to_permission_id` FOREIGN KEY (`permission_id`) REFERENCES `permissions` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+ALTER TABLE `admins`
+  ADD CONSTRAINT `to_admins_roles_id3` FOREIGN KEY (`role_id`) REFERENCES `admins_roles` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+
+--
+-- Ограничения внешнего ключа таблицы `admins_roles_permissions`
+--
+ALTER TABLE `admins_roles_permissions`
+  ADD CONSTRAINT `to_admins_roles_id2` FOREIGN KEY (`role_id`) REFERENCES `admins_roles` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `to_permissions_id2` FOREIGN KEY (`permission_id`) REFERENCES `permissions` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Ограничения внешнего ключа таблицы `categories_filters`
