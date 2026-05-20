@@ -17,6 +17,7 @@ class CatalogController {
      * Получение каталога товара
      *
      * @return Response
+     * @throws ResponseException
      */
     public function getAction(): Response {
         $filters = $this->request->get();
@@ -25,23 +26,20 @@ class CatalogController {
             return Response::jsonError(message: ResponseMessage::ERROR_DATA);
         }
 
-        try {
-            $catalog = $this->productsService->getCatalogByFilters($filters);
-            $filters = $this->productsService->getFiltersGroupByCode($filters['category']);
+        $catalog = $this->productsService->getCatalogByFilters($filters);
+        $filters = $this->productsService->getFiltersGroupByCode($filters['category']);
 
-            return Response::jsonSuccess(data: [
-                'catalog' => $catalog,
-                'filters' => $filters
-            ]);
-        } catch (ResponseException $e) {
-            return Response::jsonError(message: $e->getResponseMessage(), status: $e->getCode() ?: 400);
-        }
+        return Response::jsonSuccess(data: [
+            'catalog' => $catalog,
+            'filters' => $filters
+        ]);
     }
 
     /**
      * Получение отдельного товара
      *
      * @return Response
+     * @throws ResponseException
      */
     public function getProductAction(): Response {
         $id = (int)$this->request->get('id');
@@ -50,16 +48,12 @@ class CatalogController {
             return Response::jsonError(message: ResponseMessage::ERROR_NOT_ENOUGH_DATA, status: 403);
         }
 
-        try {
-            $product = $this->productsService->getProductById($id);
-            $relatedProducts = $this->productsService->getRelatedById($id);
+        $product = $this->productsService->getProductById($id);
+        $relatedProducts = $this->productsService->getRelatedById($id);
 
-            return Response::jsonSuccess(data: [
-                'product' => $product,
-                'related' => $relatedProducts,
-            ]);
-        } catch (ResponseException $e) {
-            return Response::jsonError(message: $e->getResponseMessage(), status: $e->getCode() ?: 400);
-        }
+        return Response::jsonSuccess(data: [
+            'product' => $product,
+            'related' => $relatedProducts,
+        ]);
     }
 }

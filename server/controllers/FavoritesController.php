@@ -31,6 +31,7 @@ class FavoritesController {
      * Добавление
      *
      * @return Response
+     * @throws ResponseException
      */
     public function addAction(): Response {
         $productId = (int)$this->request->get('product_id');
@@ -39,19 +40,16 @@ class FavoritesController {
             return Response::jsonError(message: ResponseMessage::ERROR_NOT_ENOUGH_DATA, status: 403);
         }
 
-        try {
-            $favorites = $this->favoritesService->add(productId: $productId);
+        $favorites = $this->favoritesService->add(productId: $productId);
 
-            return Response::jsonSuccess(data: $favorites, message: ResponseMessage::SUCCESS_ADD_FAVORITES);
-        } catch (ResponseException $e) {
-            return Response::jsonError(message: $e->getResponseMessage(), status: $e->getCode() ?: 400);
-        }
+        return Response::jsonSuccess(data: $favorites, message: ResponseMessage::SUCCESS_ADD_FAVORITES);
     }
 
     /**
      * Удаление
      *
      * @return Response
+     * @throws ResponseException
      */
     public function removeAction(): Response {
         $productId = (int)$this->request->get('product_id');
@@ -60,27 +58,20 @@ class FavoritesController {
             return Response::jsonError(message: ResponseMessage::ERROR_NOT_ENOUGH_DATA, status: 403);
         }
 
-        try {
-            $favorites = $this->favoritesService->remove(productId: $productId);
+        $favorites = $this->favoritesService->remove(productId: $productId);
 
-            return Response::jsonSuccess(data: $favorites, message: ResponseMessage::SUCCESS_REMOVE_FAVORITES);
-        } catch (ResponseException $e) {
-            return Response::jsonError(message: $e->getResponseMessage(), status: $e->getCode() ?: 400);
-        }
+        return Response::jsonSuccess(data: $favorites, message: ResponseMessage::SUCCESS_REMOVE_FAVORITES);
     }
 
     /**
      * Отчистка
      *
      * @return Response
+     * @throws ResponseException
      */
     public function clearAction(): Response {
-        try {
-            $favorites = $this->favoritesService->clear();
+        $favorites = $this->favoritesService->clear();
 
-            return Response::jsonSuccess(data: $favorites, message: ResponseMessage::SUCCESS_CLEAR_FAVORITES);
-        } catch (ResponseException $e) {
-            return Response::jsonError(message: $e->getResponseMessage(), status: $e->getCode() ?: 400);
-        }
+        return Response::jsonSuccess(data: $favorites, message: ResponseMessage::SUCCESS_CLEAR_FAVORITES);
     }
 }

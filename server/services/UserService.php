@@ -24,7 +24,6 @@ class UserService {
      * @param string $phone
      * @return array
      * @throws ResponseException
-     * @throws Exception
      */
     public function signIn(string $password, string $phone): array {
         $validateData = $this->validator->validate(
@@ -39,13 +38,13 @@ class UserService {
         );
 
         if (!$validateData) {
-            throw new ResponseException(ResponseMessage::ERROR_AUTH);
+            throw new ResponseException(ResponseMessage::ERROR_AUTH_PHONE_DATA);
         }
 
         $user = $this->userRepository->getByPhone($this->normalizePhone($phone));
 
         if(empty($user) || !password_verify($validateData['password'], $user['password'])) {
-            throw new ResponseException(ResponseMessage::ERROR_AUTH);
+            throw new ResponseException(ResponseMessage::ERROR_AUTH_PHONE_DATA);
         }
 
         return $user;

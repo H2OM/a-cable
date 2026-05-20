@@ -3,10 +3,39 @@
 namespace app\repositories;
 
 use app\core\Db;
+use app\core\Hydrator;
 
 /** Репозиторий для управления пользователями */
 class UserRepository {
-    public function __construct(private readonly Db $db) {}
+    public function __construct(private readonly Db $db, private readonly Hydrator $hydrator) {}
+
+    /**
+     * Получение данных админа по логину
+     *
+     * @param string $login
+     * @return array|null
+     */
+    public function getAdminByLogin(string $login): ?array {
+        $response = $this->db->fetchOne("
+            SELECT 
+	            admins.*,
+                IF(COUNT(p.id) > 0,
+                    JSON_ARRAYAGG(JSON_OBJECT(
+                        'id', p.id, 
+                        'name', p.name
+                    )),
+                    JSON_ARRAY()
+                ) AS permissions  
+              FROM admins
+              LEFT JOIN admins_permissions ON admins.id = admins_permissions.admin_id
+              LEFT JOIN permissions AS p ON admins_permissions.permission_id = p.id
+              WHERE admins.login = ?;
+        ", [$login]);
+
+        if(!is_array($response)) return null;
+
+        return $this->hydrator->decodeJson($response, ['permissions']);
+    }
 
     /**
      * Получения пользователя по номеру телефона

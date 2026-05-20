@@ -101,7 +101,14 @@ class Validator {
 
             case 'name':
                 if (iconv_strlen($value) < 2 || iconv_strlen($value) > 100 || !preg_match("/^[А-я]+$/u", $value)) {
-                    $this->errors[$field] = 'Некорректное значение';
+                    $this->errors[$field] = 'Некорректное имя';
+                    return false;
+                }
+                break;
+
+            case 'login':
+                if (iconv_strlen($value) < 2 || iconv_strlen($value) > 100 || !preg_match("/^[A-z]+$/u", $value)) {
+                    $this->errors[$field] = 'Некорректный логин';
                     return false;
                 }
                 break;

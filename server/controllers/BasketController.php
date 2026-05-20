@@ -29,6 +29,7 @@ class BasketController {
      * Добавление товара
      *
      * @return Response
+     * @throws ResponseException
      */
     public function addAction(): Response {
         $id    = $this->session->input('id');
@@ -42,22 +43,19 @@ class BasketController {
             $count = 1;
         }
 
-        try {
-            $basket = $this->basketService->add(
-                id: $id,
-                count: $count
-            );
+        $basket = $this->basketService->add(
+            id: $id,
+            count: $count
+        );
 
-            return Response::jsonSuccess(data: $basket, message: ResponseMessage::SUCCESS_ADD_BASKET);
-        } catch (ResponseException $exception) {
-            return Response::jsonError(message: $exception->getResponseMessage(), status: $exception->getCode() ?: 400);
-        }
+        return Response::jsonSuccess(data: $basket, message: ResponseMessage::SUCCESS_ADD_BASKET);
     }
 
     /**
      * Уменьшение кол-во товара
      *
      * @return Response
+     * @throws ResponseException
      */
     public function decrementAction(): Response {
         $id = $this->session->input('id');
@@ -66,36 +64,30 @@ class BasketController {
             return Response::jsonError(message: ResponseMessage::ERROR_NOT_ENOUGH_DATA, status: 403);
         }
 
-        try {
-            $basket = $this->basketService->decrement(id: $id);
+        $basket = $this->basketService->decrement(id: $id);
 
-            return Response::jsonSuccess(data: $basket, message: ResponseMessage::SUCCESS_REMOVE_BASKET);
-        } catch (ResponseException $exception) {
-            return Response::jsonError(message: $exception->getResponseMessage(), status: $exception->getCode() ?: 400);
-        }
+        return Response::jsonSuccess(data: $basket, message: ResponseMessage::SUCCESS_REMOVE_BASKET);
     }
 
     /**
      * Удаление товара
      *
      * @return Response
+     * @throws ResponseException
      */
     public function removeAction(): Response {
         $id = $this->session->input('id');
 
-        try {
-            $basket = $this->basketService->remove(id: $id);
+        $basket = $this->basketService->remove(id: $id);
 
-            return Response::jsonSuccess(data: $basket, message: ResponseMessage::SUCCESS_REMOVE_BASKET);
-        } catch (ResponseException $exception) {
-            return Response::jsonError(message: $exception->getResponseMessage(), status: $exception->getCode() ?: 400);
-        }
+        return Response::jsonSuccess(data: $basket, message: ResponseMessage::SUCCESS_REMOVE_BASKET);
     }
 
     /**
      * Установка кол-во товара
      *
      * @return Response
+     * @throws ResponseException
      */
     public function setCountAction(): Response {
         $id    = $this->session->input('id');
@@ -105,13 +97,9 @@ class BasketController {
             return Response::jsonError(message: ResponseMessage::ERROR_NOT_ENOUGH_DATA, status: 403);
         }
 
-        try {
-            $basket = $this->basketService->setCount(id: $id, count: $count);
+        $basket = $this->basketService->setCount(id: $id, count: $count);
 
-            return Response::jsonSuccess(data: $basket);
-        } catch (ResponseException $exception) {
-            return Response::jsonError(message: $exception->getResponseMessage(), status: $exception->getCode() ?: 400);
-        }
+        return Response::jsonSuccess(data: $basket);
     }
 
     /**

@@ -18,6 +18,7 @@ class CallbackController {
      * Обработка формы подписки на новости
      *
      * @return Response
+     * @throws Exception
      */
     public function subscribeAction(): Response {
         $email = $this->request->input('email');
@@ -26,33 +27,20 @@ class CallbackController {
             return Response::jsonError(message: ResponseMessage::ERROR_DATA, status: 403);
         }
 
-        try {
-            $this->callbackService->subscribe(email: $email);
+        $this->callbackService->subscribe(email: $email);
 
-            return Response::jsonSuccess(message: ResponseMessage::SUCCESS_SUBSCRIBE);
-        } catch (Exception $e) {
-            return Response::json(data: [
-                'error' => true,
-                'message' => $e->getMessage()
-            ], status: $e->getCode() ?: 400);
-        }
+        return Response::jsonSuccess(message: ResponseMessage::SUCCESS_SUBSCRIBE);
     }
 
     /**
      * Обработка формы обратной связи
      *
      * @return Response
+     * @throws Exception
      */
     public function formAction(): Response {
-        try {
-            $this->callbackService->form(data: $this->request->input());
+        $this->callbackService->form(data: $this->request->input());
 
-            return Response::jsonSuccess(message: ResponseMessage::SUCCESS_FORM);
-        } catch (Exception $e) {
-            return Response::json(data: [
-                'error' => true,
-                'message' => $e->getMessage()
-            ], status: $e->getCode() ?: 400);
-        }
+        return Response::jsonSuccess(message: ResponseMessage::SUCCESS_FORM);
     }
 }

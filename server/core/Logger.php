@@ -11,7 +11,7 @@ class Logger {
      * @return void
      */
     public function debug($data): void {
-        if (DEBUG) {
+        if ($_ENV['PHP_DEBUG']) {
             echo '<pre>' . print_r($data, true) . '</pre>';
         }
     }

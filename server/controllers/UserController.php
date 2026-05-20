@@ -31,32 +31,30 @@ class UserController {
      * Авторизация
      *
      * @return Response
+     * @throws ResponseException
      */
     public function signInAction(): Response {
         if($this->authService->check()) {
             return Response::jsonSuccess(data: $this->authService->user(), message: ResponseMessage::USER_ALREADY);
         }
 
-        try {
-            $user = $this->userService->signIn(
-                password: $this->request->input('password'),
-                phone: $this->request->input('phone')
-            );
+        $phone = $this->request->input('phone');
+        $password = $this->request->input('password');
 
-//            TODO При авторизации добавлять избранное из сессию в базу
-
-            $this->authService->login(userData: $user);
-
-            return Response::jsonSuccess(data: $this->authService->user(), message: ResponseMessage::SUCCESS_AUTH);
-        } catch (ResponseException $e) {
-            return Response::jsonError(message: $e->getResponseMessage(), status: $e->getCode() ?: 400);
-
-        } catch (Exception $e) {
-            return Response::json(data: [
-                'error' => true,
-                'message' => $e->getMessage()
-            ], status: $e->getCode() ?: 400);
+        if(empty($phone) || empty($password)) {
+            return Response::jsonError(message: ResponseMessage::ERROR_NOT_ENOUGH_DATA);
         }
+
+        $user = $this->userService->signIn(
+            password: $password,
+            phone: $phone
+        );
+
+//      TODO При авторизации добавлять избранное из сессию в базу
+
+        $this->authService->login(userData: $user);
+
+        return Response::jsonSuccess(data: $this->authService->user(), message: ResponseMessage::SUCCESS_AUTH);
     }
 
     /**
@@ -70,23 +68,13 @@ class UserController {
             return Response::jsonSuccess(data: $this->authService->user(), message: ResponseMessage::USER_ALREADY);
         }
 
-        try {
-            $user = $this->userService->signUp($this->request->input());
+        $user = $this->userService->signUp($this->request->input());
 
-//            TODO При авторизации добавлять избранное из сессию в базу
+//      TODO При авторизации добавлять избранное из сессию в базу
 
-            $this->authService->login(userData: $user);
+        $this->authService->login(userData: $user);
 
-            return Response::jsonSuccess(data: $this->authService->user(), message: ResponseMessage::SUCCESS_AUTH);
-        } catch (ResponseException $e) {
-            return Response::jsonError(message: $e->getResponseMessage(), status: $e->getCode() ?: 400);
-
-        } catch (Exception $e) {
-            return Response::json(data: [
-                'error' => true,
-                'message' => $e->getMessage()
-            ], status: $e->getCode() ?: 400);
-        }
+        return Response::jsonSuccess(data: $this->authService->user(), message: ResponseMessage::SUCCESS_AUTH);
     }
 
     /**
@@ -121,30 +109,21 @@ class UserController {
      * Редактирование
      *
      * @return Response
+     * @throws ResponseException
      */
     public function editAction(): Response {
         if(!$this->authService->check()) {
             return Response::jsonError(message: ResponseMessage::ERROR_NOT_AUTH, status: 401);
         }
 
-        try {
-            $updatedUser = $this->userService->edit(
-                userData: $this->request->input(),
-                userId: $this->authService->id()
-            );
+        $updatedUser = $this->userService->edit(
+            userData: $this->request->input(),
+            userId: $this->authService->id()
+        );
 
-            $this->authService->login(userData: $updatedUser + $this->authService->user());
+        $this->authService->login(userData: $updatedUser + $this->authService->user());
 
-            return Response::jsonSuccess(data: $this->authService->user(), message: ResponseMessage::SUCCESS_EDIT);
-        } catch (ResponseException $e) {
-            return Response::jsonError(message: $e->getResponseMessage(), status: $e->getCode() ?: 400);
-
-        } catch (\Exception $e) {
-            return Response::json(data: [
-                'error' => true,
-                'message' => $e->getMessage()
-            ], status: $e->getCode() ?: 400);
-        }
+        return Response::jsonSuccess(data: $this->authService->user(), message: ResponseMessage::SUCCESS_EDIT);
     }
 
     /**

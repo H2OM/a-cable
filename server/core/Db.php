@@ -2,6 +2,7 @@
     namespace app\core;
 
     use PDO;
+    use PDOException;
     use PDOStatement;
 
     /** Работа с базой данных */
@@ -11,12 +12,17 @@
         public function __construct(array $db_config) {
             try {
                 $this->pdo = new PDO(
-                    $db_config['dsn'],
+                    'mysql:host='.$db_config['host'].';dbname='.$db_config['dbname'].';charset=utf8',
                     $db_config['user'],
                     $db_config['pass'],
-                    $db_config['opts']
+                    [
+                        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                        PDO::ATTR_EMULATE_PREPARES => FALSE,
+                        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+                        PDO::MYSQL_ATTR_INIT_COMMAND => 'SET sql_mode="TRADITIONAL"'
+                    ]
                 );
-            } catch (\PDOException $e) {
+            } catch (PDOException $e) {
                 throw new \PDOException(
                     "Database connection error: " . $e->getMessage(),
                     (int)$e->getCode()

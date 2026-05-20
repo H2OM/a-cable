@@ -10,7 +10,7 @@
 
 # testing
 /coverage
-/server/settings/db_acc.php
+
 # next.js
 /.next/
 /out/
@@ -36,6 +36,9 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 
-/server/lib/vendor
-
 /desktop.ini
+
+/server/composer/vendor/
+/server/composer/composer.lock
+/server/.env
+/server/.idea/
