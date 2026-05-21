@@ -180,10 +180,11 @@ class ProductsRepository {
         return $this->hydrator->decodeJson($this->db->fetchAll("
             SELECT 
                 products.*, 
+                categories.title AS category_parent,
                 categories_types.name AS category, 
-                categories_types.code as category_code,
+                categories_types.code AS category_code,
                 brands.name as brand, 
-                products_stocks.count as stock,
+                products_stocks.count AS stock,
                 (
                     SELECT COALESCE(JSON_ARRAYAGG(JSON_OBJECT('id', vp.id, 'image', vp.image)), JSON_ARRAY())
                     FROM products_variations p_v
@@ -322,6 +323,19 @@ class ProductsRepository {
         if(!is_array($response)) return null;
 
         return $this->hydrator->decodeJson($response, ['variations']);
+    }
+
+    /**
+     * Добавление
+     *
+     * @param array $data
+     * @return int
+     */
+    public function insertProduct(array $data): int {
+        return $this->db->query()
+            ->table('products')
+            ->insert($data)
+            ->affectedRows();
     }
 
     /**

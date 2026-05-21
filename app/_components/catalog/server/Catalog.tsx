@@ -1,4 +1,4 @@
-import {notFound} from "next/navigation";
+import {redirect} from "next/navigation";
 import '../catalog.scss';
 import Filters from "@ui/filters/Filters";
 import Cart from "@ui/cart/Cart";
@@ -8,7 +8,6 @@ import Fallback from "@ui/fallback/Fallback";
 import {Filter} from "@_types/filters";
 import normalizeParams from "@utils/normalizeParams";
 import {SearchParams} from "@_types/common";
-import {categoriesService} from "@utils/categoriesService";
 
 export default async function Catalog({promiseParams, promiseSearchParams}: {
     promiseParams: Promise<{ category: string; }>
@@ -16,11 +15,6 @@ export default async function Catalog({promiseParams, promiseSearchParams}: {
 }) {
     const rawSearchParams: SearchParams = await promiseSearchParams;
     const params = await promiseParams;
-    const category = categoriesService.getByCode(params.category);
-
-    if(!category) {
-        notFound();
-    }
 
     const searchParams = normalizeParams(rawSearchParams);
 
@@ -29,19 +23,25 @@ export default async function Catalog({promiseParams, promiseSearchParams}: {
     const response = await catalogAPI.get(searchParams);
 
     if(!response.success) {
-        notFound();
+        redirect('/');
     }
 
-    const {catalog, filters}: {
+    const {category_title, catalog, filters}: {
+        category_title: string|null;
         catalog?: Product[];
         filters?: Filter[];
     } = response.data ?? {};
+
+    if(!category_title) {
+        redirect('/catalog');
+    }
+
     const type = searchParams.type
         ? filters?.find(f => f.code === 'type')?.values.find(v => v.code === searchParams.type)
         : null;
     const title = type
-        ? `${category.title} - ${type.name.toLowerCase()}`
-        : category.title;
+        ? `${category_title} - ${type.name.toLowerCase()}`
+        : category_title;
 
     return (
         <section className="catalog section">

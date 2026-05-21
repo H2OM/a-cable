@@ -42,3 +42,4 @@ yarn-error.log*
 /server/composer/composer.lock
 /server/.env
 /server/.idea/
+/server/repositories/parsers

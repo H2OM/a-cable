@@ -37,6 +37,10 @@
                 'create' => 'product.create',
                 'edit' => 'product.edit',
                 'delete' => 'product.delete',
+            ],
+            'admin-parser' => [
+                'class' => AdminMiddleware::class,
+                'base_permission' => 'parser',
             ]
         ];
 

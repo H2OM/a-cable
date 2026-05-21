@@ -6,12 +6,17 @@ use app\core\enums\ResponseMessage;
 use app\core\exceptions\ResponseException;
 use app\core\Request;
 use app\core\Response;
+use app\services\CategoriesService;
 use app\services\ProductsService;
 
 
 /** Управление каталогом */
 class CatalogController {
-    public function __construct(private readonly Request $request, private readonly ProductsService $productsService) {}
+    public function __construct(
+        private readonly Request $request,
+        private readonly ProductsService $productsService,
+        private readonly CategoriesService $categoriesService
+    ) {}
 
     /**
      * Получение каталога товара
@@ -20,16 +25,22 @@ class CatalogController {
      * @throws ResponseException
      */
     public function getAction(): Response {
-        $filters = $this->request->get();
+        $filters_params = $this->request->get();
 
-        if(empty($filters['category'])) {
+        if(empty($filters_params['category'])) {
             return Response::jsonError(message: ResponseMessage::ERROR_DATA);
         }
 
-        $catalog = $this->productsService->getCatalogByFilters($filters);
-        $filters = $this->productsService->getFiltersGroupByCode($filters['category']);
+        $catalog = $this->productsService->getCatalogByFilters($filters_params);
+        $filters = $this->productsService->getFiltersGroupByCode($filters_params['category']);
+        $category = $catalog[0]['category_parent'] ?? null;
+
+        if(empty($category)) {
+            $category = $this->categoriesService->getByCode($filters_params['category'])['title'] ?? null;
+        }
 
         return Response::jsonSuccess(data: [
+            'category_title' => $category,
             'catalog' => $catalog,
             'filters' => $filters
         ]);

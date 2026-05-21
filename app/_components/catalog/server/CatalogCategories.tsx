@@ -2,10 +2,17 @@ import '../catalog.scss';
 import {Category} from "@_types/categories";
 import Link from "next/link";
 import Image from "next/image";
-import {categoriesService} from "@utils/categoriesService";
+import {categoriesAPI} from "@api";
+import {redirect} from "next/navigation";
 
-export default function CatalogCategories() {
-    const categories = categoriesService.getAll();
+export default async function CatalogCategories() {
+    const response = await categoriesAPI.getAll();
+
+    if(!response.success) {
+        redirect('/');
+    }
+
+    const categories: Category[] = response.data;
 
     return (
         <section className="catalog section">

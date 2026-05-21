@@ -217,11 +217,19 @@ class QueryBuilder {
      * @return QueryBuilder
      */
     public function insert(array $insertData): self {
-        $columns = implode(', ', array_keys($insertData));
-        $placeholders = implode(', ', array_fill(0, count($insertData), '?'));
-        $this->prepareQuery = "INSERT INTO {$this->table} ($columns) VALUES ($placeholders)";
+        if(!is_array($insertData[array_key_first($insertData)])) $insertData = [$insertData];
 
-        $this->bindings = array_values($insertData);
+        $columns = implode(', ', array_keys($insertData[0]));
+        $placeholders = [];
+
+        foreach ($insertData as $insertRow) {
+            $placeholder = implode(', ', array_fill(0, count($insertRow), '?'));
+
+            $placeholders[] = "($placeholder)";
+            $this->bindings = [...$this->bindings, ...array_values($insertRow)];
+        }
+
+        $this->prepareQuery = "INSERT INTO {$this->table} ($columns) VALUES " . implode(', ', $placeholders);
 
         return $this;
     }
