@@ -5,7 +5,7 @@ namespace app\middleware;
 use app\core\enums\ResponseMessage;
 use app\core\Env;
 use app\core\exceptions\ResponseException;
-use app\services\admin\UserService;
+use app\services\admin\AdminService;
 use Exception;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
@@ -15,8 +15,8 @@ class AdminMiddleware implements MiddlewareInterface {
     private const NAMESPACE = "admin";
 
     public function __construct(
-        private readonly UserService $userService,
-        private readonly Env         $env
+        private readonly AdminService $adminService,
+        private readonly Env          $env
     ) {}
 
     /**
@@ -55,7 +55,7 @@ class AdminMiddleware implements MiddlewareInterface {
                 throw new ResponseException(ResponseMessage::ERROR_PERMISSIONS, 403);
             }
 
-            $this->userService->setCurrent(userData: $adminData);
+            $this->adminService->setCurrent(userData: $adminData);
 
             return true;
         } catch (ResponseException $e) {

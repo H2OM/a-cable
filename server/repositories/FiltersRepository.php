@@ -70,4 +70,43 @@ class FiltersRepository {
                  filters.position ASC, value_name ASC;
         ", [$categoryCode, $categoryCode]);
     }
+
+    /**
+     * Вставка новых фильтров
+     *
+     * @param array $filters
+     * @return string|false
+     */
+    public function insertFilters(array $filters): string|false {
+        return $this->db->query()
+            ->table('filters')
+            ->insert($filters)
+            ->insertId();
+    }
+
+    /**
+     * Вставка новых значений фильтров
+     *
+     * @param array $filtersValues
+     * @return string|false
+     */
+    public function insertFiltersValues(array $filtersValues): string|false {
+        return $this->db->query()
+            ->table('filters_values')
+            ->insert($filtersValues)
+            ->insertId();
+    }
+
+    /**
+     * Вставка новых связей значений фильтра и id товара
+     *
+     * @param array $filtersValuesProducts
+     * @return string|false
+     */
+    public function insertFiltersValuesProducts(array $filtersValuesProducts): string|false {
+        return $this->db->query()
+            ->table('filters_values_products')
+            ->insert($filtersValuesProducts)
+            ->insertId();
+    }
 }

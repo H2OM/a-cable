@@ -9,7 +9,7 @@ use app\core\Session;
 use app\repositories\FiltersRepository;
 use app\repositories\ProductsRepository;
 
-/** Сервис для управления товарами */
+/** Сервис для получения товаров */
 class ProductsService {
     public function __construct(
         private readonly FiltersRepository  $filtersRepository,

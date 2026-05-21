@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Хост: 127.0.0.1:3306
--- Время создания: Май 21 2026 г., 02:19
+-- Время создания: Май 22 2026 г., 02:51
 -- Версия сервера: 8.0.30
 -- Версия PHP: 8.1.9
 
@@ -108,7 +108,8 @@ CREATE TABLE `brands` (
 INSERT INTO `brands` (`id`, `name`, `code`) VALUES
 (1, 'Cabeus', 'cabeus'),
 (2, 'DataCable', 'datacable'),
-(3, 'Rexant', 'rexant');
+(3, 'Rexant', 'rexant'),
+(4, 'Неизвестно', 'unknown');
 
 -- --------------------------------------------------------
 
@@ -622,7 +623,8 @@ ALTER TABLE `feedbacks`
 -- Индексы таблицы `filters`
 --
 ALTER TABLE `filters`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `code` (`code`);
 
 --
 -- Индексы таблицы `filters_values`
@@ -732,7 +734,7 @@ ALTER TABLE `admins_roles`
 -- AUTO_INCREMENT для таблицы `brands`
 --
 ALTER TABLE `brands`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT для таблицы `categories`
@@ -768,7 +770,7 @@ ALTER TABLE `filters_values`
 -- AUTO_INCREMENT для таблицы `news`
 --
 ALTER TABLE `news`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT для таблицы `orders`

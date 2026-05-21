@@ -16,6 +16,7 @@ enum ResponseMessage: string {
     case ERROR_PERMISSIONS = 'Недостаточно прав';
     case ERROR_UPDATE = 'Не удалось обновить данные';
     case ERROR_ADD = 'Не удалось добавить данные';
+    case ERROR_ADD_PRODUCT = 'Не удалось добавить товары';
     case ERROR_DUPLICATE = 'Не удалось добавить данные. Позиция уже существует!';
     case ERROR_USER_PHONE_ISSET = 'Пользователь с таким номером зарегистрирован!';
     case ERROR_TOKEN = 'Истек токен авторизации';

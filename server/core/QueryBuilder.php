@@ -219,7 +219,7 @@ class QueryBuilder {
     public function insert(array $insertData): self {
         if(!is_array($insertData[array_key_first($insertData)])) $insertData = [$insertData];
 
-        $columns = implode(', ', array_keys($insertData[0]));
+        $columns = implode(', ', array_keys($insertData[array_key_first($insertData)]));
         $placeholders = [];
 
         foreach ($insertData as $insertRow) {

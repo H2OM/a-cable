@@ -7,8 +7,8 @@ use app\core\exceptions\ResponseException;
 use app\core\Validator;
 use app\repositories\UserRepository;
 
-/** Сервис для управления пользователями админ-панели */
-class UserService {
+/** Сервис для управления админ-пользователями */
+class AdminService {
     /** @var array $currentUser Текущий авторизированный пользователь */
     private array $current = [];
 

@@ -7,14 +7,14 @@ use app\core\exceptions\ResponseException;
 use app\core\Request;
 use app\core\Response;
 use app\services\admin\JWTService;
-use app\services\admin\UserService;
+use app\services\admin\AdminService;
 
 /** Контроллер для управления авторизацией в админ-панели */
 class AuthController {
     public function __construct(
-        private readonly UserService $userService,
-        private readonly JWTService  $JWTService,
-        private readonly Request     $request
+        private readonly AdminService $adminService,
+        private readonly JWTService   $JWTService,
+        private readonly Request      $request
     ) {}
 
     /**
@@ -31,7 +31,7 @@ class AuthController {
             throw new ResponseException(ResponseMessage::ERROR_NOT_ENOUGH_DATA);
         }
 
-        $user = $this->userService->get(login: $login, password:  $password);
+        $user = $this->adminService->get(login: $login, password:  $password);
         $token = $this->JWTService->generateToken($user);
 
         return Response::jsonSuccess(data: [
@@ -46,6 +46,6 @@ class AuthController {
      * @return Response
      */
     public function checkAction(): Response {
-        return Response::jsonSuccess(data: $this->userService->getCurrent(), message: ResponseMessage::USER_AUTH);
+        return Response::jsonSuccess(data: $this->adminService->getCurrent(), message: ResponseMessage::USER_AUTH);
     }
 }
