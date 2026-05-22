@@ -229,7 +229,7 @@ class QueryBuilder {
             $this->bindings = [...$this->bindings, ...array_values($insertRow)];
         }
 
-        $this->prepareQuery = "INSERT INTO {$this->table} ($columns) VALUES " . implode(', ', $placeholders);
+        $this->prepareQuery = "INSERT IGNORE INTO {$this->table} ($columns) VALUES " . implode(', ', $placeholders);
 
         return $this;
     }

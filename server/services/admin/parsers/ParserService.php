@@ -1,10 +1,10 @@
 <?php
 
-namespace app\services\admin;
+namespace app\services\admin\parsers;
 
 /** Абстрактный сервис для управления парсерами */
 abstract class ParserService {
-    private const IMAGES_PATH = __DIR__ . "/../../../public/img/";
+    protected const IMAGES_PATH = __DIR__ . "/../../../../public/img/";
 
     /**
      * Парс из
@@ -41,12 +41,21 @@ abstract class ParserService {
         $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);
 
-        if ($httpCode === 200 && $imageData !== false) {
-            file_put_contents(self::IMAGES_PATH . $imageLocalName, $imageData);
+        if ($httpCode === 200 && $imageData !== false && !$this->imageExists($imageLocalName)) {
+            return file_put_contents(static::IMAGES_PATH . $imageLocalName, $imageData);
 
-            return true;
         } else {
             return false;
         }
+    }
+
+    /**
+     * Проверка на существование изображения
+     *
+     * @param string $imageName
+     * @return bool
+     */
+    protected function imageExists(string $imageName): bool {
+        return file_exists(static::IMAGES_PATH . $imageName);
     }
 }

@@ -9,7 +9,7 @@ use app\core\Env;
 use app\core\exceptions\ResponseException;
 use app\core\Request;
 use app\core\Response;
-use app\services\admin\AnlanParserService;
+use app\services\admin\parsers\AnlanParserService;
 use Exception;
 
 /** Контроллер для управления парсерами */
@@ -47,7 +47,7 @@ class ParserController {
 
         $result = $this->anlanParser->from($data);
 
-//        $this->anlanParser->to($result, $data['deploy_category_id']);
+        $this->anlanParser->to($result, $data['deploy_category_id']);
 
         return Response::jsonSuccess(message: ResponseMessage::SUCCESS_PARSED);
     }

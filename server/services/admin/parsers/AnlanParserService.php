@@ -1,22 +1,26 @@
 <?php
 
-namespace app\services\admin;
+namespace app\services\admin\parsers;
 
+use app\core\Db;
 use app\core\enums\ResponseMessage;
 use app\core\Env;
 use app\core\exceptions\ResponseException;
 use app\repositories\BrandsRepository;
 use app\repositories\parsers\AnlanRepository;
+use app\services\admin\FiltersService;
+use app\services\admin\ProductsService;
 use Exception;
 
 /** Парсер для сайта АнЛан */
 class AnlanParserService extends ParserService {
     public function __construct(
-        private readonly AnlanRepository  $anlanRepository,
         private readonly BrandsRepository $brandsRepository,
+        private readonly AnlanRepository  $anlanRepository,
         private readonly ProductsService  $productsService,
         private readonly FiltersService   $filtersService,
-        private readonly Env              $env
+        private readonly Env              $env,
+        private readonly Db               $db
     ) {}
 
     /**
@@ -59,7 +63,7 @@ class AnlanParserService extends ParserService {
                     $imageUrl = $this->env->get('PARSER_ANLAN_IMAGES_URL') . "/" . $image['image'];
                     $imageLocal = $parseProduct['id'] . '_' . $key . '_' . $image['image'];
 
-                    if($this->getImage($imageUrl, $imageLocal)) {
+                    if($this->imageExists($imageLocal) || $this->getImage($imageUrl, $imageLocal)) {
                         $images[] = $imageLocal;
                     }
                 }
@@ -75,6 +79,7 @@ class AnlanParserService extends ParserService {
                 'title' => $parseProduct['name'],
                 'brand_id' => $brandsMap[$parseProduct['brand_code']],
                 'category_type_id' => $categoryTypeId,
+                'article' => $parseProduct['sku'],
                 'price' => $parseProduct['price'],
                 'price_old' => 0,
                 'unit' => $parseProduct['units'] ?? 'шт.',
@@ -86,7 +91,8 @@ class AnlanParserService extends ParserService {
         }
 
         try {
-            // TODO старт транзакции
+            $this->db->beginTransaction();
+
             $firstProductId = $this->productsService->insert($products);
 
             if(!$firstProductId) {
@@ -129,6 +135,8 @@ class AnlanParserService extends ParserService {
 
             $this->productsService->insertStock($productsStocks);
 
+            // TODO брать вставленные id через уникальный ключ (code)
+            //TODO categories_filters прикрепить фильтры к категории
             $firstFilterId = $this->filtersService->insertFilters($filters);
             $parsedFiltersValues = [];
 
@@ -167,9 +175,12 @@ class AnlanParserService extends ParserService {
 
             $this->filtersService->insertFiltersValuesProducts($parsedFiltersValuesProducts);
 
+            $this->db->commit();
+
             return true;
         } catch (Exception $e) {
-            // TODO ролбек
+            $this->db->rollBack();
+
             throw $e;
         }
     }

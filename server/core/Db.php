@@ -122,4 +122,31 @@
 
             return $state;
         }
+
+        /**
+         * Начало транзакции
+         *
+         * @return bool
+         */
+        public function beginTransaction(): bool {
+            return $this->pdo->beginTransaction();
+        }
+
+        /**
+         * Подтверждение транзакции
+         *
+         * @return bool
+         */
+        public function commit(): bool {
+            return $this->pdo->commit();
+        }
+
+        /**
+         * Отмена транзакции
+         *
+         * @return bool
+         */
+        public function rollback(): bool {
+            return $this->pdo->rollBack();
+        }
     }

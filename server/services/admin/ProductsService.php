@@ -29,7 +29,7 @@ class ProductsService {
      */
     public function insertStock(array $data): bool {
         return $this->db->query()
-            ->table('products')
+            ->table('products_stocks')
             ->insert($data)
             ->execute();
     }
