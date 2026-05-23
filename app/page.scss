@@ -4,12 +4,16 @@
     padding-bottom: 60px;
 }
 .Slider {
-    background-color: $dark-purple;
+    background-color: $lighter-gray;
     padding: 45px;
     min-height: 550px;
     &__sections {
         display: flex;
-
+        .title_small {
+            margin-top: 20px;
+            color: $dark-purple;
+            text-align: left;
+        }
         &__desc {
             display: grid;
             grid-template-rows: auto 1fr auto;
@@ -21,8 +25,8 @@
             &__text {
                 margin-top: 20px;
                 font-size: 16px;
-                font-weight: 200;
-                color: white;
+                font-weight: 400;
+                color: black;
                 text-indent: 20px;
                 line-height: 28px;
             }
@@ -37,11 +41,11 @@
                     height: 32px;
                     width: 32px;
                     border-radius: 5px;
-                    background-color: $black-purple;
+                    background-color: $dark-purple;
                     transition: 0.2s all;
                     cursor: pointer;
                     &:hover {
-                        box-shadow: -4px 4px 0px 0px #340346;
+                        box-shadow: -4px 4px 0px 0px $main-light;
                     }
                     &:active {
                         box-shadow: unset;
@@ -54,7 +58,7 @@
                     &:last-child {
                         transform: rotate(180deg);
                         &:hover {
-                            box-shadow: -4px -4px 0px 0px #340346;
+                            box-shadow: -4px -4px 0px 0px $main-light;
                         }
                         &:active {
                             box-shadow: unset;
@@ -64,7 +68,7 @@
                 &__bars {
                     display: flex;
                     &__bar {
-                        background-color: rgba(255, 255, 255, 0.685);
+                        background-color: $ghosted-black;
                         height: 5px;
                         width: 50px;
                         margin: 0 3px;
@@ -75,9 +79,12 @@
                               width: 80px;      
                         }
                         &_active {
-                            background-color: white;
+                            background-color: $main-light;
                             width: 80px;
-                            
+                            &:hover {
+                                background-color: $dark-purple;
+                                width: 80px;
+                            }
                         }
                     }
                 }
@@ -89,7 +96,7 @@
                 max-width: 400px;
                 object-fit: cover;
                 border-radius:10px;
-                box-shadow: 8px 8px 0px 0px $black-purple;
+                box-shadow: 8px 8px 0px 0px $dark-purple;
             }
         }
     }

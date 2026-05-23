@@ -72,16 +72,44 @@ class FiltersRepository {
     }
 
     /**
+     * Получение id фильтров по коду
+     *
+     * @param array $codes
+     * @return array
+     */
+    public function getFiltersIdsByCode(array $codes): array {
+        return $this->db->query()
+            ->table('filters')
+            ->select(['id', 'code'])
+            ->where('code', 'IN', $codes)
+            ->get();
+    }
+
+    /**
+     * Получение id значений фильтров по их коду
+     *
+     * @param array $codes
+     * @return array
+     */
+    public function getFiltersValuesIdsByCode(array $codes): array {
+        return $this->db->query()
+            ->table('filters_values')
+            ->select(['id', 'code'])
+            ->where('code', 'IN', $codes)
+            ->get();
+    }
+
+    /**
      * Вставка новых фильтров
      *
      * @param array $filters
-     * @return string|false
+     * @return bool
      */
-    public function insertFilters(array $filters): string|false {
+    public function insert(array $filters): bool {
         return $this->db->query()
             ->table('filters')
             ->insert($filters)
-            ->insertId();
+            ->execute();
     }
 
     /**
@@ -94,19 +122,19 @@ class FiltersRepository {
         return $this->db->query()
             ->table('filters_values')
             ->insert($filtersValues)
-            ->insertId();
+            ->execute();
     }
 
     /**
      * Вставка новых связей значений фильтра и id товара
      *
      * @param array $filtersValuesProducts
-     * @return string|false
+     * @return bool
      */
-    public function insertFiltersValuesProducts(array $filtersValuesProducts): string|false {
+    public function insertFiltersValuesProducts(array $filtersValuesProducts): bool {
         return $this->db->query()
             ->table('filters_values_products')
             ->insert($filtersValuesProducts)
-            ->insertId();
+            ->execute();
     }
 }

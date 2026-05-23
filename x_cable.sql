@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Хост: 127.0.0.1:3306
--- Время создания: Май 22 2026 г., 02:51
+-- Время создания: Май 23 2026 г., 08:26
 -- Версия сервера: 8.0.30
 -- Версия PHP: 8.1.9
 
@@ -159,7 +159,22 @@ INSERT INTO `categories_filters` (`category_id`, `filter_id`) VALUES
 (1, 12),
 (1, 13),
 (1, 14),
-(1, 15);
+(1, 15),
+(1, 120),
+(1, 121),
+(1, 122),
+(1, 123),
+(1, 124),
+(1, 125),
+(1, 126),
+(1, 127),
+(1, 128),
+(1, 129),
+(1, 130),
+(1, 131),
+(1, 132),
+(1, 134),
+(1, 135);
 
 -- --------------------------------------------------------
 
@@ -255,7 +270,23 @@ INSERT INTO `filters` (`id`, `filter`, `code`, `type`, `position`) VALUES
 (12, 'Сечение кабеля', 'cable_section', 'multi', 127),
 (13, 'Материал', 'material', 'multi', 127),
 (14, 'Номинальное напряжение', 'rated_voltage', 'multi', 127),
-(15, 'Скорость передачи данных', 'data_rate', 'switch', 127);
+(15, 'Скорость передачи данных', 'data_rate', 'switch', 127),
+(120, 'Кол-во пар', 'pairscount', 'multi', 127),
+(121, 'Оболочка', 'shell', 'multi', 127),
+(122, 'Прокладка', 'laying', 'multi', 127),
+(123, 'Категория', 'categories', 'multi', 127),
+(124, 'Экранирование', 'shield', 'multi', 127),
+(125, 'Проводник (конструкция)', 'vein', 'multi', 127),
+(126, 'Тип экрана', 'shieldtype', 'multi', 127),
+(127, 'Наличие троса', 'nalichietrosa', 'multi', 127),
+(128, 'Калибр', 'kalibr', 'multi', 127),
+(129, 'Материал проводника', 'veinmaterial', 'multi', 127),
+(130, 'Исполнение', 'performance', 'multi', 127),
+(131, 'Упаковка', 'upakovka', 'multi', 127),
+(132, 'Скорость передачи данных', 'datarate', 'multi', 127),
+(133, 'Включен в реестр МИНПРОМТОРГ', 'vklyuchenvreestrminp', 'multi', 127),
+(134, 'Диаметр проводника', 'diametrspprovodnika', 'multi', 127),
+(135, 'Длина шнура', 'cordlength', 'multi', 127);
 
 -- --------------------------------------------------------
 
@@ -275,38 +306,60 @@ CREATE TABLE `filters_values` (
 --
 
 INSERT INTO `filters_values` (`id`, `value`, `code`, `filter_id`) VALUES
+(186, '0.50 мм', '0d50spmm', 134),
 (77, '2.5 мм^2', '2d5mm', 12),
+(179, '24 AWG', '24spawg', 128),
 (81, '3', '3', 11),
 (73, '305 м', '305m', 8),
+(187, '305 метров', '305spmetrov', 135),
 (74, '4', '4', 9),
 (76, '4', '4', 11),
+(167, '4', '4', 120),
 (78, '50 м', '50m', 8),
 (80, '660 В', '660v', 14),
+(177, 'F/UTP', 'ffutp', 126),
+(169, 'LSZH + UV', 'lszhsppspuv', 121),
+(168, 'PVC / ПВХ', 'pvcspfsppvh', 121),
+(176, 'U/UTP', 'ufutp', 126),
 (57, 'Бежевый', 'beige', 7),
 (55, 'Белый', 'white', 7),
 (58, 'Бордовый', 'vinous', 7),
+(184, 'В бухте', 'vspbuhte', 131),
+(183, 'В коробке', 'vspkorobke', 131),
 (82, 'ВВГ-Пнг(А)-LS', 'vvg-png-a-ls', 10),
+(170, 'Внутренняя', 'vnutrennyaya', 122),
 (59, 'Голубой', 'blue', 7),
+(174, 'Да', 'da', 124),
 (4, 'Да', 'yes', 2),
 (83, 'До 0,01 Гбит/с', '001gbits', 15),
 (84, 'До 0,1 Гбит/с', '01gbits', 15),
 (85, 'До 1 Гбит/с', '1gbits', 15),
 (88, 'До 10 Гбит/с', '10gbits', 15),
 (86, 'До 2.5 Гбит/с', '2d5gbits', 15),
+(185, 'До 2.5 Гбит/с', 'dosp2d5spgbitfs', 132),
 (89, 'До 40 Гбит/с', '40gbits', 15),
 (87, 'До 5 Гбит/с', '5gbits', 15),
 (63, 'Зеленый', 'green', 7),
+(172, 'Кат. 5e', 'katdsp5e', 123),
 (79, 'Медь', 'copper', 13),
+(180, 'Медь (Cu)', 'medsplbcurb', 129),
 (60, 'Мультиколор', 'multicolor', 7),
 (75, 'нг(А)-HF', 'ng-a-hf', 10),
+(182, 'нг(А)-LS', 'nglbarbmls', 130),
+(173, 'Нет', 'net', 124),
+(178, 'Нет', 'net', 127),
 (5, 'Нет', 'no', 2),
+(175, 'Одножильный (solid)', 'odnozhilnyjsplbsolidrb', 125),
 (61, 'Оранжевый', 'orange', 7),
 (1, 'По возрастанию цены', 'low-to-high', 1),
 (3, 'По популярности', 'by-popular', 1),
 (2, 'По убыванию цены', 'high-to-low', 1),
 (62, 'Розовый', 'pink', 7),
 (72, 'Серый', 'gray', 7),
-(56, 'Черный', 'black', 7);
+(160, 'Серый', 'seryj', 7),
+(171, 'Универсальная', 'universalnaya', 122),
+(56, 'Черный', 'black', 7),
+(181, 'Чёрный', 'chernyj', 7);
 
 -- --------------------------------------------------------
 
@@ -358,6 +411,7 @@ INSERT INTO `filters_values_products` (`filter_value_id`, `product_id`) VALUES
 
 CREATE TABLE `news` (
   `id` int UNSIGNED NOT NULL,
+  `title` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `text` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `image` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -366,11 +420,12 @@ CREATE TABLE `news` (
 -- Дамп данных таблицы `news`
 --
 
-INSERT INTO `news` (`id`, `text`, `image`) VALUES
-(4, 'Новая модель Reebok - Zig Kinetica! Zig Kinetica – модель с беговой историей, ставшая иконой уличного стиля. Сегодня технологии Reebok на страже повседневного комфорта. Дополнительные свойства: Зигзагообразный ТПУ каркас ZIG ENERGY SHELL обеспечивающий стабилизацию, направляя и возвращая кинетическую энергию. Комбинация пеноматериалов FLOATRIDE ENERGY и FLOATRIDE FUEL в промежуточной подошве обеспечивает легкую и отзывчивую амортизацию, а также гасит ударные нагрузки. Дышащий комбинированный верх выполнен с использованием двухслойной сетки и обеспечивает превосходную циркуляцию воздуха. Инновационные резиновые полоски ZIG ENERGY BANDS на подметке сжимаются и разжимаются, усиливая возврат энергии с каждым шагом.', 'img/info1.jpg'),
-(5, 'Кроссовки PUMA RS-Z LTH Trainers. Футуристический внешний вид модели PUMA RS-Z LTH Trainers сочетается с продуманными технологическим наполнением. Верх изготовлен из кожи и отвечает за внешний вид и долговечность пары. Подошва с технологией Running System — мягкий вспененный материал IMEVA и формованная стелька снижают ударные нагрузки и обеспечивают ощущение легкости даже на длинных дистанциях. Знаменитые полосы PUMA Formstrip выделяются по структуре, дополняя многослойную конструкцию верха.', 'png/info3.png'),
-(6, 'Зарегистрируйтесь на нашем сайте и получите бонус в виде промокода на первый заказ.', 'png/info2.png'),
-(7, 'Новый интернет-магазин обуви - Shoes!', 'png/info4.png');
+INSERT INTO `news` (`id`, `title`, `text`, `image`) VALUES
+(1, 'Масштабное снижение цен!', 'Скидки до 50% на самые востребованные категории кабельной продукции и оборудования. Успейте зафиксировать выгоду для ваших проектов.', 'sales-banner.png'),
+(2, 'Встречайте новый бренд — Cabeus!', ' Мировой стандарт качества в нашем каталоге. Полный ассортимент структурированных кабельных систем (СКС) уже доступен для заказа.', 'cabeus-banner.png'),
+(3, 'Персональные предложения и скидки', 'Подпишитесь на нашу информационную рассылку. Получайте только актуальные прайс-листы, закрытые распродажи и аналитику рынка первыми.', 'personal-banner.jpg\r\n'),
+(4, 'Время обновить освещение?', 'От бытовых лампочек до промышленного и уличного светодиодного оборудования. Надежные решения с гарантией высокой энергоэффективности.', 'light.png'),
+(5, 'Выгода для постоянных клиентов', 'Зарегистрируйтесь на сайте и получите дополнительную скидку 10% на первый заказ. Управляйте покупками через удобный личный кабинет.', 'email-banner.jpg');
 
 -- --------------------------------------------------------
 
@@ -544,7 +599,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `first_name`, `second_name`, `age`, `gender`, `email`, `phone`, `password`) VALUES
-(16, 'Тест', 'Тест', 44, 'male', 'jopaj@mail.su', '79999999999', '$2y$10$9uQhtPQG.1TcN8CGeDn1/ez3603bAEqtLX4mj58zEhSvgiHtgD2VW');
+(16, 'Тест', 'Тест', 44, 'male', 'jopaj@mail.su', '79999999999', '$2y$10$Zt5JHqRP3RqIuIiyK/XgD.munQ1/vssnmQQ5pieS2hl/4jojAqV2i');
 
 --
 -- Индексы сохранённых таблиц
@@ -758,19 +813,19 @@ ALTER TABLE `feedbacks`
 -- AUTO_INCREMENT для таблицы `filters`
 --
 ALTER TABLE `filters`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=137;
 
 --
 -- AUTO_INCREMENT для таблицы `filters_values`
 --
 ALTER TABLE `filters_values`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=93;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=190;
 
 --
 -- AUTO_INCREMENT для таблицы `news`
 --
 ALTER TABLE `news`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT для таблицы `orders`
@@ -788,7 +843,7 @@ ALTER TABLE `permissions`
 -- AUTO_INCREMENT для таблицы `products`
 --
 ALTER TABLE `products`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=65;
 
 --
 -- AUTO_INCREMENT для таблицы `users`
@@ -884,7 +939,7 @@ ALTER TABLE `products_related`
 -- Ограничения внешнего ключа таблицы `products_stocks`
 --
 ALTER TABLE `products_stocks`
-  ADD CONSTRAINT `to_count_products_id` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+  ADD CONSTRAINT `to_count_products_id` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Ограничения внешнего ключа таблицы `products_variations`

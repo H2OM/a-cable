@@ -10,10 +10,13 @@ export default function MainSlider({slides}: { slides: SliderMain[] }) {
     return (
         <div className="Slider__sections">
             <div className="Slider__sections__desc">
-                <h2 className="title">Новости</h2>
-                <p className="Slider__sections__desc__text">
-                    {slides[infoSlide].text}
-                </p>
+                <h2 className="title title_black">Новости</h2>
+                <div>
+                    <p className="title title_small">{slides[infoSlide].title}</p>
+                    <p className="Slider__sections__desc__text">
+                        {slides[infoSlide].text}
+                    </p>
+                </div>
                 <div className="Slider__sections__desc__nav">
                     <div className="Slider__sections__desc__nav__arrows-wrap" onClick={() => {
                         if (infoSlide == 0) {
@@ -68,11 +71,11 @@ export default function MainSlider({slides}: { slides: SliderMain[] }) {
             </div>
             <div className="Slider__sections__slide">
                 <Image
-                    src={"/" + slides[infoSlide].image.trim()}
+                    src={"/img/" + slides[infoSlide].image.trim()}
                     alt={"КАРТИНКА К ТЕКСТУ"}
                     className={"Slider__sections__slide__img"}
-                    height={550}
-                    width={400}
+                    height={1000}
+                    width={1000}
                     quality={100}
                     priority={true}
                 />

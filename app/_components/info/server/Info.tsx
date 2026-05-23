@@ -15,15 +15,15 @@ export default function Info() {
                         <div className="About__describe">
                             Интернет-магазин “Shoes” предоставляет большой выбор обуви для всех.
                         </div>
-                        <Image
-                            src="/img/sneaker.jpg"
-                            alt="Изображение"
-                            className="About__us__section__image"
-                            width={500}
-                            height={425}
-                            priority={true}
-                            quality={100}
-                        />
+                        {/*<Image*/}
+                        {/*    src="/img/sneaker.jpg"*/}
+                        {/*    alt="Изображение"*/}
+                        {/*    className="About__us__section__image"*/}
+                        {/*    width={500}*/}
+                        {/*    height={425}*/}
+                        {/*    priority={true}*/}
+                        {/*    quality={100}*/}
+                        {/*/>*/}
                     </div>
                     <div className="About__us__section About__us__section_right">
                         <div className="About__describe">
@@ -31,15 +31,15 @@ export default function Info() {
                             obcaecati quos illo distinctio laudantium laboriosam, blanditiis animi nam fuga, doloremque
                             voluptatibus amet adipisci molestias unde! Aut?
                         </div>
-                        <Image
-                            src="/img/sneaker.jpg"
-                            alt="Изображение"
-                            className="About__us__section__image"
-                            width={500}
-                            height={425}
-                            priority={true}
-                            quality={100}
-                        />
+                        {/*<Image*/}
+                        {/*    src="/img/sneaker.jpg"*/}
+                        {/*    alt="Изображение"*/}
+                        {/*    className="About__us__section__image"*/}
+                        {/*    width={500}*/}
+                        {/*    height={425}*/}
+                        {/*    priority={true}*/}
+                        {/*    quality={100}*/}
+                        {/*/>*/}
                     </div>
                 </div>
             </div>
@@ -71,15 +71,15 @@ export default function Info() {
                         </p>
                     </div>
                 </div>
-                <ClientImage
-                    src={"/png/LOGOpng.png"}
-                    alt="logo"
-                    className="About__connect__logo"
-                    width={350}
-                    height={350}
-                    quality={100}
+                {/*<ClientImage*/}
+                {/*    src={"/png/LOGOpng.png"}*/}
+                {/*    alt="logo"*/}
+                {/*    className="About__connect__logo"*/}
+                {/*    width={350}*/}
+                {/*    height={350}*/}
+                {/*    quality={100}*/}
 
-                />
+                {/*/>*/}
             </div>
             <div className="About__callback" id="Callback">
                 <div className="grid">

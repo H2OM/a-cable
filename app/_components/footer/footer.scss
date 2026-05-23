@@ -1,11 +1,12 @@
 @use "../../scss/common/Vars" as *;
 
 .Footer {
-    bottom: 0px;
-    background-color: $dark-blue;
+    bottom: 0;
+    background-color: $lighter-gray;
     height: 255px;
     width: 100%;
     padding-top: 45px;
+    border-top: 1px solid $thin-gray;
     .grid {
         display: flex;
         justify-content: space-between;
@@ -17,12 +18,17 @@
     &__link {
         font-size: 16px;
         text-decoration: none;
-        color: white;
+        color: $dark-purple;
         margin-bottom: 15px;
     }
     &__logo {
-        height: 100px;
-        width: auto;
+        height: 50px;
+        width: 190px;
+        svg {
+            height: 100%;
+            width: 100%;
+            fill: $main-light;
+        }
     }
     &__form {
         margin-top: 10px;
@@ -35,13 +41,14 @@
             padding: 0 10px;
             border: none;
             font-size: 16px;
-            color: white;
+            color: $dark-purple;
             &:focus {
                 outline: none;
+                border: unset;
             }
             &::placeholder {
                 font-size: 16px;
-                color: rgb(180, 180, 180);
+                color: $light-black;
                 font-style: italic;
             }
         }

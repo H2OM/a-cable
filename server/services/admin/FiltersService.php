@@ -14,8 +14,8 @@ class FiltersService {
      * @param array $filters
      * @return string|false
      */
-    public function insertFilters(array $filters): string|false {
-        return $this->filtersRepository->insertFilters($filters);
+    public function insert(array $filters): string|false {
+        return $this->filtersRepository->insert($filters);
     }
 
     /**

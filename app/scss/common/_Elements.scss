@@ -142,10 +142,10 @@
         transition: 0.2s all;
         cursor: pointer;
         &:hover {
-            box-shadow: -4px 4px 0px 0px Vars.$suberblack-purple;
+            box-shadow: -4px 4px 0px 0px Vars.$main-light;
         }
         &:active {
-            box-shadow: 0px 0px 0px 0px Vars.$dark-purple;
+            box-shadow: 0px 0px 0px 0px Vars.$main-light;
         }
         &::before {
             content: "";
@@ -163,10 +163,10 @@
             margin-left: 5px;
             transform: rotate(180deg);
             &:hover {
-                box-shadow: -4px -4px 0px 0px Vars.$suberblack-purple;
+                box-shadow: -4px -4px 0px 0px Vars.$main-light;
             }
             &:active {
-                box-shadow: 0px 0px 0px 0px Vars.$dark-purple;
+                box-shadow: 0px 0px 0px 0px Vars.$main-light;
             }
         }
     }
@@ -186,7 +186,7 @@
             border-radius: 5px;
             cursor: pointer;
             &_active {
-                background-color: Vars.$light-purple;
+                background-color: Vars.$main-light;
             }
         }
         &__dot {
@@ -281,7 +281,7 @@
         }
         &:not(._active):hover {
             opacity: 1;
-            border: 1px solid Vars.$grape_purple_5;
+            border: 1px solid Vars.$ghosted-black;
         }
         img {
             width: 100%;

@@ -19,8 +19,8 @@
             margin-top: 5px;
         }
         &__filter {
-            border: 1px solid $grape_purple_5;
-            color: $grape_purple_4;
+            border: 1px solid $main-light;
+            color: $dark-purple;
             border-radius: 5px;
             padding: 5px 10px;
             font-weight: inherit;
@@ -226,7 +226,7 @@
             width: 70%;
             &:hover {
                 .Details__split__slider__base__arrows-wrap {
-                    background-color: $black-purple;
+                    background-color: $dark-purple;
                 }
             }
             &__base {
@@ -240,11 +240,11 @@
                     height: 82px;
                     width: 42px;
                     border-radius: 5px;
-                    background-color: rgba($black-purple, 0.3);
+                    background-color: rgba($dark-purple, 0.3);
                     transition: 0.2s all;
                     cursor: pointer;
                     &:hover {
-                        box-shadow: -4px 4px 0px 0px #340346;
+                        box-shadow: -4px 4px 0px 0px $main-light;
                     }
                     &:active {
                         box-shadow: unset;
@@ -259,7 +259,7 @@
                         justify-self: flex-end;
                         transform: rotate(180deg);
                         &:hover {
-                            box-shadow: -4px -4px 0px 0px #340346;
+                            box-shadow: -4px -4px 0px 0px $main-light;
                         }
                         &:active {
                             box-shadow: unset;

@@ -49,7 +49,7 @@ export default async function Details({params}: { params: Promise<{ id: string; 
             staticFilters.push({filter_name: filter.name, ...productValue});
         }
     });
-    console.log(product)
+
     return (
         <section className="Details section">
             <div className="grid">

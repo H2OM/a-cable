@@ -7,20 +7,22 @@ use app\core\enums\ResponseMessage;
 use app\core\Env;
 use app\core\exceptions\ResponseException;
 use app\repositories\BrandsRepository;
+use app\repositories\CategoriesRepository;
+use app\repositories\FiltersRepository;
 use app\repositories\parsers\AnlanRepository;
-use app\services\admin\FiltersService;
-use app\services\admin\ProductsService;
+use app\repositories\ProductsRepository;
 use Exception;
 
 /** Парсер для сайта АнЛан */
 class AnlanParserService extends ParserService {
     public function __construct(
-        private readonly BrandsRepository $brandsRepository,
-        private readonly AnlanRepository  $anlanRepository,
-        private readonly ProductsService  $productsService,
-        private readonly FiltersService   $filtersService,
-        private readonly Env              $env,
-        private readonly Db               $db
+        private readonly CategoriesRepository $categoriesRepository,
+        private readonly ProductsRepository   $productsRepository,
+        private readonly FiltersRepository    $filtersRepository,
+        private readonly BrandsRepository     $brandsRepository,
+        private readonly AnlanRepository      $anlanRepository,
+        private readonly Env                  $env,
+        private readonly Db                   $db
     ) {}
 
     /**
@@ -51,6 +53,7 @@ class AnlanParserService extends ParserService {
      * @throws Exception
      */
     public function to(array $parsedProducts, int $categoryTypeId): bool {
+        $mainCategory = $this->categoriesRepository->getMainCategoryByTypeId($categoryTypeId);
         $parsedProducts = array_values($parsedProducts);
         $products = [];
         $brandsMap = [];
@@ -93,19 +96,23 @@ class AnlanParserService extends ParserService {
         try {
             $this->db->beginTransaction();
 
-            $firstProductId = $this->productsService->insert($products);
-
-            if(!$firstProductId) {
+            if(!$this->productsRepository->insert($products)) {
                 throw new ResponseException(ResponseMessage::ERROR_ADD_PRODUCT);
             }
+
+            $productsIds = $this->productsRepository->getProductsIdsByArticle(array_map(function ($product) {
+                return $product['article'];
+            }, $products));
+
+            $productsIds = array_column($productsIds, null, 'article');
 
             $productsStocks = [];
             $filters = [];
             $filtersValues = [];
             $filtersValuesProducts = [];
 
-            foreach($parsedProducts as $index => $parsedProduct) {
-                $productId = (int)$firstProductId + $index;
+            foreach($parsedProducts as $parsedProduct) {
+                $productId = $productsIds[$parsedProduct['sku']]['id'] ?? null;
 
                 $productsStocks[] = [
                     'product_id' => $productId,
@@ -133,15 +140,23 @@ class AnlanParserService extends ParserService {
                 }
             }
 
-            $this->productsService->insertStock($productsStocks);
+            $this->productsRepository->insertStock($productsStocks);
 
-            // TODO брать вставленные id через уникальный ключ (code)
-            //TODO categories_filters прикрепить фильтры к категории
-            $firstFilterId = $this->filtersService->insertFilters($filters);
+            if(!$this->filtersRepository->insert($filters)) {
+                throw new ResponseException(ResponseMessage::ERROR_ADD_FILTERS);
+            }
+
+            $filtersIds = $this->filtersRepository->getFiltersIdsByCode(array_map(function ($filter) {
+                return $filter['code'];
+            }, $filters));
+
+            $filtersIds = array_column($filtersIds, null, 'code');
+
             $parsedFiltersValues = [];
+            $categoriesFilters = [];
 
-            foreach(array_values($filtersValues) as $index => $filterValues) {
-                $filterId = (int)$firstFilterId + $index;
+            foreach($filtersValues as $filterCode => $filterValues) {
+                $filterId = $filtersIds[$filterCode]['id'] ?? null;
 
                 foreach($filterValues as $filterValue) {
                     $parsedFiltersValues[] = [
@@ -149,9 +164,16 @@ class AnlanParserService extends ParserService {
                         'filter_id' => $filterId,
                     ];
                 }
+
+                $categoriesFilters[] = [
+                    'category_id' => $mainCategory['id'],
+                    'filter_id' => $filterId
+                ];
             }
 
-            $firstFilterValueId = $this->filtersService->insertFiltersValues(array_map(function ($value) {
+            $this->categoriesRepository->addFiltersToCategories($categoriesFilters);
+
+            $result = $this->filtersRepository->insertFiltersValues(array_map(function ($value) {
                 return [
                     'value' => $value['value'],
                     'code' => $value['code'],
@@ -159,10 +181,20 @@ class AnlanParserService extends ParserService {
                 ];
             }, $parsedFiltersValues));
 
+            if(!$result) {
+                throw new ResponseException(ResponseMessage::ERROR_ADD_FILTERS);
+            }
+
+            $filtersValuesIds = $this->filtersRepository->getFiltersValuesIdsByCode(array_map(function ($filterValue) {
+                return $filterValue['code'];
+            }, $parsedFiltersValues));
+
+            $filtersValuesIds = array_column($filtersValuesIds, null, 'code');
+
             $parsedFiltersValuesProducts = [];
 
-            foreach($parsedFiltersValues as $index => $parsedFiltersValue) {
-                $filtersValueId = (int)$firstFilterValueId + $index;
+            foreach($parsedFiltersValues as $parsedFiltersValue) {
+                $filtersValueId = $filtersValuesIds[$parsedFiltersValue['code']]['id'] ?? null;
                 $fvp = $filtersValuesProducts[$parsedFiltersValue['filter_code']][$parsedFiltersValue['code']];
 
                 foreach($fvp as $filterValueProduct) {
@@ -173,7 +205,9 @@ class AnlanParserService extends ParserService {
                 }
             }
 
-            $this->filtersService->insertFiltersValuesProducts($parsedFiltersValuesProducts);
+            if(!$this->filtersRepository->insertFiltersValuesProducts($parsedFiltersValuesProducts)) {
+                throw new ResponseException(ResponseMessage::ERROR_ADD_FILTERS);
+            }
 
             $this->db->commit();
 

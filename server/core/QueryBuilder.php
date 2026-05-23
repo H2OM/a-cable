@@ -118,20 +118,36 @@ class QueryBuilder {
             return $this;
         }
 
+        $placeholder = '?';
+        $bindings = [];
+
         if ($value === null) {
             $value = $operator;
             $operator = '=';
         }
 
+        if(strtolower($operator) === 'in' && is_array($value)) {
+            $placeholders = [];
+
+            foreach ($value as $item) {
+                $placeholders[] = '?';
+                $bindings[] = $item;
+            }
+
+            $placeholder = '(' . implode(', ', $placeholders) . ')';
+        } else {
+            $bindings[] = $value;
+        }
+
         $this->wheres[] = [
             'type'     => 'basic',
             'logic'    => $logic,
-            'sql'    => "$field $operator ?",
+            'sql'      => "$field $operator $placeholder",
             'operator' => $operator,
-            'bindings' => [$value]
+            'bindings' => $bindings
         ];
 
-        $this->bindings[] = $value;
+        $this->bindings = [...$this->bindings, ...$bindings];
 
         return $this;
     }
@@ -250,9 +266,7 @@ class QueryBuilder {
         }
 
         $this->bindings = [...$bindings, ...$this->bindings];
-
         $this->prepareQuery = rtrim($this->prepareQuery, ',');
-
         $this->prepareQuery .= " WHERE " . $this->compileWheres($this->wheres);
 
         return $this;

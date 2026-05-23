@@ -2,23 +2,20 @@
 
 namespace app\services\admin;
 
-use app\core\Db;
+use app\repositories\ProductsRepository;
 
 /** Сервис для управления товарами */
 class ProductsService {
-    public function __construct(private readonly Db $db) {}
+    public function __construct(private readonly ProductsRepository $productsRepository) {}
 
     /**
      * Добавление новых товаров
      *
      * @param array $data
-     * @return string|false
+     * @return array|false
      */
-    public function insert(array $data): string|false {
-        return $this->db->query()
-            ->table('products')
-            ->insert($data)
-            ->insertId();
+    public function insert(array $data): array|false {
+        return $this->productsRepository->insert($data);
     }
 
     /**
@@ -28,9 +25,6 @@ class ProductsService {
      * @return bool
      */
     public function insertStock(array $data): bool {
-        return $this->db->query()
-            ->table('products_stocks')
-            ->insert($data)
-            ->execute();
+        return $this->productsRepository->insertStock($data);
     }
 }

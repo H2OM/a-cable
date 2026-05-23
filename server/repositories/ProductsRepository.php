@@ -239,16 +239,17 @@ class ProductsRepository {
     }
 
     /**
-     * Получение наличия товара по id
+     * Получение id товаров по артикулу
      *
-     * @param int $id
-     * @return int
+     * @param array $articles
+     * @return array
      */
-    public function getProductId(int $id): int {
+    public function getProductsIdsByArticle(array $articles): array {
         return $this->db->query()
             ->table('products')
-            ->where('id', $id)
-            ->value('id');
+            ->select(['id', 'article'])
+            ->where('article', 'IN', $articles)
+            ->get();
     }
 
     /**
@@ -329,13 +330,26 @@ class ProductsRepository {
      * Добавление
      *
      * @param array $data
-     * @return int
+     * @return bool
      */
-    public function insertProduct(array $data): int {
+    public function insert(array $data): bool {
         return $this->db->query()
             ->table('products')
             ->insert($data)
-            ->affectedRows();
+            ->execute();
+    }
+
+    /**
+     * Добавление наличия товаров
+     *
+     * @param array $data
+     * @return bool
+     */
+    public function insertStock(array $data): bool {
+        return $this->db->query()
+            ->table('products_stocks')
+            ->insert($data)
+            ->execute();
     }
 
     /**

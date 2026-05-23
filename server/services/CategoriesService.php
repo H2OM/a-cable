@@ -4,7 +4,7 @@ namespace app\services;
 
 use app\repositories\CategoriesRepository;
 
-/** Сервис для управления категориями */
+/** Сервис для получения категорий */
 class CategoriesService {
     public function __construct(private readonly CategoriesRepository $categoriesRepository) {}
 
@@ -25,5 +25,15 @@ class CategoriesService {
      */
     public function getByCode(string $code): ?array {
         return $this->categoriesRepository->getByCode($code);
+    }
+
+    /**
+     * Получить основную категорию по id подкатегории
+     *
+     * @param int $id
+     * @return array|null
+     */
+    public function getMainCategoryByTypeId(int $id): ?array {
+        return $this->categoriesRepository->getMainCategoryByTypeId($id);
     }
 }

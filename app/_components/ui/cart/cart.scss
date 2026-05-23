@@ -16,7 +16,6 @@
         padding: 15px 15px 0 15px;
         width: 25%;
         box-shadow: unset;
-        // margin-left: 10px;
         &:nth-child(5n + 5), &:first-child {
             margin-left: 0;
         }
@@ -129,13 +128,13 @@
    
     to {
         height: 517px;
-        box-shadow: 8px 8px 0 0 #4f046a88;
+        box-shadow: 8px 8px 0 0 $main-light;
     }
 }
 @keyframes cartClose {
     from {
         height: 517px;
-        box-shadow: 8px 8px 0 0 #4f046a88;
+        box-shadow: 8px 8px 0 0 $main-light;
     }
     50% {
         height: 517px;

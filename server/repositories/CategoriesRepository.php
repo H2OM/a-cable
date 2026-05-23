@@ -49,4 +49,33 @@ class CategoriesRepository {
             ->where('code', '=', $code)
             ->first();
     }
+
+    /**
+     * Получить основную категорию по id подкатегории
+     *
+     * @param int $id
+     * @return array|null
+     */
+    public function getMainCategoryByTypeId(int $id): ?array {
+        return $this->db->fetchOne("
+            SELECT
+                categories.*
+            FROM categories
+            JOIN categories_types ON categories.id = categories_types.category_id
+            WHERE categories_types.id = ?
+        ", [$id]);
+    }
+
+    /**
+     * Прикрепить фильтры к категориям
+     *
+     * @param array $values
+     * @return bool
+     */
+    public function addFiltersToCategories(array $values): bool {
+        return $this->db->query()
+            ->table('categories_filters')
+            ->insert($values)
+            ->execute();
+    }
 }
