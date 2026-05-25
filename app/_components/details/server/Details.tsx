@@ -155,14 +155,14 @@ export default async function Details({params}: { params: Promise<{ id: string; 
                         <div className="Details__tabs__nav__tab _active" data-link={"Описание"}>
                             Описание
                         </div>
-                        <div className="Details__tabs__nav__tab" data-link={"Товар"}>
-                            Характеристики
+                        {/*<div className="Details__tabs__nav__tab" data-link={"Товар"}>*/}
+                        {/*    Характеристики*/}
                             {/*TODO характеристики*/}
-                        </div>
-                        <div className="Details__tabs__nav__tab" data-link={"Отзывы"}>
-                            Отзывы
+                        {/*</div>*/}
+                        {/*<div className="Details__tabs__nav__tab" data-link={"Отзывы"}>*/}
+                        {/*    Отзывы*/}
                             {/* <span className="Details__tabs__nav__tab__value"> {Array.isArray(feedback) ? feedback.length : ""}</span> */}
-                        </div>
+                        {/*</div>*/}
                     </DetailsTabsNavigation>
                     <div className="Details__tabs__content">
                         <div className="Details__tabs__content__block _active"

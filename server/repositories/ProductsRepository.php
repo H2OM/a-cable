@@ -353,6 +353,36 @@ class ProductsRepository {
     }
 
     /**
+     * Привязка вариаций к товару
+     *
+     * @param array $data
+     * @return bool
+     */
+    public function pairVariation(array $data): bool {
+        return $this->db->query()
+            ->table('products_variations')
+            ->insert($data)
+            ->execute();
+    }
+
+    /**
+     * Поиск id товаров по строке запроса
+     *
+     * @param string $query
+     * @return array
+     */
+    public function searchIdsByQuery(string $query): array {
+        return $this->db->query()
+            ->table('products')
+            ->select(['id', 'CONCAT(title, " | ", article) AS name', 'image'])
+            ->where('id', $query)
+            ->orWhere('title', 'LIKE', "%$query%")
+            ->orWhere('article', 'LIKE', "%$query%")
+            ->limit(15)
+            ->get();
+    }
+
+    /**
      * Подготовка запроса на получения товара/товаров по id
      *
      * @param array $ids

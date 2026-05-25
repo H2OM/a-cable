@@ -1,7 +1,7 @@
 const path = require('path');
 
 module.exports = {
-    allowedDevOrigins: ['diplom'],
+    allowedDevOrigins: ['diplom','x-cable'],
     images: {
         qualities: [75, 100],
     },

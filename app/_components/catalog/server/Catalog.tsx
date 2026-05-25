@@ -10,7 +10,7 @@ import normalizeParams from "@utils/normalizeParams";
 import {SearchParams} from "@_types/common";
 
 export default async function Catalog({promiseParams, promiseSearchParams}: {
-    promiseParams: Promise<{ category: string; }>
+    promiseParams: Promise<{ category: string; type?:string }>
     promiseSearchParams: Promise<SearchParams>;
 }) {
     const rawSearchParams: SearchParams = await promiseSearchParams;
@@ -19,6 +19,10 @@ export default async function Catalog({promiseParams, promiseSearchParams}: {
     const searchParams = normalizeParams(rawSearchParams);
 
     searchParams.category = params.category;
+
+    if(params.type) {
+        searchParams.type = params.type;
+    }
 
     const response = await catalogAPI.get(searchParams);
 
@@ -53,7 +57,7 @@ export default async function Catalog({promiseParams, promiseSearchParams}: {
                             <span className="title__count"> - {catalog.length}</span>
                         </div>
                         {(Object.keys(searchParams).length !== 0 || catalog.length > 0) && filters &&
-                            <Filters filters={filters} category={title === ""}/>
+                            <Filters filters={filters} category={title === ""} categoryType={params.type}/>
                         }
                         {catalog.length > 0 ?
                             <>

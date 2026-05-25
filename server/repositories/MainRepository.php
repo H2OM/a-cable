@@ -14,6 +14,6 @@ class MainRepository {
      * @return array
      */
     public function getNews(): array {
-        return $this->db->query()->table('news')->get();
+        return $this->db->query()->table('news')->orderBy('position')->get();
     }
 }

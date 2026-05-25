@@ -181,11 +181,11 @@ class QueryBuilder {
      * SQL команда ORDER BY
      *
      * @param string $field
-     * @param string $direction
+     * @param bool $desc
      * @return $this
      */
-    public function orderBy(string $field, string $direction = 'ASC'): self {
-        $this->orderBy = "ORDER BY $field $direction";
+    public function orderBy(string $field, bool $desc = false): self {
+        $this->orderBy = "ORDER BY $field " . ($desc ? 'DESC' : 'ASC');
 
         return $this;
     }

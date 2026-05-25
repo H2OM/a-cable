@@ -34,9 +34,10 @@
             'admin-products' => [
                 'class' => AdminMiddleware::class,
                 'base_permission' => 'products',
-                'create' => 'product.create',
-                'edit' => 'product.edit',
-                'delete' => 'product.delete',
+                'pair-variation' => 'products.edit',
+                'edit' => 'products.edit',
+                'create' => 'products.create',
+                'delete' => 'products.delete',
             ],
             'admin-parser' => [
                 'class' => AdminMiddleware::class,

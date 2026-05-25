@@ -15,6 +15,14 @@ use Exception;
 
 /** Парсер для сайта АнЛан */
 class AnlanParserService extends ParserService {
+    private const FILTERS_CODE_MAP = [
+    ];
+
+    private const FILTERS_VALUES_CODE_MAP = [
+        'seryj' => 'gray',
+        'chernyj' => 'black'
+    ];
+
     public function __construct(
         private readonly CategoriesRepository $categoriesRepository,
         private readonly ProductsRepository   $productsRepository,
@@ -78,8 +86,14 @@ class AnlanParserService extends ParserService {
                 $brandsMap[$parseProduct['brand_code']] = $currentBrand['id'] ?? 4;
             }
 
+            $parsedName = trim(preg_replace('/\s+/', ' ', preg_replace(
+                pattern: "/{$parseProduct['sku']}|{$parseProduct['brand_name']}/i",
+                replacement: '',
+                subject: $parseProduct['name']
+            )));
+
             $products[] = [
-                'title' => $parseProduct['name'],
+                'title' => $parsedName,
                 'brand_id' => $brandsMap[$parseProduct['brand_code']],
                 'category_type_id' => $categoryTypeId,
                 'article' => $parseProduct['sku'],
@@ -88,7 +102,7 @@ class AnlanParserService extends ParserService {
                 'unit' => $parseProduct['units'] ?? 'шт.',
                 'image' => $images[0] ?? '',
                 'slider_images' => implode(',', $images),
-                'description' => $parseProduct['description'],
+                'description' =>  strip_tags($parseProduct['description']),
                 'hit' => 0
             ];
         }
@@ -120,21 +134,24 @@ class AnlanParserService extends ParserService {
                 ];
 
                 foreach($parsedProduct['filters'] as $parsedFilter) {
-                    if(empty($filters[$parsedFilter['filter_code']])) {
-                        $filters[$parsedFilter['filter_code']] = [
+                    $filterCode = self::FILTERS_CODE_MAP[$parsedFilter['filter_code']] ?? $parsedFilter['filter_code'];
+                    $valueCode = self::FILTERS_VALUES_CODE_MAP[$parsedFilter['value_code']] ?? $parsedFilter['value_code'];
+
+                    if(empty($filters[$filterCode])) {
+                        $filters[$filterCode] = [
                             'filter' => $parsedFilter['filter_name'],
-                            'code' => $parsedFilter['filter_code'],
+                            'code' => $filterCode,
                             'type' => 'multi'
                         ];
                     }
 
-                    $filtersValues[$parsedFilter['filter_code']][$parsedFilter['value_code']] = [
+                    $filtersValues[$filterCode][$valueCode] = [
                         'value' => $parsedFilter['value'],
-                        'code' => $parsedFilter['value_code'],
-                        'filter_code' => $parsedFilter['filter_code']
+                        'code' => $valueCode,
+                        'filter_code' => $filterCode
                     ];
 
-                    $filtersValuesProducts[$parsedFilter['filter_code']][$parsedFilter['value_code']][] = [
+                    $filtersValuesProducts[$filterCode][$valueCode][] = [
                         'product_id' => $productId
                     ];
                 }

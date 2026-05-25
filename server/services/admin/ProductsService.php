@@ -27,4 +27,25 @@ class ProductsService {
     public function insertStock(array $data): bool {
         return $this->productsRepository->insertStock($data);
     }
+
+    /**
+     * Привязка вариаций к товару
+     *
+     * @param int $id
+     * @param int $variationId
+     * @param bool $oneWay
+     * @return bool
+     */
+    public function pairVariation(int $id, int $variationId, bool $oneWay = false): bool {
+        $data = [[
+            'product_id' => $id,
+            'variation_id' => $variationId,
+        ]];
+
+        if(!$oneWay) {
+            $data[] = ['product_id' => $variationId, 'variation_id' => $id];
+        }
+
+        return $this->productsRepository->pairVariation($data);
+    }
 }

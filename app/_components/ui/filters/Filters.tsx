@@ -8,7 +8,15 @@ import DialogRange from "./DialogRange";
 import DialogMulti from "./DialogMulti";
 import {Filter, FilterModalOptions} from "@_types/filters";
 
-export default function Filters({filters, category = false}: { filters: Filter[]; category: boolean; }) {
+export default function Filters({
+    filters,
+    categoryType,
+    category = false
+}: {
+    filters: Filter[];
+    category: boolean;
+    categoryType?: string
+}) {
     const searchParams = useSearchParams();
     const [modalOptions, setModalOptions] = useState<FilterModalOptions>({
         modalType: "",
@@ -58,6 +66,7 @@ export default function Filters({filters, category = false}: { filters: Filter[]
         <div className="filters">
             {filters.map(filter => {
                 if (filter.code === "category" && !category) return null;
+                if(filter.code === "type" && categoryType) return null;
 
                 return (
                     <div className={"filters__tab"

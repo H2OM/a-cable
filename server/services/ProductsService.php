@@ -222,4 +222,14 @@ class ProductsService {
     public function getRelatedById(int $id): array {
         return $this->productsRepository->getRelatedById($id);
     }
+
+    /**
+     * Поиск id товаров по строке запроса
+     *
+     * @param string $query
+     * @return array
+     */
+    public function searchIdsByQuery(string $query): array {
+        return $this->productsRepository->searchIdsByQuery($query);
+    }
 }

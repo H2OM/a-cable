@@ -10,8 +10,14 @@ export function Header() {
                 <div className="header__links">
                     <div>
                         <Link className="header__links__link" href={"/catalog"}>Каталог</Link>
-                        <Link className="header__links__link" href={"/catalog/cable-products/twisted-pair"}>Витая пара</Link>
-                        <Link className="header__links__link" href={"/catalog/cable-products/power-cable"}>Силовой кабель</Link>
+                        <Link className="header__links__link"
+                              href={"/catalog/cable-products/twisted-pair"}>
+                            Витая пара
+                        </Link>
+                        <Link className="header__links__link"
+                              href={"/catalog/cable-products/power-cable?type="}>
+                            Силовой кабель
+                        </Link>
                         <Link className="header__links__link" href={"/info"}>О нас</Link>
                     </div>
                 </div>
