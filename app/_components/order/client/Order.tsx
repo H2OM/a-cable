@@ -72,7 +72,7 @@ export default function Order() {
             delivery_type_id: selectedDeliveryType!.id,
             delivery_price: selectedDeliveryType!.price,
             delivery_address: String(data.delivery_address),
-            delivery_date: date.toLocaleDateString()
+            delivery_date: date.toLocaleDateString().replaceAll('.', '-')
         });
 
         if (response.success) {
@@ -98,12 +98,12 @@ export default function Order() {
             <div className="grid">
                 <h1 className="title">Оформление заказа</h1>
                 <br/>
-                {!user && !isUserPending && <OrderAuthBlock/>}
-                <div className="block-cart">
-                    <div className="block-cart__header title _lite" style={{margin: 0}}>Информация о доставке</div>
-                    <form className="form"
-                          style={{maxWidth: 'unset'}}
-                          onSubmit={handleSubmit}>
+                <form className="form"
+                      style={{maxWidth: 'unset'}}
+                      onSubmit={handleSubmit}>
+                    {!user && !isUserPending && <OrderAuthBlock/>}
+                    <div className="block-cart">
+                        <div className="block-cart__header title _lite" style={{margin: 0}}>Информация о доставке</div>
                         <div className="block-cart__body form__split">
                             <div className="form__split__block">
                                 <label className="form__label" htmlFor="delivery_type">
@@ -188,7 +188,7 @@ export default function Order() {
                                 })}
                             </div>
                         </div>
-                        <div className="block-cart__body" style={{marginTop: '20px'}}>
+                        <div className="block-cart__body" style={{marginTop: '5px'}}>
                             <div style={{marginBottom: '5px'}}>
                                 <label className="form__label">
                                     <input type="checkbox" name="agreement" required/>
@@ -211,8 +211,8 @@ export default function Order() {
                                 Оформить заказ
                             </button>
                         </div>
-                    </form>
-                </div>
+                    </div>
+                </form>
             </div>
         </section>
     );

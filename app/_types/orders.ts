@@ -33,7 +33,8 @@ export interface OrderProduct {
     id: number;
     count: number;
     price: number;
-    old_price: number;
+    price_old: number;
+    title: string;
     article: string;
     image: string;
     unit: string;

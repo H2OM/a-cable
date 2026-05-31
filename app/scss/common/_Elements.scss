@@ -303,6 +303,43 @@ a {
     }
 }
 
+.dot-list {
+    padding: 0;
+    overflow-x: hidden;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    li {
+        display: flex;
+        justify-content: space-between;
+        &::after {
+            order: 2;
+            content: "";
+            display: block;
+            width: 100%;
+            border-bottom: 1px dotted Vars.$dark-gray;
+        }
+        span {
+            flex-shrink: 0;
+            &:first-child {
+                order: 1;
+            }
+            &:last-child {
+                order: 3;
+            }
+        }
+        &._big {
+            span {
+                font-weight: 500;
+                font-size: 18px;
+            }
+        }
+    }
+
+
+}
+
 .block-cart {
     background-color: #ffffff;
     border-radius: 7px;
@@ -310,7 +347,7 @@ a {
     box-shadow: 0 0 15px 0 #00000021;
     border: 1px solid Vars.$thin-gray;
     &__header {
-        padding-bottom: 10px;
+        padding-bottom: 5px;
         border-bottom: 1px solid Vars.$thin-gray;
         line-height: 30px;
     }

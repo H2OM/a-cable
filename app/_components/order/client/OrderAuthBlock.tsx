@@ -4,11 +4,11 @@ import MaskInput from "@ui/maskInput/MaskInput";
 
 export default function OrderAuthBlock() {
     return (
-    <div className="cart">
-        <div className="cart__header title _lite" style={{margin: 0}}>
+    <div className="block-cart" style={{marginBottom: '20px'}}>
+        <div className="block-cart__header title _lite" style={{margin: 0}}>
             Персональные данные
         </div>
-        <div className="cart__body form__split">
+        <div className="block-cart__body form__split">
             <div className="form__split__block">
                 <label className="form__label" htmlFor="first_name">Имя:</label>
                 <input className="form__input" type="text" name="first_name" required/>

@@ -7,10 +7,10 @@ use app\repositories\OrdersRepository;
 use Exception;
 
 /** Сервис для получения информации по заказам */
-class OrdersService {
+readonly class OrdersService {
     public function __construct(
-        private readonly OrdersRepository $ordersRepository,
-        private readonly Validator        $validator
+        private OrdersRepository $ordersRepository,
+        private Validator        $validator
     ) {}
 
     /**
@@ -80,7 +80,7 @@ class OrdersService {
         }
 
         $validateData['products'] = $products;
-        $validateData['price']    = $price;
+        $validateData['price']    = $price + $validateData['delivery_price'];
 
         return $this->ordersRepository->newOrder($validateData);
     }

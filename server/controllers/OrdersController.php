@@ -8,18 +8,20 @@ use app\core\Request;
 use app\core\Response;
 use app\services\AuthService;
 use app\services\BasketService;
+use app\services\MailService;
 use app\services\OrdersService;
 use app\services\UserService;
 use Exception;
 
 /** Контролер для получения заказов и частичного управления ими */
-class OrdersController {
+readonly class OrdersController {
     public function __construct(
-        private readonly OrdersService $ordersService,
-        private readonly BasketService $basketService,
-        private readonly UserService   $userService,
-        private readonly AuthService   $authService,
-        private readonly Request       $request
+        private OrdersService $ordersService,
+        private BasketService $basketService,
+        private MailService   $mailService,
+        private UserService   $userService,
+        private AuthService   $authService,
+        private Request       $request
     ) {}
 
     /**

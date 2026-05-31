@@ -5,8 +5,8 @@ namespace app\services;
 use app\repositories\MainRepository;
 
 /** Сервис для управления главной информацией */
-class MainService {
-    public function __construct(private readonly MainRepository $mediaRepository) {}
+readonly class MainService {
+    public function __construct(private MainRepository $mediaRepository) {}
 
     /**
      * Получение данных из таблицы 'новости'

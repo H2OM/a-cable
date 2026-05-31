@@ -39,11 +39,14 @@
         height: 24px;
         cursor: pointer;
     }
+    > a {
+        height: 244px;
+    }
     &__img {
         justify-self: center;
         object-fit: contain;
         width: 100%;
-        height: 244px;
+        height: 100%;
         padding: 0 10px;
         cursor: pointer;
     }

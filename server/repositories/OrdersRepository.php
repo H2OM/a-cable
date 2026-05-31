@@ -6,8 +6,8 @@ use app\core\Db;
 use app\core\Hydrator;
 use Exception;
 
-class OrdersRepository {
-    public function __construct(private readonly Db $db, private readonly Hydrator $hydrator) {}
+readonly class OrdersRepository {
+    public function __construct(private Db $db, private Hydrator $hydrator) {}
 
     /**
      * Получение всех заказов пользователя по его id
@@ -161,11 +161,12 @@ class OrdersRepository {
                 (
                     SELECT COALESCE(JSON_ARRAYAGG(JSON_OBJECT(
                         'id', orders_products.product_id, 
+                        'title', products.title, 
                         'count', orders_products.count,
                         'image', products.image,
                         'article', products.article,
                         'price', products.price,
-                        'old_price', products.price_old,
+                        'price_old', products.price_old,
                         'unit', products.unit
                     )), JSON_ARRAY())
                     FROM orders_products
