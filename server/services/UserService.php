@@ -58,7 +58,7 @@ class UserService {
      * @throws ResponseException
      * @throws Exception
      */
-    public function signUp(array $userData): array {
+    public function insert(array $userData): array {
         $rules = [
             'first_name'  => ['required', 'name'],
             'second_name' => ['required', 'name'],

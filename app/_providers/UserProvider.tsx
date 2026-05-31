@@ -27,6 +27,12 @@ export const UserProvider = ({children}: { children: ReactNode }) => {
         }
     }
 
+    const manualSignIn = (data: User) => {
+        if(!data.id) return;
+
+        setUser(data);
+    }
+
     const signIn = async (data: UserSignInData) => {
         setIsPending(true);
 
@@ -89,6 +95,7 @@ export const UserProvider = ({children}: { children: ReactNode }) => {
                 signUp,
                 edit,
                 logOut,
+                manualSignIn
             }}>
             {children}
         </UserContext.Provider>

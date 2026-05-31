@@ -35,7 +35,8 @@ class Validator {
         $validated = [];
 
         foreach ($rules as $field => $fieldRules) {
-            $value = trim($data[$field] ?? '');
+            $value = $data[$field] ?? '';
+            $value = is_string($value) ? trim($value) : ($value ?? '');
 
             foreach ($fieldRules as $rule) {
                 $result = $this->applyRule($field, $value, $rule, $data);
@@ -140,6 +141,21 @@ class Validator {
                     return false;
                 }
                 break;
+
+            case "integer":
+                if(!is_numeric($value) && !(int)$value) {
+                    $this->errors[$field] = 'Поле не является числом';
+                    return false;
+                }
+                break;
+
+            case "array":
+                if(!is_Array($value)) {
+                    $this->errors[$field] = 'Поле не является набором данных';
+                    return false;
+                }
+                break;
+
         }
 
         return true;

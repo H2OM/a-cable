@@ -14,7 +14,7 @@ export interface ProviderBasket {
     setCount: (productId: number, count: number) => void;
     decrement: (productId: number) => void;
     remove: (productId: number) => void;
-    clear: () => void;
+    clear: (toast?: boolean) => void;
     toggle: (productId: number) => void;
     isPending: boolean;
 }
@@ -27,4 +27,5 @@ export interface ProviderUser {
     signUp: (data: UserSignUpData) => Promise<void>;
     edit: (data: UserEditData) => Promise<boolean>;
     logOut: () => Promise<void>;
+    manualSignIn: (data: User) => void;
 }

@@ -1,7 +1,5 @@
 import '../info.scss';
-import Image from "next/image";
 import InfoForm from '@components/info/client/InfoForm';
-import ClientImage from "@ui/clientImage/ClientImage";
 import {Icons} from "@ui/icons/Icons";
 import {contacts} from "@/_constants/contacts";
 

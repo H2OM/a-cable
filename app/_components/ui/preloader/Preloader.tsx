@@ -15,5 +15,5 @@ export default function Preloader() {
         setContentLoaded(true);
     }, [pathname]);
 
-    return !isContentLoaded ? <div className="preloader"><Spinner/></div> : null;
+    return !isContentLoaded ? <div className="preloader"><Spinner className={'_white'}/></div> : null;
 }

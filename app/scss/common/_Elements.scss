@@ -82,14 +82,17 @@
 }
 .title {
     font-size: 28px;
-    color: white;
+    color: Vars.$dark-purple;
     font-weight: 200;
-    &_small {
+    &._small {
         font-size: 22px;
         text-align: center;
         font-weight: 300;
     }
-    &_black {
+    &._align-left {
+        text-align: left;
+    }
+    &._white {
         color: black;
     }
     &__count {
@@ -103,7 +106,7 @@
         font-weight: 400;
         color: Vars.$light-black;
     }
-    &_lite {
+    &._lite {
         font-size: 18px;
         font-weight: 300;
         margin-top: 15px;
@@ -297,5 +300,21 @@ a {
     transition: .2s all;
     &:not(.btn):hover {
         color: Vars.$dark-purple;
+    }
+}
+
+.block-cart {
+    background-color: #ffffff;
+    border-radius: 7px;
+    padding: 10px;
+    box-shadow: 0 0 15px 0 #00000021;
+    border: 1px solid Vars.$thin-gray;
+    &__header {
+        padding-bottom: 10px;
+        border-bottom: 1px solid Vars.$thin-gray;
+        line-height: 30px;
+    }
+    &__body {
+        padding-top: 10px;
     }
 }

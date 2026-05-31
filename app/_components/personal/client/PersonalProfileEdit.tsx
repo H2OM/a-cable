@@ -30,7 +30,7 @@ export default function PersonalProfileEdit() {
     return (
         <>
             {isPending && <LoadScreen><Spinner/></LoadScreen>}
-            <h2 className="title title_black title_small">Изменить профиль</h2>
+            <h2 className="title title_black title _small">Изменить профиль</h2>
             <form data-form onSubmit={handleSubmit}>
                 <div className="Personal__split__content__split">
                     <div className="Personal__split__content__split__block">

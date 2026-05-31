@@ -58,7 +58,7 @@ export default function PersonalOrders() {
     return (
         <>
             {(isPending || loading) && <LoadScreen><Spinner/></LoadScreen>}
-            <h2 className="title title_black title_small">Заказы</h2>
+            <h2 className="title title_black title _small">Заказы</h2>
             {orders && orders.length > 0 && orders.map(order => (
                 <div className="Personal__split__content__block" key={order.order_id}>
                     <div className="Personal__split__content__block__order">
@@ -129,13 +129,13 @@ export default function PersonalOrders() {
                 </div>
             ))}
             {orders && orders.length === 0 &&
-                <div className="title title_black title_small"
+                <div className="title title_black title _small"
                      style={{fontWeight: "200", textAlign: "start", marginTop: "20px"}}>
                     У вас еще нет заказов
                 </div>
             }
             {!loading && orders === null &&
-                <div className="title title_black title_small"
+                <div className="title title_black title _small"
                      style={{fontWeight: "200", textAlign: "start", marginTop: "20px"}}>
                     Не удалось получить заказы
                 </div>

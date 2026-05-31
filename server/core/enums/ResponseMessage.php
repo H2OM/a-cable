@@ -5,6 +5,7 @@ namespace app\core\enums;
 enum ResponseMessage: string {
     case ERROR_PRODUCT_NOT_FOUND = 'Товар не найден';
     case ERROR_CATALOG_NOT_FOUND = 'Товары не найдены';
+    case ERROR_ORDER_NOT_FOUND = 'Заказ не найден';
     case ERROR_NOT_ENOUGH_DATA = 'Не достаточно данных';
     case ERROR_DATA = 'Некорректные данные';
     case ERROR_GET_DATA = 'Ошибка при получении данных';
@@ -33,6 +34,7 @@ enum ResponseMessage: string {
     case SUCCESS_REMOVE_FAVORITES = 'Товар удален из избранного';
     case SUCCESS_CLEAR_FAVORITES = 'Избранное отчищено';
     case SUCCESS_CLEAR_BASKET = 'Корзина очищена';
+    case SUCCESS_CREATE_ORDER = 'Заказ успешно создан!';
     case SUCCESS_EDIT = 'Данные отредактированы';
     case SUCCESS_PARSED = 'Товары успешно добавлены';
     case USER_AUTH = 'Пользователь авторизован';

@@ -272,6 +272,40 @@ class QueryBuilder {
         return $this;
     }
 
+    public function updateMany(array $data, array $setCondition): self {
+        $placeholders = [];
+        $setPlaceholders = [];
+        $this->bindings = [];
+
+        foreach ($data as $value) {
+            $fils = array_fill(0, count($value), 'CAST(? AS UNSIGNED)');
+
+            $placeholders[] = 'ROW(' . implode(', ', $fils) . ')';
+            $this->bindings = [...$this->bindings, ...array_values($value)];
+        }
+
+        foreach ($setCondition as $key => $cond) {
+            $placeholder = "{$this->table}." . $cond[0] . " = ";
+
+            if(!empty($cond[1])) {
+                $placeholder .= "{$this->table}." . $cond[0] . " " . $cond[1];
+            }
+
+            $placeholder .= " t.column_" . $key + 1;
+            $setPlaceholders[] = $placeholder;
+        }
+
+        $firstKey = array_key_first($data[0]);
+        $this->prepareQuery = "
+            UPDATE {$this->table}
+            JOIN (
+                VALUES " . implode(', ', $placeholders) .
+            ") AS t ON {$this->table}.$firstKey = t.column_0
+            SET " . implode(', ', $setPlaceholders);
+
+        return $this;
+    }
+
     /**
      * Подготовка SQL запроса. Удаление
      *

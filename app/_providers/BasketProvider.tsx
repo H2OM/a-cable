@@ -91,10 +91,10 @@ export function BasketProvider({children}: { children: ReactNode }) {
         );
     }
 
-    const clear = () => {
+    const clear = (toast = true) => {
         void executeAction(
             () => setBasket([]),
-            () => basketAPI.clear()
+            () => basketAPI.clear(toast)
         );
     }
 

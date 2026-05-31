@@ -20,7 +20,7 @@ export default function Favorites() {
                     </div>
                 }
                 {favorites.length === 0 &&
-                    <div className="title title_black title_small"
+                    <div className="title title_black title _small"
                          style={{fontWeight: "200", textAlign: "start", marginTop: "20px"}}>
                         Нет избранных товаров.
                     </div>

@@ -8,14 +8,9 @@ import LoadScreen from "@ui/loadScreen/LoadScreen";
 import Spinner from "@ui/spinner/Spinner";
 
 export default function Basket() {
-    const {basket, isPending, clear} = useBasket();
+    const {basket, isPending, getTotal, clear} = useBasket();
 
-    const total = useMemo(() => {
-        return basket.reduce((acc, product) => ({
-            price: acc.price + product.price * product.count,
-            count: acc.count + product.count
-        }), {price: 0, count: 0});
-    }, [basket]);
+    const total = useMemo(getTotal, [basket]);
 
     return (
         <section className="Basket section">
@@ -42,7 +37,7 @@ export default function Basket() {
                                 <span className="Basket__split__side__block__title">Общее количество:</span>
                                 <p className="Basket__split__side__block__value">{total.count}</p>
                             </div>
-                            <Link href={"/basket/order"} className="btn Basket__split__side__confirm _w-100">
+                            <Link href={"/order"} className="btn Basket__split__side__confirm _w-100">
                                 Оформить заказ
                             </Link>
                             <button className="btn _outline _w-100" onClick={() => clear()}>
@@ -57,7 +52,7 @@ export default function Basket() {
                     </div>
                 }
                 {basket.length === 0 &&
-                    <div className="title title_black title_small"
+                    <div className="title title_black title _small"
                          style={{fontWeight: "200", textAlign: "start", marginTop: "20px"}}>
                         Корзина пуста
                     </div>

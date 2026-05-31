@@ -42,6 +42,14 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%,-50%);
+    &._white {
+        &:after {
+            background-color: $lighter-gray;
+        }
+        &:before {
+            background-color: $lighter-gray;
+        }
+    }
     &::after {
         content: "";
         display: block;

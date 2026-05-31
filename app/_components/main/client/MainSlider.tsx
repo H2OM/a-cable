@@ -12,7 +12,7 @@ export default function MainSlider({slides}: { slides: SliderMain[] }) {
             <div className="Slider__sections__desc">
                 <h2 className="title title_black">Новости</h2>
                 <div>
-                    <p className="title title_small">{slides[infoSlide].title}</p>
+                    <p className="title title _small">{slides[infoSlide].title}</p>
                     <p className="Slider__sections__desc__text">
                         {slides[infoSlide].text}
                     </p>

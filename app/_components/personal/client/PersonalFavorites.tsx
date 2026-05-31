@@ -15,13 +15,13 @@ export default function PersonalFavorites() {
     return (
         <>
             {isPending && <LoadScreen><Spinner/></LoadScreen>}
-            <h2 className="title title_black title_small">Избранное</h2>
+            <h2 className="title title_black title _small">Избранное</h2>
             <div className="Personal__split__content__split">
                 {favorites.length > 0 && favorites.map((item => (
                     <Cart product={item} key={item.id}/>
                 )))}
                 {favorites.length === 0 &&
-                    <div className="title title_black title_lite">
+                    <div className="title _lite">
                         Нет избранных товаров
                     </div>
                 }

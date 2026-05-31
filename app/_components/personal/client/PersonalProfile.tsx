@@ -16,7 +16,7 @@ export default function PersonalProfile() {
     return (
         <>
             {isPending && <LoadScreen><Spinner/></LoadScreen>}
-            <h2 className="title title_black title_small">Профиль</h2>
+            <h2 className="title title_black title _small">Профиль</h2>
             <div className="Personal__split__content__split">
                 <div className="Personal__split__content__split__block">
                     <h3 className="Personal__split__content__split__block__title">Личная информация</h3>

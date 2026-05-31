@@ -68,7 +68,7 @@ class UserController {
             return Response::jsonSuccess(data: $this->authService->user(), message: ResponseMessage::USER_ALREADY_AUTH);
         }
 
-        $user = $this->userService->signUp($this->request->input());
+        $user = $this->userService->insert($this->request->input());
 
 //      TODO При авторизации добавлять избранное из сессию в базу
 

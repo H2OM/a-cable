@@ -8,10 +8,11 @@ import {useFavorites} from "@hooks/useFavorites";
 import {useBasket} from "@hooks/useBasket";
 import Link from "next/link";
 import ClipboardCopy from "@ui/clipboardCopy/ClipboardCopy";
+import toast from "react-hot-toast";
 
 export default function Cart({product, isSlider = false}: { product: Product; isSlider?: boolean; }) {
     const {isFavorite, isPending, toggle} = useFavorites(product.id);
-    const {add} = useBasket();
+    const {add, getItem} = useBasket();
 
     return (
         <div className={"cart-wrap" + (isSlider ? " cart-wrap_slide" : "")}>
@@ -98,7 +99,12 @@ export default function Cart({product, isSlider = false}: { product: Product; is
                     </div>
                 </div>
                 {product.stock > 0 ?
-                    <button className="btn" onClick={() => add(product.id)}>
+                    <button className="btn" onClick={() => {
+                        if((getItem(product.id)?.count ?? 0) >= product.stock)
+                            return toast.error('Больше в наличии нет!');
+
+                        add(product.id)
+                    }}>
                         В корзину
                     </button>
                     :

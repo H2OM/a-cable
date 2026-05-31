@@ -5,7 +5,7 @@ use app\core\Response;
 use app\services\ProductsService;
 use app\services\MainService;
 
-/** Контролер для управления главной информацией */
+/** Контролер для получения главной информации */
 class MainController {
     public function __construct(
         private readonly ProductsService $productsService,
