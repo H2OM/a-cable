@@ -59,6 +59,8 @@ readonly class OrdersController {
             'products' => $this->basketService->get(),
         ]);
 
+        $order = $this->ordersService->getOrder($orderId);
+
         if (!$userId) {
             // TODO Отправка на почту пароля
         }

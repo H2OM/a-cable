@@ -199,7 +199,13 @@
                                             <tbody><tr>
                                                 <td style="padding-bottom: 5px;">
                                                     <div style="font-family: Helvetica, Roboto, Arial, sans-serif; font-size: 18px; line-height: 25px; color: #000000;" align="">
-                                                        <?= $user['first_name'] ?> <?= $user['second_name'] ?>, для входа в личный кабинет используйте временный пароль - <?= $user['temp_password'] ?>.<br>
+                                                        <?= $user['first_name'] ?> <?= $user['second_name'] ?>,&nbsp;
+                                                        <?php if(!empty($user['temp_password'])) { ?>
+                                                            для входа в личный кабинет используйте временный пароль - <?= $user['temp_password'] ?>.<br>
+                                                        <?php } else { ?>
+                                                            вся информация о статусе вашего заказа находится в личном кабинете.
+                                                        <?php } ?>
+
                                                     </div>
                                                 </td>
                                             </tr>

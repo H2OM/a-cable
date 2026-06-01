@@ -7,8 +7,8 @@ use app\core\Db;
 use app\core\Hydrator;
 
 /** Репозиторий по управлению избранными товарами */
-class FavoritesRepository {
-    public function __construct(private readonly Db $db) {}
+readonly class FavoritesRepository {
+    public function __construct(private Db $db) {}
 
     /**
      * Добавление

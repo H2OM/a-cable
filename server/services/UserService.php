@@ -10,11 +10,11 @@ use app\repositories\UserRepository;
 use Exception;
 
 /** Сервис для управления пользователями */
-class UserService {
+readonly class UserService {
     public function __construct(
-        private readonly UserRepository   $userRepository,
-        private readonly OrdersRepository $ordersRepository,
-        private readonly Validator        $validator,
+        private UserRepository   $userRepository,
+        private OrdersRepository $ordersRepository,
+        private Validator        $validator,
     ) {}
 
     /**

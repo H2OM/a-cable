@@ -19,7 +19,7 @@
          *                      ]
          * @var false[][]|string[][] $PROTECTED_ROUTES
          */
-        private const PROTECTED_ROUTES = [
+        private const array PROTECTED_ROUTES = [
             'admin-auth' => [
                 'class' => AdminMiddleware::class,
                 'base_permission' => '',

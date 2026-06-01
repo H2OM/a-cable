@@ -10,10 +10,10 @@ use app\core\Request;
 use app\core\Response;
 
 /** Контроллер для управления избранным */
-class FavoritesController {
+readonly class FavoritesController {
     public function __construct(
-        private readonly FavoritesService $favoritesService,
-        private readonly Request          $request
+        private FavoritesService $favoritesService,
+        private Request          $request
     ) {}
 
     /**

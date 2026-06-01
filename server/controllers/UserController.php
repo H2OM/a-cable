@@ -11,11 +11,11 @@ use app\services\UserService;
 use Exception;
 
 /** Контролер для управления пользователями */
-class UserController {
+readonly class UserController {
     public function __construct(
-        private readonly UserService $userService,
-        private readonly AuthService $authService,
-        private readonly Request     $request
+        private UserService $userService,
+        private AuthService $authService,
+        private Request     $request
     ) {}
 
     /**

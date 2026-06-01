@@ -51,19 +51,19 @@ readonly class OrdersService {
      */
     public function newOrder(array $data): int|false {
         $rules = [
-            'user_id'          => ['required', 'integer'],
-            'payment_type_id'  => ['required', 'integer'],
+            'user_id' => ['required', 'integer'],
+            'payment_type_id' => ['required', 'integer'],
             'delivery_type_id' => ['required', 'integer'],
-            'delivery_price'   => ['required', 'integer'],
-            'products'         => ['required', 'array'],
-            'delivery_date'    => ['required', 'text'],
+            'delivery_price' => ['required', 'integer'],
+            'products' => ['required', 'array'],
+            'delivery_date' => ['required', 'text'],
             'delivery_address' => ['required', 'text'],
-            'comment'          => ['text'],
+            'comment' => ['text'],
         ];
 
         $validateData = $this->validator->validate($data, $rules);
 
-        if(!$validateData) {
+        if (!$validateData) {
             throw new Exception($this->validator->formatErrors());
         }
 
@@ -74,13 +74,13 @@ readonly class OrdersService {
         foreach ($validateData['products'] as $product) {
             $price = $price + $product['price'];
             $products[] = [
-                'id'    => $product['id'],
+                'id' => $product['id'],
                 'count' => $product['count'],
             ];
         }
 
         $validateData['products'] = $products;
-        $validateData['price']    = $price + $validateData['delivery_price'];
+        $validateData['price'] = $price + $validateData['delivery_price'];
 
         return $this->ordersRepository->newOrder($validateData);
     }
@@ -93,5 +93,15 @@ readonly class OrdersService {
      */
     public function getOrder(int $id): ?array {
         return $this->ordersRepository->getOrderById($id);
+    }
+
+    /**
+     * Приведение полей заказа к понятному виду
+     *
+     * @param array $order
+     * @return array
+     */
+    public function formatOrderFields(array $order): array {
+
     }
 }

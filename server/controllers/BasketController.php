@@ -10,10 +10,10 @@ use app\services\AuthService;
 use app\services\BasketService;
 
 /** Управление корзиной */
-class BasketController {
+readonly class BasketController {
     public function __construct(
-        private readonly BasketService $basketService,
-        private readonly Request $session
+        private BasketService $basketService,
+        private Request       $session
     ) {}
 
     /**
