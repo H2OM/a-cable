@@ -8,21 +8,23 @@ use app\core\Request;
 use app\core\Response;
 use app\services\AuthService;
 use app\services\BasketService;
-use app\services\MailService;
+use app\services\NotificationService;
 use app\services\OrdersService;
 use app\services\UserService;
 use Exception;
+use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 
 /** Контролер для получения заказов и частичного управления ими */
 readonly class OrdersController {
     public function __construct(
-        private OrdersService $ordersService,
-        private BasketService $basketService,
-        private MailService   $mailService,
-        private UserService   $userService,
-        private AuthService   $authService,
-        private Request       $request
-    ) {}
+        private NotificationService $notificationService,
+        private OrdersService       $ordersService,
+        private BasketService       $basketService,
+        private UserService         $userService,
+        private AuthService         $authService,
+        private Request             $request,
+    ) {
+    }
 
     /**
      * Создание нового заказа
@@ -49,20 +51,25 @@ readonly class OrdersController {
 
             $this->authService->login($user);
 
-            $data['user_id'] = $user['id'];
-        } else {
-            $data['user_id'] = $userId;
+            $userId = $user['id'];
         }
 
         $orderId = $this->ordersService->newOrder([
             ...$data,
+            'user_id' => $userId,
             'products' => $this->basketService->get(),
         ]);
 
         $order = $this->ordersService->getOrder($orderId);
+        $user = $this->authService->user();
 
-        if (!$userId) {
-            // TODO Отправка на почту пароля
+        if (!empty($data['user']['password'])) {
+            $user['password'] = $data['user']['password'];
+        }
+
+        try {
+            $this->notificationService->sendOrderInfo(order: $order, user: $user);
+        } catch (TransportExceptionInterface $e) {
         }
 
         return Response::jsonSuccess(data: [
@@ -79,7 +86,7 @@ readonly class OrdersController {
     public function getAction(): Response {
         $id = (int)$this->request->get('id');
 
-        if(empty($id) || !is_numeric($id)) {
+        if (empty($id) || !is_numeric($id)) {
             return Response::jsonError(message: ResponseMessage::ERROR_NOT_ENOUGH_DATA);
         }
 

@@ -2,6 +2,7 @@
 
 namespace app\services;
 
+use app\core\enums\OrderFields;
 use app\core\Validator;
 use app\repositories\OrdersRepository;
 use Exception;
@@ -102,6 +103,16 @@ readonly class OrdersService {
      * @return array
      */
     public function formatOrderFields(array $order): array {
+        $fields = [];
 
+        foreach ($order as $field => $value) {
+            $enumField = OrderFields::class . "::$field";
+
+            if(!defined($enumField)) continue;
+
+            $fields[constant($enumField)->value] = $value;
+        }
+
+        return $fields;
     }
 }

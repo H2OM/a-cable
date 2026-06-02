@@ -1,9 +1,33 @@
 <?php
-/** @var $main_info */
-/** @var $order_url */
-/** @var $site_url */
-/** @var $products */
-/** @var $user */
+/**
+ * >**Обязательные поля:**
+ *
+ *      [
+ *          'main_info' => ['field_name' => 'field_value'],
+ *          'order_url' => string,
+ *          'site_url' => string,
+ *          'products' => [
+ *                ['image' => string, 'price' => string|int 'title' => string, 'count' => int]
+ *           ]
+ *       ]
+ *
+ *   >**НЕ обязательные поля:**
+ *
+ *       [
+ *           'user' => [
+ *               'first_name' => string,
+ *               'second_name' => string,
+ *               'password' => string,
+ *               'personal_url' => string
+ *           ]
+ *       ]
+ *
+ * @var $main_info
+ * @var $order_url
+ * @var $site_url
+ * @var $products
+ * @var $user
+ */
 ?>
 
 <html>
@@ -165,8 +189,20 @@
                                             <tbody>
                                             <tr>
                                                 <td style="padding-bottom: 5px;">
-                                                    <div style="font-family: Helvetica, Roboto, Arial, sans-serif; font-size: 18px; line-height: 25px; color: #000000;"
-                                                         align="center"><?= $field ?>: <?= $info ?><br></div>
+                                                    <div style="font-family: Helvetica, Roboto, Arial, sans-serif; font-size: 18px; line-height: 25px; color: #000000;">
+                                                        <?= $field ?>:&nbsp;
+                                                        <?php if($field === 'цена') {
+                                                            echo number_format(
+                                                                    num: $info,
+                                                                    decimals: 2,
+                                                                    decimal_separator: ',',
+                                                                    thousands_separator: ' '
+                                                            ) . ' ₽';
+                                                        } else {
+                                                            echo $info;
+                                                        } ?>
+                                                        <br>
+                                                    </div>
                                                 </td>
                                             </tr>
                                             </tbody>
@@ -200,8 +236,8 @@
                                                 <td style="padding-bottom: 5px;">
                                                     <div style="font-family: Helvetica, Roboto, Arial, sans-serif; font-size: 18px; line-height: 25px; color: #000000;" align="">
                                                         <?= $user['first_name'] ?> <?= $user['second_name'] ?>,&nbsp;
-                                                        <?php if(!empty($user['temp_password'])) { ?>
-                                                            для входа в личный кабинет используйте временный пароль - <?= $user['temp_password'] ?>.<br>
+                                                        <?php if(!empty($user['password'])) { ?>
+                                                            для входа в личный кабинет используйте временный пароль - <?= $user['password'] ?>.<br>
                                                         <?php } else { ?>
                                                             вся информация о статусе вашего заказа находится в личном кабинете.
                                                         <?php } ?>
@@ -282,7 +318,7 @@
                                             <tbody>
                                             <tr>
                                                 <td>
-                                                    <img src="<?= $product['image_url'] ?>"
+                                                    <img src="<?= $product['$site_url'] . '/public/img/' . $product['image'] ?>"
                                                          width="130"
                                                          border="0" alt=""
                                                          style="display: block; width: 100%; max-width: 130px;"
@@ -327,7 +363,14 @@
                                                 <td style="padding-right: 0px; padding-bottom: 10px; padding-left: 0px;">
                                                     <div style="font-family: Helvetica, Roboto, Arial, sans-serif; font-size: 18px; line-height: 25px; color: #cb5652;"
                                                          align="right" class="em-mob-font_size-16px">
-                                                        <strong><?= $product['price'] ?> ₽</strong>
+                                                        <strong>
+                                                            <?= number_format(
+                                                                    num: $product['price'],
+                                                                    decimals: 2,
+                                                                    decimal_separator: ',',
+                                                                    thousands_separator: ' '
+                                                            ) ?> ₽
+                                                        </strong>
                                                     </div>
                                                 </td>
                                             </tr>
