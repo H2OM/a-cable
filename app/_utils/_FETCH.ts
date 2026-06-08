@@ -73,7 +73,11 @@ const request = async ({
                 throw new Error(data.message ?? `Ошибка в получении данных с сервера.`);
             }
 
-            toastSuccess && isClient && toast.success(typeof toastSuccess === 'string' ? toastSuccess : data.message ?? 'Успешно!');
+            toastSuccess && isClient &&
+                toast.success(typeof toastSuccess === 'string'
+                    ? toastSuccess
+                    : data.message ?? 'Успешно!'
+                );
 
             return data;
         })
