@@ -1,4 +1,4 @@
-import _FETCH from "@/_utils/_FETCH";
+import _FETCH from "@utils/_FETCH";
 
 const API_URL = `${process.env.NEXT_PUBLIC_API_URL}/main`;
 
