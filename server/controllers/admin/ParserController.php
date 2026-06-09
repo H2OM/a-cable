@@ -13,11 +13,11 @@ use app\services\admin\parsers\AnlanParserService;
 use Exception;
 
 /** Контроллер для управления парсерами */
-class ParserController {
+readonly class ParserController {
     public function __construct(
-        private readonly AnlanParserService $anlanParser,
-        private readonly Env                $env,
-        private readonly Request            $request
+        private AnlanParserService $anlanParser,
+        private Env                $env,
+        private Request            $request
     ) {}
 
     /**

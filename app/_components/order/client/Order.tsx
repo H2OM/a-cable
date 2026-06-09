@@ -103,7 +103,7 @@ export default function Order() {
                       onSubmit={handleSubmit}>
                     {!user && !isUserPending && <OrderAuthBlock/>}
                     <div className="block-cart">
-                        <div className="block-cart__header title _lite" style={{margin: 0}}>Информация о доставке</div>
+                        <div className="block-cart__header title _lite" style={{margin: 0}}>Основная информация</div>
                         <div className="block-cart__body form__split">
                             <div className="form__split__block">
                                 <label className="form__label" htmlFor="delivery_type">
