@@ -10,11 +10,11 @@ use app\services\admin\JWTService;
 use app\services\admin\AdminService;
 
 /** Контроллер для управления авторизацией в админ-панели */
-class AuthController {
+readonly class AuthController {
     public function __construct(
-        private readonly AdminService $adminService,
-        private readonly JWTService   $JWTService,
-        private readonly Request      $request
+        private AdminService $adminService,
+        private JWTService   $JWTService,
+        private Request      $request
     ) {}
 
     /**
