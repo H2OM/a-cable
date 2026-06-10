@@ -47,26 +47,4 @@ readonly class CatalogController {
             'filters' => $filters
         ]);
     }
-
-    /**
-     * Получение отдельного товара
-     *
-     * @return Response
-     * @throws ResponseException
-     */
-    public function getProductAction(): Response {
-        $id = (int)$this->request->get('id');
-
-        if(!$id || !is_numeric($id)) {
-            return Response::jsonError(message: ResponseMessage::ERROR_NOT_ENOUGH_DATA, status: 403);
-        }
-
-        $product = $this->productsService->getProductById($id);
-        $relatedProducts = $this->productsService->getRelatedById($id);
-
-        return Response::jsonSuccess(data: [
-            'product' => $product,
-            'related' => $relatedProducts,
-        ]);
-    }
 }

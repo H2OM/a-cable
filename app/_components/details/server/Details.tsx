@@ -6,13 +6,13 @@ import DetailsSlider from '@components/details/client/DetailsSlider';
 import MiniSlider from "@ui/miniSlider/MiniSlider";
 import {ProductLocalFilter, Product, ProductDetails, ProductLocalFilters} from "@_types/product";
 import {notFound} from "next/navigation";
-import {catalogAPI} from "@api";
+import {productsAPI} from "@api";
 import ClipboardCopy from "@ui/clipboardCopy/ClipboardCopy";
 import ClientImage from "@ui/clientImage/ClientImage";
 
 export default async function Details({params}: { params: Promise<{ id: string; }> }) {
     const {id} = await params;
-    const response = await catalogAPI.getProductById(id);
+    const response = await productsAPI.getById(id);
 
     if (!response.success) {
         return notFound();

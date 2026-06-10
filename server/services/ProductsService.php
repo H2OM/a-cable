@@ -138,12 +138,12 @@ readonly class ProductsService {
     }
 
     /**
-     * Поиск id товаров по строке запроса
+     * Поиск товаров по строке запроса
      *
      * @param string $query
      * @return array
      */
-    public function searchIdsByQuery(string $query): array {
-        return $this->productsRepository->searchIdsByQuery($query);
+    public function searchByQuery(string $query): array {
+        return $this->productsRepository->searchByQuery($query);
     }
 }

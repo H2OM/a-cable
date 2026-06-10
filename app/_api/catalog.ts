@@ -8,7 +8,3 @@ export const get = async (filters: Record<string, string>) => {
 
     return await _FETCH.request({url: `${API_URL}/get${params ? `?${params}` : ''}`});
 }
-
-export const getProductById = async (id: number|string) => {
-    return await _FETCH.request({url: `${API_URL}/get-product?id=${id}`});
-}

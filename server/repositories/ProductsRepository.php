@@ -37,7 +37,13 @@ class ProductsRepository {
             brands.name AS brand, 
             products_stocks.count AS stock,
             (
-                SELECT COALESCE(JSON_ARRAYAGG(JSON_OBJECT('id', vp.id, 'image', vp.image)), JSON_ARRAY())
+                SELECT COALESCE(JSON_ARRAYAGG(JSON_OBJECT(
+                    'id', vp.id, 
+                    'image', vp.image,
+                    'title', vp.title,
+                    'price', vp.price,
+                    'article', vp.article
+                )), JSON_ARRAY())
                 FROM products_variations p_v
                 JOIN products vp ON p_v.variation_id = vp.id
                 WHERE p_v.product_id = products.id
@@ -415,12 +421,12 @@ class ProductsRepository {
     }
 
     /**
-     * Поиск id товаров по строке запроса
+     * Поиск товаров по строке запроса
      *
      * @param string $query
      * @return array
      */
-    public function searchIdsByQuery(string $query): array {
+    public function searchByQuery(string $query): array {
         return $this->db->query()
             ->table('products')
             ->select(['id', 'CONCAT(title, " | ", article) AS name', 'image'])

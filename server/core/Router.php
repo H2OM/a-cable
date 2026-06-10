@@ -36,7 +36,7 @@
                 'base_permission' => 'products',
                 'pair-variation' => 'products.edit',
                 'edit' => 'products.edit',
-                'create' => 'products.create',
+                'add' => 'products.add',
                 'delete' => 'products.delete',
             ],
             'admin-parser' => [
