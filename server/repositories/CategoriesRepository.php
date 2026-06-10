@@ -6,8 +6,8 @@ use app\core\Db;
 use app\core\Hydrator;
 
 /** Репозиторий для управления категориями */
-class CategoriesRepository {
-    public function __construct(private readonly Db $db, private readonly Hydrator $hydrator) {}
+readonly class CategoriesRepository {
+    public function __construct(private Db $db, private Hydrator $hydrator) {}
 
     /**
      * Получение всех категорий и их подтипов

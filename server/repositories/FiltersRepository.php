@@ -5,8 +5,8 @@ namespace app\repositories;
 use app\core\Db;
 
 /** Репозиторий для управления фильтрами */
-class FiltersRepository {
-    public function __construct(private readonly Db $db) {}
+readonly class FiltersRepository {
+    public function __construct(private Db $db) {}
 
     /**
      * Получение всех фильтров

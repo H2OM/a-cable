@@ -2,6 +2,6 @@
 
 namespace app\repositories;
 
-class CallbackRepository {
+readonly class CallbackRepository {
 
 }

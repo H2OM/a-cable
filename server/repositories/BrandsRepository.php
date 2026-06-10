@@ -5,8 +5,8 @@ namespace app\repositories;
 use app\core\Db;
 
 /** Репозиторий для управления брендами */
-class BrandsRepository {
-    public function __construct(private readonly Db $db) {}
+readonly class BrandsRepository {
+    public function __construct(private Db $db) {}
 
     /**
      * Получение по коду

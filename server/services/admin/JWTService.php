@@ -7,7 +7,7 @@ use Firebase\JWT\JWT;
 
 /** Сервис для управления jwt токенами */
 class JWTService {
-    private const HOURS_TO_EXPIRE = 2;
+    private const int HOURS_TO_EXPIRE = 2;
 
     public function __construct(private readonly Env $env) {}
 

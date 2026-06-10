@@ -2,6 +2,6 @@
 
 namespace app\controllers;
 
-class BannersController {
+readonly class BannersController {
 
 }

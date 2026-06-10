@@ -5,8 +5,8 @@ namespace app\services;
 use app\core\Session;
 
 /** Сервис для управления авторизации и авторизационных данных */
-class AuthService {
-    public function __construct(private readonly Session $session) {}
+readonly class AuthService {
+    public function __construct(private Session $session) {}
 
     /**
      * Проверка существования пользователя

@@ -5,8 +5,8 @@ namespace app\services\admin;
 use app\repositories\CategoriesRepository;
 
 /** Сервис для управления категориями */
-class CategoriesService {
-    public function __construct(private readonly CategoriesRepository $categoriesRepository) {}
+readonly class CategoriesService {
+    public function __construct(private CategoriesRepository $categoriesRepository) {}
 
     /**
      * Прикрепить фильтры к категориям

@@ -5,8 +5,8 @@ namespace app\services;
 use app\repositories\BrandsRepository;
 
 /** Сервис для получения брендов */
-class BrandsService {
-    public function __construct(private readonly BrandsRepository $brandsRepository) {}
+readonly class BrandsService {
+    public function __construct(private BrandsRepository $brandsRepository) {}
 
     /**
      * Получение по коду

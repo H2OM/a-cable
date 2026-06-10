@@ -5,8 +5,8 @@ namespace app\services\admin;
 use app\repositories\FiltersRepository;
 
 /** Сервис для управления фильтрами */
-class FiltersService {
-    public function __construct(private readonly FiltersRepository $filtersRepository) {}
+readonly class FiltersService {
+    public function __construct(private FiltersRepository $filtersRepository) {}
 
     /**
      * Вставка новых фильтров

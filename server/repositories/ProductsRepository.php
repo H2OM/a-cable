@@ -6,7 +6,7 @@ use app\core\Db;
 use app\core\Hydrator;
 
 /** Репозиторий для управления товарами */
-class ProductsRepository {
+readonly class ProductsRepository {
     private const string PRODUCTS_WITH_VARIATIONS_SQL = "
         SELECT 
             products.*, 

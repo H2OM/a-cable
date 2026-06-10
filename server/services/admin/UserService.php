@@ -2,6 +2,6 @@
 
 namespace app\services\admin;
 
-class UserService {
+readonly class UserService {
 
 }

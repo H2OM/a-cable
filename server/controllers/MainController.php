@@ -6,10 +6,10 @@ use app\services\ProductsService;
 use app\services\MainService;
 
 /** Контролер для получения главной информации */
-class MainController {
+readonly class MainController {
     public function __construct(
-        private readonly ProductsService $productsService,
-        private readonly MainService     $mainService
+        private ProductsService $productsService,
+        private MainService     $mainService
     ) {}
 
     /**

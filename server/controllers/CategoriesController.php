@@ -5,9 +5,9 @@ namespace app\controllers;
 use app\core\Response;
 use app\services\CategoriesService;
 
-class CategoriesController {
+readonly class CategoriesController {
 
-    public function __construct(private readonly CategoriesService $categoriesService) {}
+    public function __construct(private CategoriesService $categoriesService) {}
 
     /**
      * Получение всех категорий

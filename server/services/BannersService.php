@@ -2,6 +2,6 @@
 
 namespace app\services;
 
-class BannersService {
+readonly class BannersService {
 
 }

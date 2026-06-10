@@ -3,6 +3,6 @@
 namespace app\controllers\admin;
 
 /** Контроллер для управления пользователями */
-class UserController {
+readonly class UserController {
 
 }

@@ -5,8 +5,8 @@ namespace app\services;
 use app\repositories\CategoriesRepository;
 
 /** Сервис для получения категорий */
-class CategoriesService {
-    public function __construct(private readonly CategoriesRepository $categoriesRepository) {}
+readonly class CategoriesService {
+    public function __construct(private CategoriesRepository $categoriesRepository) {}
 
     /**
      * Получение всех категорий

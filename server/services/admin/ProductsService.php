@@ -5,8 +5,8 @@ namespace app\services\admin;
 use app\repositories\ProductsRepository;
 
 /** Сервис для управления товарами */
-class ProductsService {
-    public function __construct(private readonly ProductsRepository $productsRepository) {}
+readonly class ProductsService {
+    public function __construct(private ProductsRepository $productsRepository) {}
 
     /**
      * Добавление новых товаров

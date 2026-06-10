@@ -2,6 +2,6 @@
 
 namespace app\controllers;
 
-class BrandsController {
+readonly class BrandsController {
 
 }

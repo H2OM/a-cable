@@ -3,5 +3,5 @@
 namespace app\services\admin;
 
 /** Сервис для управления брендами */
-class BrandsService {
+readonly class BrandsService {
 }

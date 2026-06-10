@@ -9,10 +9,10 @@ use app\services\CallbackService;
 use Exception;
 
 /** Контролер для управления обратной связи */
-class CallbackController {
+readonly class CallbackController {
     public function __construct(
-        private readonly Request         $request,
-        private readonly CallbackService $callbackService) {}
+        private Request         $request,
+        private CallbackService $callbackService) {}
 
     /**
      * Обработка формы подписки на новости

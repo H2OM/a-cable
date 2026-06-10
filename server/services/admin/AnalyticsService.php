@@ -2,6 +2,6 @@
 
 namespace app\services\admin;
 
-class AnalyticsService {
+readonly class AnalyticsService {
 
 }

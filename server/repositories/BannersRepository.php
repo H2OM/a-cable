@@ -2,6 +2,6 @@
 
 namespace app\repositories;
 
-class BannersRepository {
+readonly class BannersRepository {
 
 }

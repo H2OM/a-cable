@@ -2,6 +2,6 @@
 
 namespace app\controllers\admin;
 
-class BrandsController {
+readonly class BrandsController {
 
 }

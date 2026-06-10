@@ -6,8 +6,8 @@ use app\core\Validator;
 use Exception;
 
 /** Сервис по управлению формами */
-class CallbackService {
-    public function __construct(private readonly Validator $validator) {}
+readonly class CallbackService {
+    public function __construct(private Validator $validator) {}
 
     /**
      * Обработка подписки по email

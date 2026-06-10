@@ -2,6 +2,6 @@
 
 namespace app\controllers\admin;
 
-class OrdersController {
+readonly class OrdersController {
 
 }
