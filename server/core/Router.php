@@ -64,12 +64,17 @@
                     Router::dispatchURI(App::request()->server('REQUEST_URI'));
                 }
             } catch (PDOException $e) {
-                if($_ENV['PHP_DEBUG']) $message = $e->getMessage();
-                    else $message = 'Внутренняя ошибка сервера!';
-                Response::json(['error' => true, 'message' => $message], 500)->send();
+                if($_ENV['PHP_DEBUG']) {
+                    $message = $e->getMessage();
 
+                } else {
+                    $message = 'Внутренняя ошибка сервера!';
+                }
+
+                Response::json(['error' => true, 'message' => $message], 500)->send();
             } catch (ResponseException $e) {
                 Response::jsonError(message: $e->getResponseMessage(), status: $e->getCode() ?: 400)->send();
+
             } catch (Exception $e) {
                 Response::json(['error' => true, 'message' => $e->getMessage()], 400)->send();
             }

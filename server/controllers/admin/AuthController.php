@@ -31,7 +31,7 @@ readonly class AuthController {
             throw new ResponseException(ResponseMessage::ERROR_NOT_ENOUGH_DATA);
         }
 
-        $user = $this->adminService->get(login: $login, password:  $password);
+        $user = $this->adminService->get(login: $login, password: $password);
         $token = $this->JWTService->generateToken($user);
 
         return Response::jsonSuccess(data: [

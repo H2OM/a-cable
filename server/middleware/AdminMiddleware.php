@@ -12,7 +12,7 @@ use Firebase\JWT\Key;
 
 class AdminMiddleware implements MiddlewareInterface {
     /** Имя пространства защищенных классов */
-    private const NAMESPACE = "admin";
+    private const string NAMESPACE = "admin";
 
     public function __construct(
         private readonly AdminService $adminService,
@@ -51,7 +51,11 @@ class AdminMiddleware implements MiddlewareInterface {
             $adminData = (array)$decoded->data;
             $adminPermissions = array_column($adminData['permissions'] ?? [], 'code');
 
-            if($requiredPermission && !in_array($requiredPermission, $adminPermissions) && !in_array('*', $adminPermissions)) {
+            if(
+                $requiredPermission &&
+                !in_array($requiredPermission, $adminPermissions) &&
+                !in_array('*', $adminPermissions)
+            ) {
                 throw new ResponseException(ResponseMessage::ERROR_PERMISSIONS, 403);
             }
 
