@@ -7,7 +7,7 @@ use app\core\Hydrator;
 
 /** Репозиторий для управления товарами */
 class ProductsRepository {
-    private const PRODUCTS_WITH_VARIATIONS_SQL = "
+    private const string PRODUCTS_WITH_VARIATIONS_SQL = "
         SELECT 
             products.*, 
             categories_types.name AS category, 
@@ -26,9 +26,10 @@ class ProductsRepository {
         LEFT JOIN products AS var_p ON products_variations.variation_id = var_p.id
         %s
         WHERE (%s)
-        GROUP BY products.id";
+        GROUP BY products.id 
+        %s";
 
-    private const PRODUCT_WITH_DETAILS = "
+    private const string PRODUCT_WITH_DETAILS = "
         SELECT 
             products.*, 
             categories_types.name AS category, 
@@ -69,6 +70,49 @@ class ProductsRepository {
 
     public function __construct(private readonly Db $db, private readonly Hydrator $hydrator) {}
 
+
+    /**
+     * Получение всех товаров, с лимитом
+     *
+     * @param int $factor
+     * @param int $limit
+     * @return array
+     */
+    public function getAllByLimit(int $factor, int $limit): array {
+        return $this->hydrator->decodeJson(
+            $this->db->fetchAll(sprintf(
+                self::PRODUCTS_WITH_VARIATIONS_SQL,
+                '',
+                "1",
+                'LIMIT ?, ?'
+            ), [$factor * $limit, $limit]),
+            ['variations']
+        );
+    }
+
+    /**
+     * Получение количества товаров, с возможностью подсчета по подкатегории и бренду
+     *
+     * @param int|null $categoryTypeId
+     * @param int|null $brandId
+     * @return int
+     */
+    public function getCount(?int $categoryTypeId = null, ?int $brandId = null): int {
+        $queryBuilder = $this->db->query()
+            ->table('products')
+            ->select('COUNT(*) AS count');
+
+        if ($categoryTypeId !== null) {
+            $queryBuilder->where('category_type_id', $categoryTypeId);
+        }
+
+        if ($brandId !== null) {
+            $queryBuilder->where('brand_id', $brandId);
+        }
+
+        return (int)$queryBuilder->first()['count'];
+    }
+
     /**
      * Получение популярных и скидочных товаров
      *
@@ -79,7 +123,8 @@ class ProductsRepository {
             $this->db->fetchAll(sprintf(
                 self::PRODUCTS_WITH_VARIATIONS_SQL,
                 '',
-                "products.hit = '1' OR products.price_old > 0"
+                "products.hit = '1' OR products.price_old > 0",
+                ''
             )),
             ['variations']
         );
@@ -232,7 +277,8 @@ class ProductsRepository {
             $this->db->fetchAll(sprintf(
                 self::PRODUCTS_WITH_VARIATIONS_SQL,
                 'JOIN products_related ON products.id = products_related.related_id',
-                "products_related.product_id = ?"
+                "products_related.product_id = ?",
+                ''
             ), [$id]),
             ['variations']
         );
@@ -285,7 +331,8 @@ class ProductsRepository {
             $this->db->fetchAll(sprintf(
                 self::PRODUCTS_WITH_VARIATIONS_SQL,
                 '',
-                "products.id IN ($placeholders)"
+                "products.id IN ($placeholders)",
+                ''
             ), $ids),
             ['variations']
         );
@@ -302,7 +349,8 @@ class ProductsRepository {
             $this->db->fetchAll(sprintf(
                 self::PRODUCTS_WITH_VARIATIONS_SQL,
                 'LEFT JOIN favorites ON products.id = favorites.product_id',
-                "favorites.user_id = ?"
+                "favorites.user_id = ?",
+                ''
             ), [$userId]),
             ['variations']
         );
@@ -318,7 +366,8 @@ class ProductsRepository {
         $response = $this->db->fetchOne(sprintf(
             self::PRODUCTS_WITH_VARIATIONS_SQL,
             '',
-            "products.id = ?"
+            "products.id = ?",
+            ''
         ), [$id]);
 
         if(!is_array($response)) return null;

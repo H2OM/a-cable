@@ -9,10 +9,10 @@ use app\core\Response;
 use app\services\admin\ProductsService;
 
 /** Контроллер для управления товарами */
-class ProductsController {
+readonly class ProductsController {
     public function __construct(
-        private readonly ProductsService $productsService,
-        private readonly Request         $request
+        private ProductsService $productsService,
+        private Request         $request
     ) {}
 
     /**

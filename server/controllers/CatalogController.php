@@ -7,15 +7,17 @@ use app\core\exceptions\ResponseException;
 use app\core\Request;
 use app\core\Response;
 use app\services\CategoriesService;
+use app\services\FiltersService;
 use app\services\ProductsService;
 
 
-/** Управление каталогом */
-class CatalogController {
+/** Контроллер для получения каталога */
+readonly class CatalogController {
     public function __construct(
-        private readonly Request $request,
-        private readonly ProductsService $productsService,
-        private readonly CategoriesService $categoriesService
+        private Request           $request,
+        private FiltersService    $filtersService,
+        private ProductsService   $productsService,
+        private CategoriesService $categoriesService
     ) {}
 
     /**
@@ -32,7 +34,7 @@ class CatalogController {
         }
 
         $catalog = $this->productsService->getCatalogByFilters($filters_params);
-        $filters = $this->productsService->getFiltersGroupByCode($filters_params['category']);
+        $filters = $this->filtersService->getFiltersGroupByCode($filters_params['category']);
         $category = $catalog[0]['category_parent'] ?? null;
 
         if(empty($category)) {

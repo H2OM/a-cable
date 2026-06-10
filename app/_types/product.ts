@@ -3,7 +3,7 @@ export interface Product {
     title: string;
     article: string;
     brand_id: string;
-    brand: string; // TODO
+    brand: string;
     category_type_id: number;
     category: string;
     category_code: string;

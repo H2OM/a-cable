@@ -74,11 +74,18 @@ class AnlanParserService extends ParserService {
                     $imageUrl = $this->env->get('PARSER_ANLAN_IMAGES_URL') . "/" . $image['image'];
                     $imageLocal = $parseProduct['id'] . '_' . $key . '_' . $image['image'];
 
+                    var_dump($imageUrl);
+                    var_dump($imageLocal);
+                    var_dump($this->imageExists($imageLocal));
+                    var_dump($this->getImage($imageUrl, $imageLocal));
+
                     if($this->imageExists($imageLocal) || $this->getImage($imageUrl, $imageLocal)) {
                         $images[] = $imageLocal;
                     }
                 }
             }
+
+            var_dump($images);
 
             if(empty($brandsMap[$parseProduct['brand_code']])) {
                 $currentBrand = $this->brandsRepository->getByCode(strtolower($parseProduct['brand_code']));
