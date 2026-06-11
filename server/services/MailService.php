@@ -12,9 +12,7 @@ use Symfony\Component\Mime\Email;
 readonly class MailService {
     private Mailer $mailer;
 
-    public function __construct(
-        private Env $env
-    ) {
+    public function __construct(private Env $env) {
         $transport = Transport::fromDsn(
             sprintf(
                 'smtp://%s:%s@%s:%s',
