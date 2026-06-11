@@ -19,7 +19,9 @@ enum ResponseMessage: string {
     case ERROR_ADD = 'Не удалось добавить данные';
     case ERROR_ADD_PRODUCT = 'Не удалось добавить товары';
     case ERROR_ADD_FILTERS = 'Не удалось добавить новые фильтры';
+    case ERROR_DELETE = 'Не удалось удалить позиции!';
     case ERROR_DUPLICATE = 'Не удалось добавить данные. Позиция уже существует!';
+    case ERROR_CREATE_ORDER = 'Не удалось создать заказ';
     case ERROR_USER_PHONE_ISSET = 'Пользователь с таким номером зарегистрирован!';
     case ERROR_TOKEN = 'Истек токен авторизации';
     case SUCCESS_SUBSCRIBE = 'Вы успешно подписаны на обновления!';
@@ -30,11 +32,13 @@ enum ResponseMessage: string {
     case SUCCESS_ADD_BASKET = 'Товар добавлен в корзину';
     case SUCCESS_ADD_FAVORITES = 'Товар добавлен в избранное';
     case SUCCESS_REMOVE = 'Успешное удаление';
+    case SUCCESS_REMOVE_ITEMS = 'Успешное удаление позиций';
     case SUCCESS_REMOVE_BASKET = 'Товар удален из корзины';
     case SUCCESS_REMOVE_FAVORITES = 'Товар удален из избранного';
     case SUCCESS_CLEAR_FAVORITES = 'Избранное отчищено';
     case SUCCESS_CLEAR_BASKET = 'Корзина очищена';
     case SUCCESS_CREATE_ORDER = 'Заказ успешно создан!';
+    case SUCCESS_UPDATE_DATA = 'Данные успешно обновленны!';
     case SUCCESS_EDIT = 'Данные отредактированы';
     case SUCCESS_PARSED = 'Товары успешно добавлены';
     case USER_AUTH = 'Пользователь авторизован';

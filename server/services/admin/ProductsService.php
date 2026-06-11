@@ -29,6 +29,16 @@ readonly class ProductsService {
     }
 
     /**
+     * Удаление товаров по Id
+     *
+     * @param array $ids
+     * @return bool
+     */
+    public function deleteByIds(array $ids): bool {
+        return $this->productsRepository->deleteByIds($ids);
+    }
+
+    /**
      * Привязка вариаций к товару
      *
      * @param int $id
@@ -47,5 +57,15 @@ readonly class ProductsService {
         }
 
         return $this->productsRepository->pairVariation($data);
+    }
+
+    /**
+     * Присваивание товарам статуса хит продаж
+     *
+     * @param array $ids
+     * @return bool
+     */
+    public function makeHit(array $ids): bool {
+        return $this->productsRepository->makeHit($ids);
     }
 }

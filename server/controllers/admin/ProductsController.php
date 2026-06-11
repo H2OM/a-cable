@@ -36,4 +36,57 @@ readonly class ProductsController {
 
         return Response::jsonSuccess(message: ResponseMessage::SUCCESS_ADD);
     }
+
+    /**
+     * Удаление товаров по id
+     *
+     * @return Response
+     * @throws ResponseException
+     */
+    public function deleteAction(): Response {
+        $ids = $this->request->input('ids');
+
+        if(empty($ids)) {
+            throw new ResponseException(ResponseMessage::ERROR_NOT_ENOUGH_DATA);
+        }
+
+        $result = $this->productsService->deleteByIds($ids);
+
+        if(!$result) {
+            throw new ResponseException(ResponseMessage::ERROR_DELETE);
+        }
+
+        return Response::jsonSuccess(message: ResponseMessage::SUCCESS_REMOVE_ITEMS);
+    }
+
+    /**
+     * Присваивание товарам статуса - хит продаж
+     *
+     * @return Response
+     * @throws ResponseException
+     */
+    public function makeHitAction(): Response {
+        $ids = $this->request->input('ids');
+
+        if(empty($ids) || !is_array($ids)) {
+            throw new ResponseException(ResponseMessage::ERROR_NOT_ENOUGH_DATA);
+        }
+
+        $result = $this->productsService->makeHit($ids);
+
+        if(!$result) {
+            throw new ResponseException(ResponseMessage::ERROR_UPDATE);
+        }
+
+        return Response::jsonSuccess(message: ResponseMessage::SUCCESS_UPDATE_DATA);
+    }
+
+    /**
+     * Удаление у товаров статуса - хит продаж
+     *
+     * @return Response
+     */
+    public function excludeHitAction(): Response {
+
+    }
 }

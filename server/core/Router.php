@@ -36,6 +36,8 @@
                 'base_permission' => 'products',
                 'pair-variation' => 'products.edit',
                 'edit' => 'products.edit',
+                'exclude-hit' => 'products.edit',
+                'make-hit' => 'products.edit',
                 'add' => 'products.add',
                 'delete' => 'products.delete',
             ],

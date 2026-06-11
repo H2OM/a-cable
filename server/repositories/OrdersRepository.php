@@ -3,6 +3,8 @@
 namespace app\repositories;
 
 use app\core\Db;
+use app\core\enums\ResponseMessage;
+use app\core\exceptions\ResponseException;
 use app\core\Hydrator;
 use Exception;
 
@@ -75,7 +77,7 @@ readonly class OrdersRepository {
      *
      * @param array $data
      * @return int
-     * @throws Exception
+     * @throws ResponseException
      */
     public function newOrder(array $data): int {
         try {
@@ -97,7 +99,7 @@ readonly class OrdersRepository {
                 ->insertId();
 
             if (!$orderId) {
-                throw new Exception('Не удалось создать заказ');
+                throw new ResponseException(ResponseMessage::ERROR_CREATE_ORDER);
             }
 
             $result = $this->db->query()
@@ -112,7 +114,7 @@ readonly class OrdersRepository {
                 ->execute();
 
             if (!$result) {
-                throw new Exception('Не удалось создать заказ');
+                throw new ResponseException(ResponseMessage::ERROR_CREATE_ORDER);
             }
 
             $productsStock = $this->db->query()
@@ -133,7 +135,7 @@ readonly class OrdersRepository {
                 ->execute();
 
             if (!$result) {
-                throw new Exception('Не удалось создать заказ');
+                throw new ResponseException(ResponseMessage::ERROR_CREATE_ORDER);
             }
 
             $this->db->commit();

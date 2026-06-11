@@ -408,6 +408,20 @@ readonly class ProductsRepository {
     }
 
     /**
+     * Удаление товаров по Id
+     *
+     * @param array $ids
+     * @return bool
+     */
+    public function deleteByIds(array $ids): bool {
+        return $this->db->query()
+            ->table('products')
+            ->where('id', 'IN', $ids)
+            ->delete()
+            ->execute();
+    }
+
+    /**
      * Привязка вариаций к товару
      *
      * @param array $data
@@ -417,6 +431,20 @@ readonly class ProductsRepository {
         return $this->db->query()
             ->table('products_variations')
             ->insert($data)
+            ->execute();
+    }
+
+    /**
+     * Присваивание товарам статуса хит продаж
+     *
+     * @param array $ids
+     * @return bool
+     */
+    public function makeHit(array $ids): bool {
+        return $this->db->query()
+            ->table('products')
+            ->where('id', 'IN', $ids)
+            ->update(['hit' => 1])
             ->execute();
     }
 
