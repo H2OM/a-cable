@@ -15,10 +15,10 @@ use Exception;
 
 /** Парсер для сайта АнЛан */
 class AnlanParserService extends ParserService {
-    private const FILTERS_CODE_MAP = [
+    private const array FILTERS_CODE_MAP = [
     ];
 
-    private const FILTERS_VALUES_CODE_MAP = [
+    private const array FILTERS_VALUES_CODE_MAP = [
         'seryj' => 'gray',
         'chernyj' => 'black'
     ];
@@ -74,18 +74,11 @@ class AnlanParserService extends ParserService {
                     $imageUrl = $this->env->get('PARSER_ANLAN_IMAGES_URL') . "/" . $image['image'];
                     $imageLocal = $parseProduct['id'] . '_' . $key . '_' . $image['image'];
 
-                    var_dump($imageUrl);
-                    var_dump($imageLocal);
-                    var_dump($this->imageExists($imageLocal));
-                    var_dump($this->getImage($imageUrl, $imageLocal));
-
                     if($this->imageExists($imageLocal) || $this->getImage($imageUrl, $imageLocal)) {
                         $images[] = $imageLocal;
                     }
                 }
             }
-
-            var_dump($images);
 
             if(empty($brandsMap[$parseProduct['brand_code']])) {
                 $currentBrand = $this->brandsRepository->getByCode(strtolower($parseProduct['brand_code']));

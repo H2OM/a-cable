@@ -3,11 +3,11 @@
 namespace app\services\admin\parsers;
 
 /** Абстрактный сервис для управления парсерами */
-abstract class ParserService {
-    protected const IMAGES_PATH = __DIR__ . "/../../../../public/img/";
+readonly abstract class ParserService {
+    protected const string IMAGES_PATH = __DIR__ . "/../../../../public/img/";
 
     /**
-     * Парс из
+     * Выгрузка из
      *
      * @param array $data
      * @return array
@@ -15,7 +15,7 @@ abstract class ParserService {
     abstract protected function from(array $data): array;
 
     /**
-     * Парс в текущую БД
+     * Загрузка в текущую БД
      *
      * @param array $parsedProducts
      * @param int $categoryTypeId

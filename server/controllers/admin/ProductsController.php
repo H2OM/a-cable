@@ -16,21 +16,65 @@ readonly class ProductsController {
     ) {}
 
     /**
-     * Привязка вариации к товару
+     * Редактирование товара
      *
      * @return Response
      * @throws ResponseException
      */
-    public function pairVariationAction(): Response {
-        $id          = (int)$this->request->input('id');
-        $variationId = (int)$this->request->input('variation_id');
-        $oneWay      = (bool)$this->request->input('one_way');
+    public function updateAction(): Response {
+        $data = $this->request->post();
 
-        if (!$id || !$variationId) {
+        if(empty($data)) {
             throw new ResponseException(ResponseMessage::ERROR_NOT_ENOUGH_DATA);
         }
 
-        if(!$this->productsService->pairVariation($id, $variationId, $oneWay)) {
+        $result = $this->productsService->update($data);
+
+        if(!$result) {
+            throw new ResponseException(ResponseMessage::ERROR_UPDATE);
+        }
+
+        return Response::jsonSuccess(message: ResponseMessage::SUCCESS_EDIT);
+    }
+
+    /**
+     * Привязка вариаций к товару
+     *
+     * @return Response
+     * @throws ResponseException
+     */
+    public function pairVariationsAction(): Response {
+        $ids           = $this->request->input('ids');
+        $variationsIds = $this->request->input('variations_ids');
+        $oneWay        = (bool)$this->request->input('one_way');
+
+        if (!is_array($ids) || !is_array($variationsIds)) {
+            throw new ResponseException(ResponseMessage::ERROR_NOT_ENOUGH_DATA);
+        }
+
+        if(!$this->productsService->pairVariations($ids, $variationsIds, $oneWay)) {
+            throw new ResponseException(ResponseMessage::ERROR_ADD);
+        }
+
+        return Response::jsonSuccess(message: ResponseMessage::SUCCESS_ADD);
+    }
+
+    /**
+     * Привязка связанных товаров
+     *
+     * @return Response
+     * @throws ResponseException
+     */
+    public function pairRelatedAction(): Response {
+        $ids        = $this->request->input('ids');
+        $relatedIds = $this->request->input('related_ids');
+        $oneWay     = (bool)$this->request->input('one_way');
+
+        if (!is_array($ids) || !is_array($relatedIds)) {
+            throw new ResponseException(ResponseMessage::ERROR_NOT_ENOUGH_DATA);
+        }
+
+        if(!$this->productsService->pairRelated($ids, $relatedIds, $oneWay)) {
             throw new ResponseException(ResponseMessage::ERROR_ADD);
         }
 
@@ -66,27 +110,40 @@ readonly class ProductsController {
      * @throws ResponseException
      */
     public function makeHitAction(): Response {
-        $ids = $this->request->input('ids');
+        return $this->changeHit(status: true);
 
-        if(empty($ids) || !is_array($ids)) {
-            throw new ResponseException(ResponseMessage::ERROR_NOT_ENOUGH_DATA);
-        }
-
-        $result = $this->productsService->makeHit($ids);
-
-        if(!$result) {
-            throw new ResponseException(ResponseMessage::ERROR_UPDATE);
-        }
-
-        return Response::jsonSuccess(message: ResponseMessage::SUCCESS_UPDATE_DATA);
     }
 
     /**
      * Удаление у товаров статуса - хит продаж
      *
      * @return Response
+     * @throws ResponseException
      */
     public function excludeHitAction(): Response {
+        return $this->changeHit(status: false);
+    }
 
+    /**
+     * Смена статуса хит продаж у товара
+     *
+     * @param bool $status
+     * @return Response
+     * @throws ResponseException
+     */
+    private function changeHit(bool $status): Response  {
+        $ids = $this->request->input('ids');
+
+        if(empty($ids) || !is_array($ids)) {
+            throw new ResponseException(ResponseMessage::ERROR_NOT_ENOUGH_DATA);
+        }
+
+        $result = $this->productsService->changeHit(ids: $ids, status: $status);
+
+        if(!$result) {
+            throw new ResponseException(ResponseMessage::ERROR_UPDATE);
+        }
+
+        return Response::jsonSuccess(message: ResponseMessage::SUCCESS_UPDATE_DATA);
     }
 }

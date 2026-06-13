@@ -56,6 +56,7 @@ readonly class ProductsRepository {
                             'filter_code', f.code, 
                             'value_name', f_v.value, 
                             'value_code', f_v.code, 
+                            'value_id', f_v.id,
                             'product_id', f_v_p.product_id 
                         )
                     ), 
@@ -74,7 +75,7 @@ readonly class ProductsRepository {
         WHERE (%s);
     ";
 
-    public function __construct(private readonly Db $db, private readonly Hydrator $hydrator) {}
+    public function __construct(private Db $db, private Hydrator $hydrator) {}
 
 
     /**
@@ -408,6 +409,20 @@ readonly class ProductsRepository {
     }
 
     /**
+     * Обновление товара
+     *
+     * @param array $data
+     * @return bool
+     */
+    public function update(array $data): bool {
+        return $this->db->query()
+            ->table('products')
+            ->where('id', $data['id'])
+            ->update($data)
+            ->execute();
+    }
+
+    /**
      * Удаление товаров по Id
      *
      * @param array $ids
@@ -422,14 +437,27 @@ readonly class ProductsRepository {
     }
 
     /**
-     * Привязка вариаций к товару
+     * Привязка вариаций
      *
      * @param array $data
      * @return bool
      */
-    public function pairVariation(array $data): bool {
+    public function pairVariations(array $data): bool {
         return $this->db->query()
             ->table('products_variations')
+            ->insert($data)
+            ->execute();
+    }
+
+    /**
+     * Привязка связанных товаров
+     *
+     * @param array $data
+     * @return bool
+     */
+    public function pairRelated(array $data): bool {
+        return $this->db->query()
+            ->table('products_related')
             ->insert($data)
             ->execute();
     }
@@ -438,13 +466,14 @@ readonly class ProductsRepository {
      * Присваивание товарам статуса хит продаж
      *
      * @param array $ids
+     * @param bool $status
      * @return bool
      */
-    public function makeHit(array $ids): bool {
+    public function changeHit(array $ids, bool $status): bool {
         return $this->db->query()
             ->table('products')
             ->where('id', 'IN', $ids)
-            ->update(['hit' => 1])
+            ->update(['hit' => $status ? 1 : 0])
             ->execute();
     }
 

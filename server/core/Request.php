@@ -7,17 +7,20 @@ class Request {
 
     protected ?array $get = null;
     protected ?array $post = null;
+    protected ?array $files = null;
     protected ?array $server = null;
     protected ?string $rawBody = null;
 
     public function __construct(
         ?array $get = null,
         ?array $post = null,
+        ?array $files = null,
         ?array $server = null,
         ?string $rawBody = null
     ) {
         $this->get = $get;
         $this->post = $post;
+        $this->files = $files;
         $this->server = $server;
         $this->rawBody = $rawBody;
     }
@@ -60,7 +63,6 @@ class Request {
         return $this->get[$key] ?? $default;
     }
 
-
     /**
      * Метод для получения POST запроса
      *
@@ -78,6 +80,24 @@ class Request {
         }
 
         return $this->post[$key] ?? $default;
+    }
+
+    /**
+     * Метод для получения данных из массива FILES
+     *
+     * @param string|null $key
+     * @return mixed
+     */
+    public function files(?string $key = null): mixed {
+        if ($this->files === null) {
+            $this->files = $_FILES;
+        }
+
+        if ($key === null) {
+            return $this->files;
+        }
+
+        return $this->files[$key] ?? null;
     }
 
     /**

@@ -33,6 +33,7 @@ export interface ProductLocalFilters {
 }
 
 export interface ProductLocalFilter {
+    id: number;
     name: string;
     code: string;
     product_id: number;

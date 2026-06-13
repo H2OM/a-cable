@@ -116,6 +116,7 @@ readonly class ProductsService {
             }
 
             $localFilters[$filter['filter_code']]['values'][] = [
+                'id' => $filter['value_id'],
                 'name' => $filter['value_name'],
                 'code' => $filter['value_code'],
                 'product_id' => $filter['product_id'],
