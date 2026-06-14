@@ -14,7 +14,7 @@ use app\repositories\ProductsRepository;
 use Exception;
 
 /** Парсер для сайта АнЛан */
-class AnlanParserService extends ParserService {
+readonly class AnlanParserService extends ParserService {
     private const array FILTERS_CODE_MAP = [
     ];
 
@@ -24,13 +24,13 @@ class AnlanParserService extends ParserService {
     ];
 
     public function __construct(
-        private readonly CategoriesRepository $categoriesRepository,
-        private readonly ProductsRepository   $productsRepository,
-        private readonly FiltersRepository    $filtersRepository,
-        private readonly BrandsRepository     $brandsRepository,
-        private readonly AnlanRepository      $anlanRepository,
-        private readonly Env                  $env,
-        private readonly Db                   $db
+        private CategoriesRepository $categoriesRepository,
+        private ProductsRepository   $productsRepository,
+        private FiltersRepository    $filtersRepository,
+        private BrandsRepository     $brandsRepository,
+        private AnlanRepository      $anlanRepository,
+        private Env                  $env,
+        private Db                   $db
     ) {}
 
     /**
@@ -202,17 +202,24 @@ class AnlanParserService extends ParserService {
                 throw new ResponseException(ResponseMessage::ERROR_ADD_FILTERS);
             }
 
-            $filtersValuesIds = $this->filtersRepository->getFiltersValuesIdsByCode(array_map(function ($filterValue) {
+            $filtersValuesWithIds = $this->filtersRepository->getFiltersValuesByCode(array_map(function ($filterValue) {
                 return $filterValue['code'];
             }, $parsedFiltersValues));
 
-            $filtersValuesIds = array_column($filtersValuesIds, null, 'code');
+            $parsedFiltersValuesWithIds = [];
+
+            foreach($filtersValuesWithIds as $filterValueWithId) {
+                $parsedFiltersValuesWithIds[$filterValueWithId['filter_id']][$filterValueWithId['code']] = $filterValueWithId;
+            }
 
             $parsedFiltersValuesProducts = [];
 
             foreach($parsedFiltersValues as $parsedFiltersValue) {
-                $filtersValueId = $filtersValuesIds[$parsedFiltersValue['code']]['id'] ?? null;
-                $fvp = $filtersValuesProducts[$parsedFiltersValue['filter_code']][$parsedFiltersValue['code']];
+                $filterId = $parsedFiltersValue['filter_id'];
+                $filterCode = $parsedFiltersValue['filter_code'];
+                $valueCode = $parsedFiltersValue['code'];
+                $filtersValueId = $parsedFiltersValuesWithIds[$filterId][$valueCode]['id'] ?? null;
+                $fvp = $filtersValuesProducts[$filterCode][$valueCode];
 
                 foreach($fvp as $filterValueProduct) {
                     $parsedFiltersValuesProducts[] = [
@@ -222,7 +229,7 @@ class AnlanParserService extends ParserService {
                 }
             }
 
-            if(!$this->filtersRepository->insertFiltersValuesProducts($parsedFiltersValuesProducts)) {
+            if(!$this->filtersRepository->insertValuesProducts($parsedFiltersValuesProducts)) {
                 throw new ResponseException(ResponseMessage::ERROR_ADD_FILTERS);
             }
 

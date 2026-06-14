@@ -15,24 +15,6 @@ readonly class OrdersService {
     ) {}
 
     /**
-     * Получение всех способов доставки
-     *
-     * @return array
-     */
-    public function getDeliveryTypes(): array {
-        return $this->ordersRepository->getDeliveryTypes();
-    }
-
-    /**
-     * Получение всех способов оплаты
-     *
-     * @return array
-     */
-    public function getPaymentTypes(): array {
-        return $this->ordersRepository->getPaymentTypes();
-    }
-
-    /**
      * Создание нового заказа
      * **Обязательные поля:**
      *
@@ -50,7 +32,7 @@ readonly class OrdersService {
      * @return int|false
      * @throws Exception
      */
-    public function newOrder(array $data): int|false {
+    public function new(array $data): int|false {
         $rules = [
             'user_id' => ['required', 'integer'],
             'payment_type_id' => ['required', 'integer'],
@@ -92,8 +74,26 @@ readonly class OrdersService {
      * @param int $id
      * @return array|null
      */
-    public function getOrder(int $id): ?array {
+    public function get(int $id): ?array {
         return $this->ordersRepository->getOrderById($id);
+    }
+
+    /**
+     * Получение всех способов доставки
+     *
+     * @return array
+     */
+    public function getDeliveryTypes(): array {
+        return $this->ordersRepository->getDeliveryTypes();
+    }
+
+    /**
+     * Получение всех способов оплаты
+     *
+     * @return array
+     */
+    public function getPaymentTypes(): array {
+        return $this->ordersRepository->getPaymentTypes();
     }
 
     /**

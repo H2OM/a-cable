@@ -16,25 +16,40 @@ readonly class ProductsController {
     ) {}
 
     /**
+     * Добавление нового товара
+     *
+     * @throws ResponseException
+     */
+    public function addAction(): Response {
+        $messages = $this->productsService->add($this->request->post(default: []));
+
+        if(!empty($messages)) {
+            return Response::json(data: [
+                'success' => true,
+                'message' => ResponseMessage::SUCCESS_UPDATE_DATA->value . PHP_EOL . $messages
+            ]);
+        }
+
+        return Response::jsonSuccess(message: ResponseMessage::SUCCESS_UPDATE_DATA);
+    }
+
+    /**
      * Редактирование товара
      *
      * @return Response
      * @throws ResponseException
      */
     public function updateAction(): Response {
-        $data = $this->request->post();
+        $messages = $this->productsService->update($this->request->post(default: []));
 
-        if(empty($data)) {
-            throw new ResponseException(ResponseMessage::ERROR_NOT_ENOUGH_DATA);
+        if(!empty($messages)) {
+            return Response::json(data: [
+                'success' => true,
+                'message' => ResponseMessage::SUCCESS_UPDATE_DATA->value . PHP_EOL . $messages
+            ]);
         }
 
-        $result = $this->productsService->update($data);
-
-        if(!$result) {
-            throw new ResponseException(ResponseMessage::ERROR_UPDATE);
-        }
-
-        return Response::jsonSuccess(message: ResponseMessage::SUCCESS_EDIT);
+        return Response::jsonSuccess(message: ResponseMessage::SUCCESS_UPDATE_DATA);
     }
 
     /**

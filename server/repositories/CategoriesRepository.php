@@ -67,6 +67,22 @@ readonly class CategoriesRepository {
     }
 
     /**
+     * Поиск подтипа категории по строке запроса
+     *
+     * @param string $query
+     * @return array
+     */
+    public function searchTypeByQuery(string $query): array {
+        return $this->db->query()
+            ->table('categories_types')
+            ->where('id', 'LIKE', "$query%")
+            ->orWhere('name', 'LIKE', "%$query%")
+            ->orWhere('code', 'LIKE', "%$query%")
+            ->limit(10)
+            ->get();
+    }
+
+    /**
      * Прикрепить фильтры к категориям
      *
      * @param array $values

@@ -17,4 +17,14 @@ readonly class BrandsService {
     public function getByCode(string $code): ?array {
         return $this->brandsRepository->getByCode($code);
     }
+
+    /**
+     * Поиск бренда по строке запроса
+     *
+     * @param string $query
+     * @return array
+     */
+    public function searchByQuery(string $query): array {
+        return $this->brandsRepository->searchByQuery($query);
+    }
 }

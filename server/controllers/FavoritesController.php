@@ -4,10 +4,9 @@ namespace app\controllers;
 
 use app\core\enums\ResponseMessage;
 use app\core\exceptions\ResponseException;
-use app\services\AuthService;
-use app\services\FavoritesService;
 use app\core\Request;
 use app\core\Response;
+use app\services\FavoritesService;
 
 /** Контроллер для управления избранным */
 readonly class FavoritesController {

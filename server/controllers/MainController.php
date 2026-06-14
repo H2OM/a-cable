@@ -2,8 +2,8 @@
 namespace app\controllers;
 
 use app\core\Response;
-use app\services\ProductsService;
 use app\services\MainService;
+use app\services\ProductsService;
 
 /** Контролер для получения главной информации */
 readonly class MainController {

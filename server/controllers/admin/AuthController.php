@@ -6,8 +6,8 @@ use app\core\enums\ResponseMessage;
 use app\core\exceptions\ResponseException;
 use app\core\Request;
 use app\core\Response;
-use app\services\admin\JWTService;
 use app\services\admin\AdminService;
+use app\services\admin\JWTService;
 
 /** Контроллер для управления авторизацией в админ-панели */
 readonly class AuthController {

@@ -396,9 +396,31 @@ readonly class ProductsRepository {
     }
 
     /**
-     * Добавление наличия товаров
+     * Добавление с возвращением id
      *
      * @param array $data
+     * @return false|string
+     */
+    public function insertId(array $data): false|string {
+        return $this->db->query()
+            ->table('products')
+            ->insert($data)
+            ->insertId();
+    }
+
+    /**
+     * Добавление наличия товаров
+     *
+     * @param array $data формат:
+     *
+     *                  ['product_id' => int, 'count' => int]
+     *
+     * ИЛИ
+     *
+     *                  [
+     *                      ['product_id' => int, 'count' => int], ...
+     *                  ]
+     *
      * @return bool
      */
     public function insertStock(array $data): bool {
@@ -419,6 +441,21 @@ readonly class ProductsRepository {
             ->table('products')
             ->where('id', $data['id'])
             ->update($data)
+            ->execute();
+    }
+
+    /**
+     * Обновление остатка товара
+     *
+     * @param int $id
+     * @param int $stock
+     * @return bool
+     */
+    public function updateStock(int $id, int $stock): bool {
+        return $this->db->query()
+            ->table('products_stocks')
+            ->where('product_id', $id)
+            ->update(['count' => $stock])
             ->execute();
     }
 
@@ -487,7 +524,7 @@ readonly class ProductsRepository {
         return $this->db->query()
             ->table('products')
             ->select(['id', 'CONCAT(title, " | ", article) AS name', 'image'])
-            ->where('id', $query)
+            ->where('id', 'LIKE', "$query%")
             ->orWhere('title', 'LIKE', "%$query%")
             ->orWhere('article', 'LIKE', "%$query%")
             ->limit(15)

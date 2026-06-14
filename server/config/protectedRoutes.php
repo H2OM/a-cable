@@ -29,7 +29,7 @@ return [
         'base_permission' => 'products',
         'pair-variations' => 'products.edit',
         'pair-related' => 'products.edit',
-        'edit' => 'products.edit',
+        'update' => 'products.edit',
         'exclude-hit' => 'products.edit',
         'make-hit' => 'products.edit',
         'add' => 'products.add',
@@ -38,5 +38,22 @@ return [
     'admin-parser' => [
         'class' => AdminMiddleware::class,
         'base_permission' => 'parser',
+    ],
+    'admin-orders' => [
+        'class' => AdminMiddleware::class,
+        'base_permission' => 'orders',
+        'update' => 'orders.edit',
+        'update-status' => 'orders.edit',
+        'delete' => 'orders.delete',
+    ],
+    'admin-filters' => [
+        'class' => AdminMiddleware::class,
+        'base_permission' => 'filters',
+        'delete' => 'filters.delete'
+    ],
+    'admin-categories' => [
+        'class' => AdminMiddleware::class,
+        'base_permission' => 'categories',
+        'delete' => 'categories.delete'
     ]
 ];

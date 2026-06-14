@@ -20,4 +20,20 @@ readonly class BrandsRepository {
             ->where('code', '=', $code)
             ->first();
     }
+
+    /**
+     * Поиск бренда по строке запроса
+     *
+     * @param string $query
+     * @return array
+     */
+    public function searchByQuery(string $query): array {
+        return $this->db->query()
+            ->table('brands')
+            ->where('id', 'LIKE', "$query%")
+            ->orWhere('name', 'LIKE', "%$query%")
+            ->orWhere('code', 'LIKE', "%$query%")
+            ->limit(10)
+            ->get();
+    }
 }

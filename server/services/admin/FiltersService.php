@@ -9,6 +9,23 @@ readonly class FiltersService {
     public function __construct(private FiltersRepository $filtersRepository) {}
 
     /**
+     * Получение всех фильтров, с лимитом
+     *
+     * @param int $page
+     * @param int $limit
+     * @return array
+     */
+    public function getAllByLimit(int $page, int $limit): array {
+        if($limit > 100) $limit = 100;
+
+        return $this->filtersRepository->getAllByLimit(factor: $page - 1, limit: $limit);
+    }
+
+    public function getCount(?int $categoryId): int {
+        return $this->filtersRepository->getCount($categoryId);
+    }
+
+    /**
      * Вставка новых фильтров
      *
      * @param array $filters
@@ -36,6 +53,6 @@ readonly class FiltersService {
      * @return string|false
      */
     public function insertFiltersValuesProducts(array $filtersValuesProducts): string|false {
-        return $this->filtersRepository->insertFiltersValuesProducts($filtersValuesProducts);
+        return $this->filtersRepository->insertValuesProducts($filtersValuesProducts);
     }
 }

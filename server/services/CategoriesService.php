@@ -28,6 +28,16 @@ readonly class CategoriesService {
     }
 
     /**
+     * Поиск подтипов категорий по строке запроса
+     *
+     * @param string $query
+     * @return array
+     */
+    public function searchTypeByQuery(string $query): array {
+        return $this->categoriesRepository->searchTypeByQuery($query);
+    }
+
+    /**
      * Получить основную категорию по id подкатегории
      *
      * @param int $id

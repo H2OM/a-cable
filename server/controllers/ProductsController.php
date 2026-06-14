@@ -60,7 +60,10 @@ readonly class ProductsController {
         $categoryTypeId = $this->request->get('category_type_id');
         $brandId = $this->request->get('brand_id');
 
-        $count = $this->productsService->getCount($categoryTypeId, $brandId);
+        $count = $this->productsService->getCount(
+            categoryTypeId: (int)$categoryTypeId ?: null,
+            brandId: (int)$brandId ?: null
+        );
 
         return Response::jsonSuccess(data: $count);
     }

@@ -4,10 +4,10 @@ namespace app\core;
 
 /** Управление загрузками на сервер */
 class Uploader {
-    private const string IMAGE_PATH = __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR . 'img';
+    private const string IMAGE_PATH = __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR . 'img' . DIRECTORY_SEPARATOR;
     private const array ALLOWED_FILE_TYPE_EXTENSIONS = [
-        'image' => 'jpg', 'jpeg', 'png', 'webp',
-        'file' => 'doc', 'pdf', 'xls', 'xlsx', 'docx', 'ppt', 'pptx'
+        'image' => ['jpg', 'jpeg', 'png', 'webp'],
+        'file' => ['doc', 'pdf', 'xls', 'xlsx', 'docx', 'ppt', 'pptx']
     ];
     private int $uploadMaxSize;
     public array $errors = [];
@@ -22,6 +22,8 @@ class Uploader {
         $files = $this->request->files($fieldName);
         $this->errors = [];
         $this->savedFileNames = [];
+
+        if(empty($files)) return;
 
         $fileCount = is_array($files['tmp_name']) ? count($files['tmp_name']) : 1;
 
@@ -46,7 +48,6 @@ class Uploader {
                 continue;
             }
 
-
             $extension = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
 
             if (!in_array($extension, self::ALLOWED_FILE_TYPE_EXTENSIONS[$fileType])) {
@@ -66,10 +67,12 @@ class Uploader {
 
             if (file_exists($destination)) {
                 $this->errors[] = "Файл {$fileName} уже существует!. Имя на сервере - {$newFileName}";
+                $this->savedFileNames[] = $newFileName;
+
                 continue;
             }
 
-            if (!move_uploaded_file($tmpName, $destination)) {
+            if (move_uploaded_file($tmpName, $destination)) {
                 $this->savedFileNames[] = $newFileName;
 
             } else {

@@ -198,7 +198,9 @@ class QueryBuilder {
      * @return $this
      */
     public function limit(int $limit, int $offset = 0): self {
-        $this->limit = "LIMIT $offset, $limit";
+        $this->limit = "LIMIT ?, ?";
+        $this->bindings[] = $offset;
+        $this->bindings[] = $limit;
 
         return $this;
     }

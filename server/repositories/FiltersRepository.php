@@ -3,10 +3,11 @@
 namespace app\repositories;
 
 use app\core\Db;
+use app\core\Hydrator;
 
 /** Репозиторий для управления фильтрами */
 readonly class FiltersRepository {
-    public function __construct(private Db $db) {}
+    public function __construct(private Db $db, private Hydrator $hydrator) {}
 
     /**
      * Получение всех фильтров
@@ -86,17 +87,70 @@ readonly class FiltersRepository {
     }
 
     /**
-     * Получение id значений фильтров по их коду
+     * Получение значений фильтров по их коду
      *
      * @param array $codes
      * @return array
      */
-    public function getFiltersValuesIdsByCode(array $codes): array {
+    public function getFiltersValuesByCode(array $codes): array {
         return $this->db->query()
             ->table('filters_values')
-            ->select(['id', 'code'])
+            ->select(['id', 'code', 'filter_id'])
             ->where('code', 'IN', $codes)
             ->get();
+    }
+
+    /**
+     * Получение всех фильтров, с лимитом
+     *
+     * @param int $factor
+     * @param int $limit
+     * @return array
+     */
+    public function getAllByLimit(int $factor, int $limit): array {
+        return $this->hydrator->decodeJson(
+            $this->db->query()
+                ->table('filters')
+                ->select([
+                    '*',
+                    "(
+                        SELECT COALESCE(JSON_ARRAYAGG(JSON_OBJECT(
+                            'id', id, 
+                            'value', value, 
+                            'code', code, 
+                            'filter_id', filter_id
+                        )), JSON_ARRAY())
+                        FROM filters_values
+                        WHERE filters.id = filters_values.filter_id
+                    ) AS 'values'"
+                ])
+                ->limit($limit, $factor * $limit)
+                ->get(),
+            ['values']
+        );
+    }
+
+    /**
+     * Получение количества
+     *
+     * @param int|null $categoryId
+     * @return int
+     */
+    public function getCount(?int $categoryId): int {
+        $sql = "SELECT COUNT(*) AS count FROM filters";
+        $params = [];
+
+        if ($categoryId !== null) {
+            $sql .= " 
+                JOIN categories_filters ON filters.id = categories_filters.filter_id 
+                WHERE categories_filters.category_id = ?
+            ";
+
+            $params[] = $categoryId;
+        }
+
+        return (int)$this->db->fetchOne($sql, $params)['count'];
+
     }
 
     /**
@@ -128,13 +182,13 @@ readonly class FiltersRepository {
     /**
      * Вставка новых связей значений фильтра и id товара
      *
-     * @param array $filtersValuesProducts
+     * @param array $valuesProducts
      * @return bool
      */
-    public function insertFiltersValuesProducts(array $filtersValuesProducts): bool {
+    public function insertValuesProducts(array $valuesProducts): bool {
         return $this->db->query()
             ->table('filters_values_products')
-            ->insert($filtersValuesProducts)
+            ->insert($valuesProducts)
             ->execute();
     }
 }

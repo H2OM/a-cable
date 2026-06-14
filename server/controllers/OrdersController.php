@@ -54,13 +54,13 @@ readonly class OrdersController {
             $userId = $user['id'];
         }
 
-        $orderId = $this->ordersService->newOrder([
+        $orderId = $this->ordersService->new([
             ...$data,
             'user_id' => $userId,
             'products' => $this->basketService->get(),
         ]);
 
-        $order = $this->ordersService->getOrder($orderId);
+        $order = $this->ordersService->get($orderId);
         $user = $this->authService->user();
 
         if (!empty($data['user']['password'])) {
@@ -90,7 +90,7 @@ readonly class OrdersController {
             return Response::jsonError(message: ResponseMessage::ERROR_NOT_ENOUGH_DATA);
         }
 
-        $order = $this->ordersService->getOrder($id);
+        $order = $this->ordersService->get($id);
 
         if (empty($order)) {
             return Response::jsonError(message: ResponseMessage::ERROR_ORDER_NOT_FOUND);
