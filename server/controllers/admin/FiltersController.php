@@ -2,6 +2,8 @@
 
 namespace app\controllers\admin;
 
+use app\core\enums\ResponseMessage;
+use app\core\exceptions\ResponseException;
 use app\core\Request;
 use app\core\Response;
 use app\services\admin\FiltersService;
@@ -35,5 +37,24 @@ readonly class FiltersController {
         $count = $this->filtersService->getCount(categoryId: (int)$categoryId ?: null);
 
         return response::jsonSuccess(data: $count);
+    }
+
+
+    /**
+     * Удаление
+     *
+     * @return Response
+     * @throws ResponseException
+     */
+    public function deleteAction(): Response {
+        $ids = $this->request->input('ids', []);
+
+        $result = $this->filtersService->deleteByIds($ids);
+
+        if(!$result) {
+            throw new ResponseException(ResponseMessage::ERROR_DELETE);
+        }
+
+        return Response::jsonSuccess(message: ResponseMessage::SUCCESS_REMOVE_ITEMS);
     }
 }

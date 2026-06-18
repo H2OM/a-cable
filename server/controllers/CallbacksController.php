@@ -5,14 +5,14 @@ namespace app\controllers;
 use app\core\enums\ResponseMessage;
 use app\core\Request;
 use app\core\Response;
-use app\services\CallbackService;
+use app\services\CallbacksService;
 use Exception;
 
-/** Контролер для управления обратной связи */
-readonly class CallbackController {
+/** Контролер для обратной связи */
+readonly class CallbacksController {
     public function __construct(
-        private Request         $request,
-        private CallbackService $callbackService) {}
+        private Request          $request,
+        private CallbacksService $callbackService) {}
 
     /**
      * Обработка формы подписки на новости

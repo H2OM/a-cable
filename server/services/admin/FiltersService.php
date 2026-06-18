@@ -55,4 +55,14 @@ readonly class FiltersService {
     public function insertFiltersValuesProducts(array $filtersValuesProducts): string|false {
         return $this->filtersRepository->insertValuesProducts($filtersValuesProducts);
     }
+
+    /**
+     * Удаление по id
+     *
+     * @param array $ids
+     * @return bool
+     */
+    public function deleteByIds(array $ids): bool {
+        return $this->filtersRepository->deleteByIds($ids);
+    }
 }

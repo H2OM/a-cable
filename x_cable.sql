@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Хост: 127.0.0.1:3306
--- Время создания: Июн 18 2026 г., 10:51
+-- Время создания: Июн 18 2026 г., 18:18
 -- Версия сервера: 8.0.30
 -- Версия PHP: 8.3.31
 
@@ -127,6 +127,30 @@ INSERT INTO `brands` (`id`, `name`, `code`) VALUES
 (1, 'Cabeus', 'cabeus'),
 (3, 'Rexant', 'rexant'),
 (4, 'Неизвестно', 'unknown');
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `callbacks`
+--
+
+CREATE TABLE `callbacks` (
+  `id` int UNSIGNED NOT NULL,
+  `user_id` int UNSIGNED DEFAULT NULL,
+  `title` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `message` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `email` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `status` enum('0','1','2') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '0',
+  `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `update_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Дамп данных таблицы `callbacks`
+--
+
+INSERT INTO `callbacks` (`id`, `user_id`, `title`, `message`, `email`, `status`, `date`, `update_date`) VALUES
+(2, NULL, 'eee', 'ttt', 'ewae@ma', '0', '2026-06-18 15:05:44', '2026-06-18 15:06:57');
 
 -- --------------------------------------------------------
 
@@ -2514,7 +2538,7 @@ CREATE TABLE `orders` (
   `delivery_price` smallint UNSIGNED NOT NULL,
   `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `change_date` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  `delivery_date` date NOT NULL,
+  `delivery_date` timestamp NOT NULL,
   `comment` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -2523,19 +2547,19 @@ CREATE TABLE `orders` (
 --
 
 INSERT INTO `orders` (`id`, `number`, `status`, `user_id`, `delivery_type_id`, `payment_type_id`, `delivery_address`, `price`, `delivery_price`, `date`, `change_date`, `delivery_date`, `comment`) VALUES
-(47, '92c4973cc13e4', '1', 16, 2, 1, 'Калатушкина 2', 79946, 1000, '2026-06-02 15:32:33', '2026-06-02 15:32:33', '0000-00-00', ''),
-(48, 'e80bff5fc58e3', '1', 16, 2, 1, 'Калатушкина 2', 79946, 1000, '2026-06-02 15:41:03', '2026-06-02 15:41:03', '0000-00-00', ''),
-(49, '905f803973939', '4', 16, 1, 1, 'г. Москва проезд ...', 78946, 0, '2026-06-02 15:44:38', '2026-06-02 15:44:38', '0000-00-00', ''),
-(50, '81069e194c5fa', '0', 16, 1, 1, 'г. Москва проезд ...', 78946, 0, '2026-06-02 15:47:43', '2026-06-02 15:47:43', '0000-00-00', ''),
-(51, 'fa5c343977790', '0', 16, 1, 1, 'г. Москва проезд ...', 78946, 0, '2026-06-02 15:51:47', '2026-06-02 15:51:47', '0000-00-00', ''),
-(52, '5a9bb632c3418', '0', 16, 1, 1, 'г. Москва проезд ...', 78946, 0, '2026-06-02 15:53:21', '2026-06-02 15:53:21', '0000-00-00', ''),
-(53, '90eb8b84214f0', '0', 16, 1, 1, 'г. Москва проезд ...', 61823, 0, '2026-06-02 16:02:49', '2026-06-02 16:02:49', '0000-00-00', ''),
-(54, 'd849193cfe8f2', '0', 16, 1, 1, 'г. Москва проезд ...', 44899, 0, '2026-06-02 16:03:46', '2026-06-02 16:03:46', '0000-00-00', ''),
-(55, '764d5dff7fffd', '2', 30, 2, 1, 'г. Москва, Пресненская наб., 10 блок С', 61041, 1000, '2026-06-09 11:42:16', '2026-06-09 11:42:16', '2026-06-10', ''),
-(56, 'ad373ead5cf0a', '4', 30, 3, 1, 'г. Москва, Большой Саввинский переулок, 2к1', 15342, 0, '2026-06-09 12:22:55', '2026-06-09 12:22:55', '2026-06-11', ''),
-(66, 'abaf4a76ca8b3', '0', 16, 1, 1, 'г. Москва проезд ...', 121426, 0, '2026-06-11 21:59:18', '2026-06-11 21:59:18', '0000-00-00', ''),
-(67, '4e4e13127f833', '0', 16, 2, 1, 'г. Москва проезд ...', 9372, 1000, '2026-06-11 22:00:29', '2026-06-11 22:00:29', '0000-00-00', ''),
-(68, 'eb0c852d0d3d6', '0', 31, 1, 1, 'Калатушкина 2', 44700, 0, '2026-06-17 09:49:31', '2026-06-17 09:49:31', '0000-00-00', '');
+(47, '92c4973cc13e4', '1', 16, 2, 1, 'Калатушкина 2', 79946, 1000, '2026-06-02 15:32:33', '2026-06-02 15:32:33', '0000-00-00 00:00:00', ''),
+(48, 'e80bff5fc58e3', '1', 16, 2, 1, 'Калатушкина 2', 79946, 1000, '2026-06-02 15:41:03', '2026-06-02 15:41:03', '0000-00-00 00:00:00', ''),
+(49, '905f803973939', '4', 16, 1, 1, 'г. Москва проезд ...', 78946, 0, '2026-06-02 15:44:38', '2026-06-02 15:44:38', '0000-00-00 00:00:00', ''),
+(50, '81069e194c5fa', '0', 16, 1, 1, 'г. Москва проезд ...', 78946, 0, '2026-06-02 15:47:43', '2026-06-02 15:47:43', '0000-00-00 00:00:00', ''),
+(51, 'fa5c343977790', '0', 16, 1, 1, 'г. Москва проезд ...', 78946, 0, '2026-06-02 15:51:47', '2026-06-02 15:51:47', '0000-00-00 00:00:00', ''),
+(52, '5a9bb632c3418', '0', 16, 1, 1, 'г. Москва проезд ...', 78946, 0, '2026-06-02 15:53:21', '2026-06-02 15:53:21', '0000-00-00 00:00:00', ''),
+(53, '90eb8b84214f0', '0', 16, 1, 1, 'г. Москва проезд ...', 61823, 0, '2026-06-02 16:02:49', '2026-06-02 16:02:49', '0000-00-00 00:00:00', ''),
+(54, 'd849193cfe8f2', '0', 16, 1, 1, 'г. Москва проезд ...', 44899, 0, '2026-06-02 16:03:46', '2026-06-02 16:03:46', '0000-00-00 00:00:00', ''),
+(55, '764d5dff7fffd', '2', 30, 2, 1, 'г. Москва, Пресненская наб., 10 блок С', 61041, 1000, '2026-06-09 11:42:16', '2026-06-09 11:42:16', '2026-06-09 21:00:00', ''),
+(56, 'ad373ead5cf0a', '4', 30, 3, 1, 'г. Москва, Большой Саввинский переулок, 2к1', 15342, 0, '2026-06-09 12:22:55', '2026-06-09 12:22:55', '2026-06-10 21:00:00', ''),
+(66, 'abaf4a76ca8b3', '0', 16, 1, 1, 'г. Москва проезд ...', 121426, 0, '2026-06-11 21:59:18', '2026-06-11 21:59:18', '0000-00-00 00:00:00', ''),
+(67, '4e4e13127f833', '0', 16, 2, 1, 'г. Москва проезд ...', 9372, 1000, '2026-06-11 22:00:29', '2026-06-11 22:00:29', '0000-00-00 00:00:00', ''),
+(68, 'eb0c852d0d3d6', '0', 31, 1, 1, 'Калатушкина 2', 44700, 0, '2026-06-17 09:49:31', '2026-06-17 09:49:31', '0000-00-00 00:00:00', '');
 
 -- --------------------------------------------------------
 
@@ -3684,6 +3708,16 @@ ALTER TABLE `brands`
   ADD KEY `brand_name` (`name`);
 
 --
+-- Индексы таблицы `callbacks`
+--
+ALTER TABLE `callbacks`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `user_id` (`user_id`),
+  ADD KEY `title` (`title`),
+  ADD KEY `email` (`email`),
+  ADD KEY `status` (`status`);
+
+--
 -- Индексы таблицы `categories`
 --
 ALTER TABLE `categories`
@@ -3866,6 +3900,12 @@ ALTER TABLE `brands`
   MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
+-- AUTO_INCREMENT для таблицы `callbacks`
+--
+ALTER TABLE `callbacks`
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
 -- AUTO_INCREMENT для таблицы `categories`
 --
 ALTER TABLE `categories`
@@ -3953,6 +3993,12 @@ ALTER TABLE `admins`
 ALTER TABLE `admins_roles_permissions`
   ADD CONSTRAINT `to_admins_roles_id2` FOREIGN KEY (`role_id`) REFERENCES `admins_roles` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `to_permissions_id2` FOREIGN KEY (`permission_id`) REFERENCES `permissions` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Ограничения внешнего ключа таблицы `callbacks`
+--
+ALTER TABLE `callbacks`
+  ADD CONSTRAINT `callback_to_user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Ограничения внешнего ключа таблицы `categories_filters`

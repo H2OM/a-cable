@@ -191,4 +191,18 @@ readonly class FiltersRepository {
             ->insert($valuesProducts)
             ->execute();
     }
+
+    /**
+     * Удаление по id
+     *
+     * @param array $ids
+     * @return bool
+     */
+    public function deleteByIds(array $ids): bool {
+        return $this->db->query()
+            ->table('filters')
+            ->where('id', 'IN', $ids)
+            ->delete()
+            ->execute();
+    }
 }

@@ -65,5 +65,10 @@ return [
     'admin-banners' => [
         'class' => AdminMiddleware::class,
         'base_permission' => 'banners'
-    ]
+    ],
+    'admin-callbacks' => [
+        'class' => AdminMiddleware::class,
+        'base_permission' => 'callbacks',
+        'delete' => 'callbacks.delete'
+    ],
 ];
