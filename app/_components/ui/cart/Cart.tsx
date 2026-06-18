@@ -78,7 +78,7 @@ export default function Cart({product, isSlider = false}: { product: Product; is
                     {/*TODO слайдер вариаций*/}
                     <div className="variations">
                         {product.variations.map(variation => (
-                            <Link href={`/variation/${variation.id}`} key={variation.id}>
+                            <Link href={`/product/${variation.id}`} key={variation.id}>
                                 <Image
                                     src={`/img/${variation.image.trim()}`}
                                     alt={"ОШИБКА ЗАГРУЗКИ ФОТОГРАФИИ"}

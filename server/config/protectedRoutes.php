@@ -55,5 +55,15 @@ return [
         'class' => AdminMiddleware::class,
         'base_permission' => 'categories',
         'delete' => 'categories.delete'
+    ],
+    'admin-brands' => [
+        'class' => AdminMiddleware::class,
+        'base_permission' => 'brands',
+        'delete' => 'brands.delete',
+        'safe-delete' => 'brands.delete'
+    ],
+    'admin-banners' => [
+        'class' => AdminMiddleware::class,
+        'base_permission' => 'banners'
     ]
 ];

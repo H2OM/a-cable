@@ -274,6 +274,22 @@ class QueryBuilder {
         return $this;
     }
 
+    /**
+     * Подготовка запроса. Обновление таблицы с разными строками
+     * >**Обновление текущих строк с возможностью выполнения математических операций над ними**
+     *
+     * @param array $data Данные:
+     *
+     *      [
+     *          [main pair, ...fields] => ['id' => number, 'count' => number]
+     *      ]
+     * @param array $setCondition Проводимые операции:
+     *
+     *      [
+     *          [field, condition] => ['count', '-']
+     *      ]
+     * @return $this
+     */
     public function updateMany(array $data, array $setCondition): self {
         $placeholders = [];
         $setPlaceholders = [];

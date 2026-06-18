@@ -77,7 +77,6 @@ readonly class ProductsRepository {
 
     public function __construct(private Db $db, private Hydrator $hydrator) {}
 
-
     /**
      * Получение всех товаров, с лимитом
      *
@@ -445,6 +444,21 @@ readonly class ProductsRepository {
     }
 
     /**
+     * Обновление товаров
+     *
+     * @param array $ids
+     * @param array $data
+     * @return bool
+     */
+    public function updateMany(array $ids, array $data): bool {
+        return $this->db->query()
+            ->table('products')
+            ->where('id', 'IN', $ids)
+            ->update($data)
+            ->execute();
+    }
+
+    /**
      * Обновление остатка товара
      *
      * @param int $id
@@ -456,6 +470,21 @@ readonly class ProductsRepository {
             ->table('products_stocks')
             ->where('product_id', $id)
             ->update(['count' => $stock])
+            ->execute();
+    }
+
+    /**
+     * Обновление товаров по брендам
+     *
+     * @param array $brandsId
+     * @param array $data
+     * @return bool
+     */
+    public function updateByBrands(array $brandsId, array $data): bool {
+        return $this->db->query()
+            ->table('products')
+            ->where('brand_id', 'IN', $brandsId)
+            ->update($data)
             ->execute();
     }
 

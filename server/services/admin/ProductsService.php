@@ -113,10 +113,12 @@ readonly class ProductsService {
 
         foreach ($ids as $id) {
             foreach($variationsIds as $variationId) {
-                $data[$id] = ['product_id' => $id, 'variation_id' => $variationId];
+                if($variationId === $id) continue;
+
+                $data[] = ['product_id' => $id, 'variation_id' => $variationId];
 
                 if(!$oneWay) {
-                    $data[$variationId] = ['product_id' => $variationId, 'variation_id' => $id];
+                    $data[] = ['product_id' => $variationId, 'variation_id' => $id];
                 }
             }
         }
@@ -137,10 +139,12 @@ readonly class ProductsService {
 
         foreach ($ids as $id) {
             foreach($relatedIds as $relatedId) {
-                $data[$id] = ['product_id' => $id, 'related_id' => $relatedId];
+                if($relatedId === $id) continue;
+
+                $data[] = ['product_id' => $id, 'related_id' => $relatedId];
 
                 if(!$oneWay) {
-                    $data[$relatedId] = ['product_id' => $relatedId, 'related_id' => $id];
+                    $data[] = ['product_id' => $relatedId, 'related_id' => $id];
                 }
             }
         }
