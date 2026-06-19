@@ -10,6 +10,8 @@ import Link from "next/link";
 import ClipboardCopy from "@ui/clipboardCopy/ClipboardCopy";
 import toast from "react-hot-toast";
 
+const IMAGES_URL = process.env.NEXT_PUBLIC_IMAGES_URL;
+
 export default function Cart({product, isSlider = false}: { product: Product; isSlider?: boolean; }) {
     const {isFavorite, isPending, toggle} = useFavorites(product.id);
     const {add, getItem} = useBasket();
@@ -38,7 +40,7 @@ export default function Cart({product, isSlider = false}: { product: Product; is
                 </div>
                 <Link href={`/product/${product.id}`}>
                     <Image
-                        src={`/img/${product.image.trim()}`}
+                        src={`${IMAGES_URL}/${product.image.trim()}`}
                         alt={"ОШИБКА ЗАГРУЗКИ ФОТОГРАФИИ"}
                         className={"cart__img"}
                         width={0}
@@ -80,7 +82,7 @@ export default function Cart({product, isSlider = false}: { product: Product; is
                         {product.variations.map(variation => (
                             <Link href={`/product/${variation.id}`} key={variation.id}>
                                 <Image
-                                    src={`/img/${variation.image.trim()}`}
+                                    src={`${IMAGES_URL}/${variation.image.trim()}`}
                                     alt={"ОШИБКА ЗАГРУЗКИ ФОТОГРАФИИ"}
                                     width={0}
                                     height={0}

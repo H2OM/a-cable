@@ -13,6 +13,8 @@ import Link from "next/link";
 import ClipboardCopy from "@ui/clipboardCopy/ClipboardCopy";
 import Image from "next/image";
 
+const IMAGES_URL = process.env.NEXT_PUBLIC_IMAGES_URL;
+
 export default function OrderSuccess({id}: { id: number }) {
     const [order, setOrder] = useState<Order | null>(null);
     const [isPending, setIsPending] = useState<boolean>(true);
@@ -148,7 +150,7 @@ export default function OrderSuccess({id}: { id: number }) {
                                 <Link className="Personal__split__content__block__order__content__cart__desc__link"
                                       href={`/product/${product.id}`}>
                                     <Image
-                                        src={`/img/${product.image.trim()}`}
+                                        src={`${IMAGES_URL}/${product.image.trim()}`}
                                         alt={"ОШИБКА ЗАГРУЗКИ ФОТОГРАФИИ"}
                                         className={"Personal__split__content__block__order__content__cart__image"}
                                         width={0}

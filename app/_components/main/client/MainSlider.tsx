@@ -4,6 +4,8 @@ import Image from "next/image";
 import {useState} from "react";
 import {SliderMain} from "@/_types/sliders";
 
+const IMAGES_URL = process.env.NEXT_PUBLIC_IMAGES_URL;
+
 export default function MainSlider({slides}: { slides: SliderMain[] }) {
     const [infoSlide, moveInfoSlide] = useState<number>(0);
 
@@ -71,7 +73,7 @@ export default function MainSlider({slides}: { slides: SliderMain[] }) {
             </div>
             <div className="Slider__sections__slide">
                 <Image
-                    src={"/img/" + slides[infoSlide].image.trim()}
+                    src={IMAGES_URL + slides[infoSlide].image.trim()}
                     alt={"КАРТИНКА К ТЕКСТУ"}
                     className={"Slider__sections__slide__img"}
                     height={1000}

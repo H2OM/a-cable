@@ -3,6 +3,8 @@
 import Image from "next/image";
 import {useState} from "react";
 
+const IMAGES_URL = process.env.NEXT_PUBLIC_IMAGES_URL;
+
 export default function DetailsSlider({slides, mainImage}: {
     slides: string[];
     mainImage: string;
@@ -28,7 +30,7 @@ export default function DetailsSlider({slides, mainImage}: {
                             />
                         </div>
                         <Image
-                            src={`/img/${slides[slide].trim()}`}
+                            src={`${IMAGES_URL}/${slides[slide].trim()}`}
                             alt={"slide"}
                             className={"Details__split__slider__base__image"}
                             width={0}
@@ -52,7 +54,7 @@ export default function DetailsSlider({slides, mainImage}: {
                         </div>
                     </>
                     : <Image
-                        src={`/img/${mainImage.trim()}`}
+                        src={`${IMAGES_URL}/${mainImage.trim()}`}
                         alt={"slide"}
                         className={"Details__split__slider__base__image"}
                         width={500}
@@ -66,7 +68,7 @@ export default function DetailsSlider({slides, mainImage}: {
                 {slides.map((image, i) => {
                     return (
                         <Image
-                            src={`/img/${image.trim()}`}
+                            src={`${IMAGES_URL}/${image.trim()}`}
                             alt={`slide${i}`}
                             className={"Details__split__slider__slides__image" + (i === slide ? " _active" : "")}
                             width={105}

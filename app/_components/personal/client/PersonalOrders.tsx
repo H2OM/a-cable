@@ -10,6 +10,7 @@ import Link from "next/link";
 import Image from "next/image";
 import ClipboardCopy from "@ui/clipboardCopy/ClipboardCopy";
 
+const IMAGES_URL = process.env.NEXT_PUBLIC_IMAGES_URL;
 const orderStatusesMap: Record<number, string> = {
     0: "В обработке",
     1: "Принят в доставку",
@@ -101,7 +102,7 @@ export default function PersonalOrders() {
                                     <Link className="Personal__split__content__block__order__content__cart__desc__link"
                                           href={`/product/${product.id}`}>
                                         <Image
-                                            src={`/img/${product.image.trim()}`}
+                                            src={`${IMAGES_URL}/${product.image.trim()}`}
                                             alt={"ОШИБКА ЗАГРУЗКИ ФОТОГРАФИИ"}
                                             className={"Personal__split__content__block__order__content__cart__image"}
                                             width={0}

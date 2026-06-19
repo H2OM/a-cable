@@ -37,9 +37,3 @@ yarn-error.log*
 *.tsbuildinfo
 
 /desktop.ini
-
-/server/composer/vendor/
-/server/composer/composer.lock
-/server/.env
-/server/.idea/
-/server/repositories/parsers

@@ -5,6 +5,8 @@ import Image from "next/image";
 import {categoriesAPI} from "@api";
 import {redirect} from "next/navigation";
 
+const IMAGES_URL = process.env.NEXT_PUBLIC_IMAGES_URL;
+
 export default async function CatalogCategories() {
     const response = await categoriesAPI.getAll();
 
@@ -22,7 +24,7 @@ export default async function CatalogCategories() {
                     {categories.map((category: Category) => (
                         <Link href={`/catalog/${category.code}`} key={category.id}>
                             <Image
-                                src={`/img/${category.image.trim()}`}
+                                src={`${IMAGES_URL}/${category.image.trim()}`}
                                 height={1000}
                                 width={1000}
                                 quality={100}

@@ -9,6 +9,8 @@ import Image from "next/image";
 import ClipboardCopy from "@ui/clipboardCopy/ClipboardCopy";
 import toast from "react-hot-toast";
 
+const IMAGES_URL = process.env.NEXT_PUBLIC_IMAGES_URL;
+
 export default function BasketCart({product}: { product: ProductBasket }) {
     const {isFavorite, toggle} = useFavorites(product.id);
     const {add, decrement, remove} = useBasket();
@@ -63,7 +65,7 @@ export default function BasketCart({product}: { product: ProductBasket }) {
             <Link href={`/product/${product.id}`}>
                 <Image
                     className="Basket__split__content__cart__image"
-                    src={`/img/${product.image.trim()}`}
+                    src={`${IMAGES_URL}/${product.image.trim()}`}
                     height={160}
                     width={160}
                     quality={100}

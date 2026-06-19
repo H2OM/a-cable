@@ -10,6 +10,8 @@ import {productsAPI} from "@api";
 import ClipboardCopy from "@ui/clipboardCopy/ClipboardCopy";
 import ClientImage from "@ui/clientImage/ClientImage";
 
+const IMAGES_URL = process.env.NEXT_PUBLIC_IMAGES_URL;
+
 export default async function Details({params}: { params: Promise<{ id: string; }> }) {
     const {id} = await params;
     const response = await productsAPI.getById(id);
@@ -116,7 +118,7 @@ export default async function Details({params}: { params: Promise<{ id: string; 
                                         .map(variation => {
                                             const img = (
                                                 <ClientImage
-                                                    src={`/img/${variation.image.trim()}`}
+                                                    src={`${IMAGES_URL}/${variation.image.trim()}`}
                                                     alt={String(variation.id)}
                                                     width={500}
                                                     height={500}
