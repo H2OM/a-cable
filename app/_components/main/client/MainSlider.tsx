@@ -73,7 +73,7 @@ export default function MainSlider({slides}: { slides: SliderMain[] }) {
             </div>
             <div className="Slider__sections__slide">
                 <Image
-                    src={IMAGES_URL + slides[infoSlide].image.trim()}
+                    src={`${IMAGES_URL}/${slides[infoSlide].image.trim()}`}
                     alt={"КАРТИНКА К ТЕКСТУ"}
                     className={"Slider__sections__slide__img"}
                     height={1000}

@@ -83,7 +83,7 @@ export default function Cart({product, isSlider = false}: { product: Product; is
                             <Link href={`/product/${variation.id}`} key={variation.id}>
                                 <Image
                                     src={`${IMAGES_URL}/${variation.image.trim()}`}
-                                    alt={"ОШИБКА ЗАГРУЗКИ ФОТОГРАФИИ"}
+                                    alt={""}
                                     width={0}
                                     height={0}
                                     sizes="100vw"
