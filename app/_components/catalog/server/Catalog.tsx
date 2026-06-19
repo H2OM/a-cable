@@ -8,6 +8,7 @@ import Fallback from "@ui/fallback/Fallback";
 import {Filter} from "@_types/filters";
 import normalizeParams from "@utils/normalizeParams";
 import {SearchParams} from "@_types/common";
+import Pagination from "@ui/pagination/Pagination";
 
 export default async function Catalog({promiseParams, promiseSearchParams}: {
     promiseParams: Promise<{ category: string; type?:string }>
@@ -68,29 +69,8 @@ export default async function Catalog({promiseParams, promiseSearchParams}: {
                                         )
                                     })}
                                 </div>
-                                {/* <div className="catalog__navigation">
-                                    <div className="btn btn_big catalog__navigation__btn">Показать еще</div>
-                                    <div className="pagination">
-                                        <button className="pagination__btns">
-                                        </button>
-                                        <div className="pagination__titles" onClick={({target})=>{
-                                            if(target.classList.contains("pagination__titles__tab")) {
-                                                target.parentElement.querySelectorAll(".pagination__titles__tab_active").forEach(elem=>{
-                                                    elem.classList.remove("pagination__titles__tab_active");
-                                                });
-                                                target.classList.add("pagination__titles__tab_active");
-                                            }
-                                        }}>
-                                            <div className="pagination__titles__tab pagination__titles__tab_active">1</div>
-                                            <div className="pagination__titles__tab">2</div>
-                                            <div className="pagination__titles__tab">3</div>
-                                            <div className="pagination__titles__dot">...</div>
-                                            <div className="pagination__titles__tab">10</div>
-                                        </div>
-                                        <button className="pagination__btns">
-                                        </button>
-                                    </div>
-                                </div> */}
+                                <Pagination totalCount={400}/>
+
                             </> :
                             <div className="title title_black" style={{marginTop: "20px", fontSize: "22px"}}>
                                 Товаров не найдено

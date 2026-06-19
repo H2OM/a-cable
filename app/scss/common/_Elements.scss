@@ -159,10 +159,10 @@
             width: 20px;
             height: 20px;
         }
-        &:first-child {
+        &._back {
             margin-right: 5px;
         }
-        &:last-child {
+        &._next {
             margin-left: 5px;
             transform: rotate(180deg);
             &:hover {
@@ -176,7 +176,7 @@
     &__titles {
         display: flex;
         align-items: center;
-        margin: 0 40px;
+        margin: 0 18px;
         &__tab {
             display: flex;
             margin: 0 5px;
@@ -188,7 +188,8 @@
             font-weight: 400;
             border-radius: 5px;
             cursor: pointer;
-            &_active {
+            &._active {
+                color: white;
                 background-color: Vars.$main-light;
             }
         }
@@ -200,6 +201,22 @@
             height: 32px;
             font-size: 18px;
             font-weight: 400;
+        }
+    }
+    &__limits {
+        cursor: pointer;
+        margin-left: 14px;
+        border-radius: 5px;
+        border: 1px solid Vars.$dark-purple;
+        color: Vars.$dark-purple;
+        padding: 0 10px;
+        font-family: raleway, raleway Fallback;
+        &:focus {
+            outline: none;
+        }
+        option {
+            background-color: white;
+            color: black;
         }
     }
 }
