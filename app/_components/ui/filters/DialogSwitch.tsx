@@ -21,6 +21,7 @@ export default function DialogSwitch({modalOptions, closeAction}: {
             set(name, code);
         }
 
+        unset('page', 'limit');
         confirm();
         closeAction();
     }

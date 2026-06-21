@@ -20,8 +20,8 @@ export default function setQueryParams() {
     const set = (name: string, value: string) => {
         params.set(name, value);
     }
-    const unset = (name: string) => {
-        params.delete(name);
+    const unset = (...args: string[]) => {
+        args.forEach(arg => params.delete(arg));
     }
     const get = (name: string): string | null => {
         return params.get(name);

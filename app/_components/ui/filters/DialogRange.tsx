@@ -46,6 +46,7 @@ export default function DialogRange({modalOptions, closeAction}: {
             set(name, `${values.first},${values.second}`);
         }
 
+        unset('page', 'limit');
         confirm();
         closeAction();
     }

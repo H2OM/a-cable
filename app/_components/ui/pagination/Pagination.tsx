@@ -4,8 +4,8 @@ import usePagination from "@hooks/usePagination";
 
 export default function Pagination({
     totalCount,
-    defaultLimit = 30,
-    limits = [30, 60, 90],
+    defaultLimit = 32,
+    limits = [32, 60, 92],
 }: {
     totalCount: number;
     defaultLimit?: number;

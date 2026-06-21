@@ -25,7 +25,7 @@ export default function DialogMulti({modalOptions, closeAction}: {
     }
 
     const handleClear = () => {
-        unset(name);
+        unset(name, 'page', 'limit');
         setSelected([]);
         confirm();
     }
@@ -42,6 +42,7 @@ export default function DialogMulti({modalOptions, closeAction}: {
             unset(name);
         }
 
+        unset('page', 'limit');
         confirm();
         closeAction();
     }

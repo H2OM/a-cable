@@ -8,3 +8,9 @@ export const get = async (filters: Record<string, string>) => {
 
     return await _FETCH.request({url: `${API_URL}/get${params ? `?${params}` : ''}`});
 }
+
+export const getCount = async (filters: Record<string, string>) => {
+    const params = formatQueryParams(filters);
+
+    return await _FETCH.request({url: `${API_URL}/getCount${params ? `?${params}` : ''}`});
+}
