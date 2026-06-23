@@ -15,7 +15,7 @@ export function Header() {
                             Витая пара
                         </Link>
                         <Link className="header__links__link"
-                              href={"/catalog/cable-products/power-cable?type="}>
+                              href={"/catalog/cable-products/power-cable"}>
                             Силовой кабель
                         </Link>
                         {/*<Link className="header__links__link" href={"/info"}>О нас</Link>*/}
