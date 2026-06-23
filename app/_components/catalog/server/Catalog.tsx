@@ -21,7 +21,7 @@ export default async function Catalog({promiseParams, promiseSearchParams}: {
     searchParams.category = params.category;
 
     if(params.type) {
-        searchParams.type = params.type;
+        searchParams.category_type = searchParams.type = params.type;
     }
 
     const response = await catalogAPI.get(searchParams);
