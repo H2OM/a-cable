@@ -8,6 +8,7 @@ import {BasketProvider} from "@providers/BasketProvider";
 import {Toaster} from "react-hot-toast";
 import {UserProvider} from "@providers/UserProvider";
 import Preloader from "@ui/preloader/Preloader";
+import Metric from "@components/metric/client/Metric";
 
 const raleway = localFont({
     src: [
@@ -103,6 +104,7 @@ export default async function Layout({children}: { children: ReactNode }) {
     return (
         <html className={raleway.className}>
         <body>
+        <Metric/>
         <BasketProvider>
             <FavoritesProvider>
                 <UserProvider>
