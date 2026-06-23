@@ -3,9 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "set NODE_OPTIONS=--max-old-space-size=4096 && next dev -p 3000",
+    "dev": "set NODE_OPTIONS=--max-old-space-size=4096 && next dev -p 3001",
     "build": "next build ",
-    "start": "next start -H 127.0.0.1 -p 3000"
+    "start": "next start -H 127.0.0.1 -p 3001"
   },
   "dependencies": {
     "framer-motion": "^11.0.13",
