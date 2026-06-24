@@ -18,6 +18,7 @@ export default function Filters({
     categoryType?: string
 }) {
     const searchParams = useSearchParams();
+    const [showFullFilters, setShowFullFilters] = useState<boolean>(false);
     const [modalOptions, setModalOptions] = useState<FilterModalOptions>({
         modalType: "",
         cords: {
@@ -64,9 +65,11 @@ export default function Filters({
 
     return (
         <div className="filters">
-            {filters.map(filter => {
+            {filters.map((filter, i) => {
                 if (filter.code === "category" && !category) return null;
                 if(filter.code === "type" && categoryType) return null;
+
+                if(i > 8 && !showFullFilters) return null;
 
                 return (
                     <div className={"filters__tab"
@@ -84,6 +87,11 @@ export default function Filters({
                     </div>
                 );
             })}
+            <button className={'btn' + (showFullFilters ? ' _outline' : '')}
+                    onClick={()=> setShowFullFilters(prev => !prev)}
+            >
+                {showFullFilters ? 'Скрыть фильтры' : 'Показать все фильтры'}
+            </button>
             {modalOptions.modalType === "switch" &&
                 <DialogSwitch modalOptions={modalOptions} closeAction={handleModalClose}/>}
             {modalOptions.modalType === "range" &&

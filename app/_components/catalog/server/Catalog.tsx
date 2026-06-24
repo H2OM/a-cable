@@ -22,12 +22,16 @@ export default async function Catalog({promiseParams, promiseSearchParams}: {
 
     if(params.type) {
         searchParams.category_type = searchParams.type = params.type;
+
+    } else if(searchParams.type && searchParams.type.split(',').length === 1) {
+        params.type = searchParams.category_type = searchParams.type;
+        // redirect(`/catalog/${params.category}/${searchParams.type}`);
     }
 
     const response = await catalogAPI.get(searchParams);
 
     if(!response.success) {
-        redirect('/');
+        return redirect('/');
     }
 
     const {category_title, catalog, filters, count}: {
@@ -38,7 +42,7 @@ export default async function Catalog({promiseParams, promiseSearchParams}: {
     } = response.data ?? {};
 
     if(!category_title) {
-        redirect('/catalog');
+        return redirect('/catalog');
     }
 
     const type = searchParams.type
