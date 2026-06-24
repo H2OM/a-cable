@@ -7,7 +7,7 @@ const cleanRequest = async ({url, options = {method: "GET"}}: {
     options?: RequestInit,
     toasts?: boolean
 }) => {
-    return await fetch(url, options)
+    return await fetch(url, {...options, credentials: 'include'})
         .catch(() => {
             isClient && toast.error("Ошибка запроса");
             return false;
@@ -66,7 +66,7 @@ const request = async ({
         'Content-Type': 'application/json'
     }
 
-    return await fetch(url, options)
+    return await fetch(url, {...options, credentials: 'include'})
         .then(response => response.json())
         .then(data => {
             if (!data || !data.success) {
@@ -117,7 +117,7 @@ const progressTrackingRequest = async ({
     }
 
     return toast.promise(
-        fetch(url, options)
+        fetch(url, {...options, credentials: 'include'})
             .then(response => response.json())
             .then(data => {
                 if (!data || !data.success) throw new Error(data.message);
